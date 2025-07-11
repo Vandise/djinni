@@ -4,10 +4,12 @@
 #include "geometry/shared.h"
 #include "geometry/coordinate.h"
 #include "geometry/line.h"
+#include "geometry/rectangle.h"
 
 struct Djinni_GeometryStruct {
   struct Djinni_Geometry_CoordinateStruct* Coordinate;
   struct Djinni_Geometry_LineStruct* Line;
+  struct Djinni_Geometry_RectangleStruct* Rectangle;
 
   void (*initialize)();
 };

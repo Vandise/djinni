@@ -15,5 +15,8 @@ int main(void) {
   Line l = Djinni.Geometry->Line->create(c, c2);
   Djinni.Geometry->Line->inspect(&l);
 
+  Rectangle r = Djinni.Geometry->Rectangle->create(0,0,10,20);
+  Djinni.Geometry->Rectangle->inspect(&r);
+
   return 0;
 }
