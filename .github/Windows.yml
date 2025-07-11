@@ -1,0 +1,58 @@
+name: Windows
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Print Search Paths
+      run: echo $env:Path
+
+    - name: Install MSYS2
+      run: choco install msys2
+
+    - name: Build and install tools
+      run: C:\tools\msys64\usr\bin\bash -lc "pacman -Sy autoconf make gcc git automake libtool --noconfirm"
+      env:
+        HOME: ${{ runner.workspace }}/djinni
+        MINGW_INSTALLS: ${{ matrix.task.installs }}
+        CI: true
+
+    - name: Build and install SDL2
+      run: C:\tools\msys64\usr\bin\bash -lc "pacman -Sy sdl2 sdl2_image --noconfirm"
+      env:
+        HOME: ${{ runner.workspace }}/djinni
+        MINGW_INSTALLS: ${{ matrix.task.installs }}
+        CI: true
+
+    - name: Check uname
+      run: C:\tools\msys64\usr\bin\bash -lc "uname"
+      env:
+        HOME: ${{ runner.workspace }}/djinni
+        MINGW_INSTALLS: ${{ matrix.task.installs }}
+        CI: true
+
+    - name: Print GCC Information
+      run: C:\tools\msys64\usr\bin\bash -lc "echo | gcc -E -Wp,-v -"
+      env:
+        HOME: ${{ runner.workspace }}/djinni
+        MINGW_INSTALLS: ${{ matrix.task.installs }}
+        CI: true
+
+    - name: Print PATH Information
+      run: C:\tools\msys64\usr\bin\bash -lc "echo | gcc -E -Wp,-v -"
+      env:
+        HOME: ${{ runner.workspace }}/djinni
+        MINGW_INSTALLS: ${{ matrix.task.installs }}
+        CI: true
+
+    - name: Build
+      run: |
+        C:\tools\msys64\usr\bin\bash -lc "make"
+      env:
+        HOME: ${{ runner.workspace }}/djinni
+        MINGW_INSTALLS: ${{ matrix.task.installs }}
+        CI: true

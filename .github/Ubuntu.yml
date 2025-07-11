@@ -1,0 +1,27 @@
+name: Ubuntu
+
+on: [push,workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Compiler version
+      run: gcc -v
+
+    - name: Compiler version
+      run: gcc -v
+
+    - name: Install SDL2
+      run: sudo apt install libsdl2-dev libsdl2-2.0-0 -y;
+
+    - name: Install SDL2 Image
+      run: sudo apt install libjpeg-dev libwebp-dev libtiff5-dev libsdl2-image-dev libsdl2-image-2.0-0 -y;
+
+    - name: Build
+      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+      export DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:/usr/local/lib
+      run: |
+        make
