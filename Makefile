@@ -12,7 +12,7 @@ LIBNAME   := libdjinni.a
 ENGINE_MODULE_FILES := $(shell find $(SOURCES) -type f -name *.c)
 ENGINE_OBJECTS      := $(patsubst $(SOURCES)/%.c, $(OBJECTS)/%.o, $(ENGINE_MODULE_FILES))
 
-all: engine program
+all: clean engine program
 
 program:
 	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I inc/ test/main.c -o bin/test $(LIBRARIES)/$(LIBNAME) -lsdl2 -lsdl2_image -lm

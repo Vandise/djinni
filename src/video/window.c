@@ -15,7 +15,7 @@ static void destroy(Window *window) {
   free(window);
 }
 
-const struct Djinni_Video_WindowStruct Djinni_Video_Window = {
+struct Djinni_Video_WindowStruct Djinni_Video_Window = {
   .create = create,
   .destroy = destroy
 };

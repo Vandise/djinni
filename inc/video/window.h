@@ -15,6 +15,6 @@ struct Djinni_Video_WindowStruct {
   void (*destroy)(Window *window);
 };
 
-extern const struct Djinni_Video_WindowStruct Djinni_Video_Window;
+extern struct Djinni_Video_WindowStruct Djinni_Video_Window;
 
 #endif

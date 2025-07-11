@@ -25,7 +25,7 @@ static void destroy(Renderer *renderer) {
   free(renderer);
 }
 
-const struct Djinni_Video_RendererStruct Djinni_Video_Renderer = {
+struct Djinni_Video_RendererStruct Djinni_Video_Renderer = {
   .create = create,
   .destroy = destroy,
   .drawColor = drawColor,

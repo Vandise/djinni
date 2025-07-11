@@ -16,6 +16,6 @@ struct Djinni_Video_RendererStruct {
   void (*clear)(Renderer *renderer);
 };
 
-extern const struct Djinni_Video_RendererStruct Djinni_Video_Renderer;
+extern struct Djinni_Video_RendererStruct Djinni_Video_Renderer;
 
 #endif
