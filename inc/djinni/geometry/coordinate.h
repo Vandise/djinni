@@ -1,7 +1,7 @@
 #ifndef DJINNI_GEOMETRY_COORDINATE
 #define DJINNI_GEOMETRY_COORDINATE 1
 
-#include "geometry/shared.h"
+#include "djinni/geometry/shared.h"
 
 typedef struct CoordinateStruct {
   int x;

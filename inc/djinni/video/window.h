@@ -1,7 +1,7 @@
 #ifndef DJINNI_VIDEO_WINDOW
 #define DJINNI_VIDEO_WINDOW 1
 
-#include "video/shared.h"
+#include "djinni/video/shared.h"
 
 typedef struct WindowStruct {
   int width;

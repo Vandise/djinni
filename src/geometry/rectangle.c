@@ -1,5 +1,5 @@
-#include "util/util.h"
-#include "geometry/rectangle.h"
+#include "djinni/util/util.h"
+#include "djinni/geometry/rectangle.h"
 
 static Rectangle create(int x, int y, int w, int h) {
   Rectangle r;

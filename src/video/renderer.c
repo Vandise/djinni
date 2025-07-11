@@ -1,5 +1,5 @@
-#include "video/window.h"
-#include "video/renderer.h"
+#include "djinni/video/window.h"
+#include "djinni/video/renderer.h"
 
 static Renderer* create(Window *window, int index, int flags) {
   Renderer *r = malloc(sizeof(Renderer));

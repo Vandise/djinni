@@ -1,4 +1,4 @@
-#include "video/window.h"
+#include "djinni/video/window.h"
 
 static Window* create(const char *title, int x, int y, int w, int h, int flags) {
   Window *winstance = malloc(sizeof(Window));

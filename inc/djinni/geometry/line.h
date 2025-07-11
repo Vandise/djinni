@@ -1,8 +1,8 @@
 #ifndef DJINNI_GEOMETRY_LINE
 #define DJINNI_GEOMETRY_LINE 1
 
-#include "geometry/shared.h"
-#include "geometry/coordinate.h"
+#include "djinni/geometry/shared.h"
+#include "djinni/geometry/coordinate.h"
 
 typedef struct LineSlopeStruct {
   float dx;

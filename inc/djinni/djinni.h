@@ -3,9 +3,9 @@
 
 #define MAX_KEYBOARD_KEYS 350
 
-#include "util/shared.h"
-#include "video/video.h"
-#include "geometry/geometry.h"
+#include "djinni/util/shared.h"
+#include "djinni/video/video.h"
+#include "djinni/geometry/geometry.h"
 
 struct DjinniStruct {
   struct Djinni_Util_LoggerStruct* Logger;

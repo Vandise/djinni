@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "djinni.h"
+#include "djinni/djinni.h"
 
 int main(void) {
   Djinni.initialize();

@@ -1,5 +1,5 @@
-#include "djinni.h"
-#include "util/util.h"
+#include "djinni/djinni.h"
+#include "djinni/util/util.h"
 
 static void initialize() {
   Djinni_Util_Logger.log_dev("Djinni.initialize");

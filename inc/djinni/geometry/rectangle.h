@@ -2,7 +2,7 @@
 #define DJINNI_GEOMETRY_RECTANGLE 1
 
 #include <SDL2/SDL_rect.h>
-#include "geometry/shared.h"
+#include "djinni/geometry/shared.h"
 
 typedef struct RectangleStruct {
   SDL_Rect instance;

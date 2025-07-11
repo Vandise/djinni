@@ -1,7 +1,7 @@
 #ifndef DJINNI_VIDEO_TEXTURE
 #define DJINNI_VIDEO_TEXTURE 1
 
-#include "video/shared.h"
+#include "djinni/video/shared.h"
 
 typedef struct TextureStruct {
   SDL_Texture *instance;

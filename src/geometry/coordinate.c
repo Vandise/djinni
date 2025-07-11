@@ -1,5 +1,5 @@
-#include "util/util.h"
-#include "geometry/coordinate.h"
+#include "djinni/util/util.h"
+#include "djinni/geometry/coordinate.h"
 
 static Coordinate create(int x, int y) {
   Coordinate c = {

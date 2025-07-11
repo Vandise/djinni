@@ -1,5 +1,5 @@
-#include "util/util.h"
-#include "video/video.h"
+#include "djinni/util/util.h"
+#include "djinni/video/video.h"
 
 static int initialize() {
   Djinni_Util_Logger.log_dev("Djinni::Video.initialize");

@@ -1,10 +1,10 @@
 #ifndef DJINNI_VIDEO
 #define DJINNI_VIDEO 1
 
-#include "video/shared.h"
-#include "video/window.h"
-#include "video/renderer.h"
-#include "video/texture.h"
+#include "djinni/video/shared.h"
+#include "djinni/video/window.h"
+#include "djinni/video/renderer.h"
+#include "djinni/video/texture.h"
 
 struct Djinni_VideoStruct {
   struct Djinni_Video_WindowStruct* Window;

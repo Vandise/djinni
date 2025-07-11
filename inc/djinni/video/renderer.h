@@ -1,7 +1,7 @@
 #ifndef DJINNI_VIDEO_RENDERER
 #define DJINNI_VIDEO_RENDERER 1
 
-#include "video/shared.h"
+#include "djinni/video/shared.h"
 
 typedef struct RendererStruct {
   SDL_Renderer* instance;

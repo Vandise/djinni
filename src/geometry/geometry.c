@@ -1,5 +1,5 @@
-#include "util/logger.h"
-#include "geometry/geometry.h"
+#include "djinni/util/logger.h"
+#include "djinni/geometry/geometry.h"
 
 static void initialize() {
   Djinni_Util_Logger.log_dev("Djinni::Geometry.initialize");

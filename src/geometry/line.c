@@ -1,5 +1,5 @@
-#include "util/util.h"
-#include "geometry/line.h"
+#include "djinni/util/util.h"
+#include "djinni/geometry/line.h"
 
 static LineSlope slope(Coordinate c1, Coordinate c2);
 

@@ -1,5 +1,5 @@
-#include "video/texture.h"
-#include "video/renderer.h"
+#include "djinni/video/texture.h"
+#include "djinni/video/renderer.h"
 
 static void initialize(int flags) {
   IMG_Init(flags);
