@@ -1,7 +1,7 @@
 #ifndef DJINNI_VIDEO_WINDOW
 #define DJINNI_VIDEO_WINDOW 1
 
-#include <SDL2/SDL.h>
+#include "video/shared.h"
 
 typedef struct WindowStruct {
   int width;
@@ -15,6 +15,6 @@ struct Djinni_Video_WindowStruct {
   void (*destroy)(Window *window);
 };
 
-extern const struct Djinni_Video_WindowStruct Djinni_Video_Window ;
+extern const struct Djinni_Video_WindowStruct Djinni_Video_Window;
 
 #endif
