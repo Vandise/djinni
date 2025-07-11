@@ -7,11 +7,14 @@
 #include "djinni/video/texture.h"
 
 struct Djinni_VideoStruct {
+  Renderer* renderer;
+
   struct Djinni_Video_WindowStruct* Window;
   struct Djinni_Video_RendererStruct* Renderer;
   struct Djinni_TextureStruct* Texture;
 
-  int (*initialize)();
+  int (*initialize)(int);
+  void (*setRenderer)(Renderer*);
 };
 
 extern struct Djinni_VideoStruct Djinni_Video;

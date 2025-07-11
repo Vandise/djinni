@@ -10,6 +10,7 @@ typedef struct RectangleStruct {
 
 struct Djinni_Geometry_RectangleStruct {
   Rectangle (*create)(int, int, int, int);
+  Coordinate (*getPosition)(Rectangle*);
   void (*inspect)(Rectangle*);
 };
 

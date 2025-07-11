@@ -1,7 +1,10 @@
+#include "djinni/util/util.h"
 #include "djinni/video/window.h"
 #include "djinni/video/renderer.h"
 
 static Renderer* create(Window *window, int index, int flags) {
+  Djinni_Util_Logger.log_dev("Djinni::Video::Renderer.create");
+
   Renderer *r = malloc(sizeof(Renderer));
   r->instance = SDL_CreateRenderer(window->instance, index, flags);
 
@@ -21,8 +24,12 @@ static void clear(Renderer *renderer) {
 }
 
 static void destroy(Renderer *renderer) {
-  SDL_DestroyRenderer(renderer->instance);
-  free(renderer);
+  Djinni_Util_Logger.log_dev("Djinni::Video::Renderer.destroy (%p)", renderer);
+
+  if (renderer != NULL && renderer->instance != NULL) {
+    SDL_DestroyRenderer(renderer->instance);
+    free(renderer);
+  }
 }
 
 struct Djinni_Video_RendererStruct Djinni_Video_Renderer = {
