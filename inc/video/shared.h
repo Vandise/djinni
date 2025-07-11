@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "util/logger.h"
 
 typedef struct WindowStruct Window;
 typedef struct RendererStruct Renderer;

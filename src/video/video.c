@@ -1,3 +1,4 @@
+#include "util/util.h"
 #include "video/video.h"
 
 static int initialize() {
