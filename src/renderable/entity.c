@@ -3,7 +3,7 @@
 #include "djinni/renderable/entity.h"
 
 static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
-  Entity* e = malloc(sizeof(e));
+  Entity* e = malloc(sizeof(Entity));
   e->type = type;
   e->bounds = Djinni_Geometry.Rectangle->create(x, y, w, h);
   e->body = Djinni_Geometry.Rectangle->create(x, y, w, h);

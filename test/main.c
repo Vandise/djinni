@@ -29,7 +29,7 @@ int main(void) {
     .width = 800,
     .height = 800,
     .flags = 0
-  };  
+  }; 
   ws.name = strdup("Demo");
 
   VideoSettings vs = {
