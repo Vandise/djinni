@@ -7,6 +7,7 @@
 #include "djinni/geometry/shared.h"
 #include "djinni/physics/shared.h"
 
+#include "djinni/geometry/observablePoint.h"
 #include "djinni/geometry/rectangle.h"
 #include "djinni/video/texture.h"
 #include "djinni/physics/physics.h"
@@ -30,6 +31,8 @@ typedef struct EntityStruct {
   int keepAlive;
   int alwaysUpdate;
 
+  ObservablePoint anchorPoint;
+
   // draw-size bounds
   Rectangle bounds;
 
@@ -47,6 +50,7 @@ struct Djinni_Renderable_EntityStruct {
   Coordinate (*getPosition)(Entity*);
   void (*move)(Entity*, int, int);
   void (*setPosition)(Entity*, int, int);
+  void (*setAnchor)(Entity*, float, float);
   void (*inspect)(Entity*);
   void (*destroy)(Entity*);
 };

@@ -7,10 +7,9 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 typedef struct CoordinateStruct Coordinate;
-
 typedef struct LineStruct Line;
 typedef struct LineSlopeStruct LineSlope;
-
 typedef struct RectangleStruct Rectangle;
+typedef struct ObservablePointStruct ObservablePoint;
 
 #endif

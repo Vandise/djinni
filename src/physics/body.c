@@ -21,5 +21,6 @@ static void inspect(PhysicsBody* b) {
 }
 
 struct Djinni_Physics_BodyStruct Djinni_Physics_Body = {
-  .create = create
+  .create = create,
+  .inspect = inspect
 };

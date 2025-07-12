@@ -7,15 +7,17 @@ Entity* create(int x, int y, int w, int h) {
   e->shape.type = SHAPE_RECTANGLE_PTR_TYPE;
   e->shape.fill = 0;
   e->shape.outline = 0;
-  e->shape.geometry.rectptr = &(e->bounds);
+  e->shape.geometry.rectptr = &(e->body.bounds);
 
   return e;
 }
 
 void inspect(Entity* e) {
+  Coordinate loc = Djinni_Renderable.Entity->getPosition(e);
+
   Djinni_Util_Logger.log_debug(
-    "Djinni::Renderable::Shape::Rectangle(address:(%p), fill:(%d), outline:(%d))",
-    e, e->shape.fill, e->shape.outline
+    "Djinni::Renderable::Shape::Rectangle(address:(%p), fill:(%d), outline:(%d), x:(%d), y:(%d))",
+    e, e->shape.fill, e->shape.outline, loc.x, loc.y
   );
 }
 

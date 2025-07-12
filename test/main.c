@@ -48,9 +48,16 @@ int main(void) {
   };
 
   Color rectColor = {
+    .r = 0,
+    .g = 0,
+    .b = 255,
+    .a = 255
+  };
+
+  Color ptColor = {
     .r = 255,
     .g = 255,
-    .b = 255,
+    .b = 0,
     .a = 255
   };
 
@@ -68,13 +75,22 @@ int main(void) {
   Djinni.Geometry->Rectangle->inspect(&r);
 
   Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
-  Entity* rectEntity = Djinni.Renderable->Shape->Rectangle->create(100,100,10,10);
+  //Djinni.Renderable->Entity->setAnchor(e,0,0);
+  Djinni.Renderable->Entity->inspect(e);
 
-  Djinni.Renderable->Shape->Rectangle->inspect(rectEntity);
+  Entity* rctr = Djinni.Renderable->Shape->Rectangle->create(100,100,10,10);
 
-  Djinni.Renderable->Shape->setOutlineColor(rectEntity, rectColor);
+  Entity* rtl = Djinni.Renderable->Shape->Rectangle->create(100,100,10,10);
+  Djinni.Renderable->Entity->setAnchor(rtl,0,0);
 
-  Djinni.Renderable->Shape->Rectangle->inspect(rectEntity);
+  Entity* rtr = Djinni.Renderable->Shape->Rectangle->create(100,100,10,10);
+  Djinni.Renderable->Entity->setAnchor(rtr,1,0);
+
+  Entity* rbl = Djinni.Renderable->Shape->Rectangle->create(100,100,10,10);
+  Djinni.Renderable->Entity->setAnchor(rbl,0,1);
+
+  Entity* rbr = Djinni.Renderable->Shape->Rectangle->create(100,100,10,10);
+  Djinni.Renderable->Entity->setAnchor(rbr,1,1);
 
   while (terminate == 0) {
     Djinni.Video->Renderer->setDrawColor(Djinni.renderer, Djinni.renderer->backgroundColor);
@@ -84,17 +100,29 @@ int main(void) {
 
     //Djinni.Renderable->Entity->move(e,5,0);
     Coordinate position = Djinni.Renderable->Entity->getPosition(e);
-
+/*
     Djinni.Video->Texture->blit(
       Djinni.renderer,
       e->texture,
       position.x, position.y
     );
-
+*/
     Djinni.Video->Renderer->setDrawColor(Djinni.renderer, rectColor);
-    SDL_RenderDrawRect(Djinni.renderer->instance, &(rectEntity->bounds.instance));
+  
+    //SDL_RenderDrawRect(Djinni.renderer->instance, &(rectEntity->bounds.instance));
     SDL_RenderDrawRect(Djinni.renderer->instance, &(e->bounds.instance));
+    SDL_RenderDrawRect(Djinni.renderer->instance, &(rtr->bounds.instance));
+    SDL_RenderDrawRect(Djinni.renderer->instance, &(rtl->bounds.instance));
+    SDL_RenderDrawRect(Djinni.renderer->instance, &(rbr->bounds.instance));
+    SDL_RenderDrawRect(Djinni.renderer->instance, &(rbl->bounds.instance));
+    SDL_RenderDrawRect(Djinni.renderer->instance, &(rctr->bounds.instance));
 
+    Djinni.Video->Renderer->setDrawColor(Djinni.renderer, ptColor);
+    SDL_RenderDrawPoint(Djinni.renderer->instance,100,100);
+    SDL_RenderDrawPoint(Djinni.renderer->instance,100,99);
+    SDL_RenderDrawPoint(Djinni.renderer->instance,99,100);
+    SDL_RenderDrawPoint(Djinni.renderer->instance,99,99);
+  
     Djinni.Video->Renderer->present(Djinni.renderer);
 
     Djinni.Logger->log_debug("Terminate( %d )", terminate);

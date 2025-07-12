@@ -5,8 +5,17 @@
 static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   Entity* e = malloc(sizeof(Entity));
   e->type = type;
-  e->bounds = Djinni_Geometry.Rectangle->create(x, y, w, h);
-  e->body = Djinni_Physics.Body->create(x, y, w, h);
+
+  e->anchorPoint.x = 0.5;
+  e->anchorPoint.y = 0.5;
+
+  Coordinate pos = Djinni_Geometry.ObservablePoint->translate(
+    e->anchorPoint, x, y, w, h
+  );
+
+  e->bounds = Djinni_Geometry.Rectangle->create(pos.x, pos.y, w, h);
+  e->body = Djinni_Physics.Body->create(pos.x, pos.y, w, h);
+
   e->status = ENTITY_ALIVE;
   e->alwaysUpdate = 0;
   e->keepAlive = 0;
@@ -38,6 +47,19 @@ static void move(Entity* e, int dx, int dy) {
   setPosition(e, c.x + dx, c.y + dy);
 }
 
+static void setAnchor(Entity* e, float x, float y) {
+  e->anchorPoint.x = x;
+  e->anchorPoint.y = y;
+
+  Coordinate pos = Djinni_Geometry.ObservablePoint->translate(
+    e->anchorPoint,
+    e->body.bounds.instance.x, e->body.bounds.instance.y,
+    e->body.bounds.instance.w, e->body.bounds.instance.h
+  );
+
+  setPosition(e, pos.x, pos.y);
+}
+
 static void inspect(Entity* e) {
   Djinni_Util_Logger.log_debug(
     "Djinni::Renderable::Entity( address:(%p) type:(%d) status:(%d) alwaysUpdate:(%d) keepAlive:(%d))",
@@ -60,5 +82,6 @@ struct Djinni_Renderable_EntityStruct Djinni_Renderable_Entity = {
   .inspect = inspect,
   .move = move,
   .setPosition = setPosition,
+  .setAnchor = setAnchor,
   .destroy = destroy
 };
