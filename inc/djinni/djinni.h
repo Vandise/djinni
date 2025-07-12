@@ -4,7 +4,7 @@
 #define MAX_KEYBOARD_KEYS 350
 
 #include <SDL2/SDL.h>
-#include "djinni/util/shared.h"
+#include "djinni/util/util.h"
 #include "djinni/video/video.h"
 #include "djinni/geometry/geometry.h"
 #include "djinni/renderable/renderable.h"

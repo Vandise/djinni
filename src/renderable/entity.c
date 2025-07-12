@@ -10,6 +10,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->status = ENTITY_ALIVE;
   e->alwaysUpdate = 0;
   e->keepAlive = 0;
+  e->texture = NULL;
 
   return e;
 }

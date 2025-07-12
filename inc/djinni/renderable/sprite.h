@@ -5,7 +5,7 @@
 #include "djinni/renderable/entity.h"
 
 struct Djinni_Renderable_SpriteStruct {
-  Entity* (*create)(int, int, const char*);
+  Entity* (*create)(int, int, char*);
 };
 
 extern struct Djinni_Renderable_SpriteStruct Djinni_Renderable_Sprite;

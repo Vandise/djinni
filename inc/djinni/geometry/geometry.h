@@ -1,5 +1,5 @@
-#ifndef DJINNI_GEOMETRY_SHARED
-#define DJINNI_GEOMETRY_SHARED 1
+#ifndef DJINNI_GEOMETRY
+#define DJINNI_GEOMETRY 1
 
 #include "djinni/geometry/shared.h"
 #include "djinni/geometry/coordinate.h"

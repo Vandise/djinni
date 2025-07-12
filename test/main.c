@@ -6,10 +6,11 @@
 int terminate = 0;
 
 void pollEvents() {
-  SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-      printf("Pull Event \n");
-        switch (event.type) {
+  SDL_Event* event = malloc(sizeof(SDL_Event));
+  printf("polling events:\n");
+    while (SDL_PollEvent(event)) {
+      printf("\tPulled event %d\n", event->type);
+        switch (event->type) {
             case SDL_QUIT:
                 terminate = 1;
                 break;
@@ -18,7 +19,7 @@ void pollEvents() {
                 break;
         }
     }
-
+  free(event);
 }
 
 int main(void) {
@@ -32,7 +33,7 @@ int main(void) {
   ws.name = strdup("Demo");
 
   VideoSettings vs = {
-    .index = -1,
+    .index = 0,
     .videoFlags = IMG_INIT_PNG | IMG_INIT_JPG,
     .rendererFlags = SDL_RENDERER_ACCELERATED
   };
@@ -53,31 +54,36 @@ int main(void) {
   Rectangle r = Djinni.Geometry->Rectangle->create(0,0,10,20);
   Djinni.Geometry->Rectangle->inspect(&r);
 
+/*
   Entity* e = Djinni.Renderable->Entity->create(0,0,10,10, ENTITY_TYPE_NONE);
   Djinni.Renderable->Entity->inspect(e);
   Djinni.Renderable->Entity->destroy(e);
+*/
 
+  Entity* e = Djinni.Renderable->Sprite->create(0,0,"bin/gfx/player.png");
+
+  SDL_Delay(1000);
 
   while (terminate == 0) {
-
-    printf("Draw \n");
-
-    Djinni.Video->Renderer->drawColor(Djinni.renderer, 96, 128, 255, 255);
-
-    printf("Clear \n");
-
+    Djinni.Video->Renderer->drawColor(Djinni.renderer, 0, 0, 0, 255);
     Djinni.Video->Renderer->clear(Djinni.renderer);
 
     pollEvents();
-    
-    printf("Present \n");
+
+    Djinni.Video->Texture->blit(
+      Djinni.renderer,
+      e->texture,
+      100, 100
+    );
 
     Djinni.Video->Renderer->present(Djinni.renderer);
-    
+
+    Djinni.Logger->log_debug("Terminate( %d )", terminate);
+
     SDL_Delay(1000);
   }
 
-  printf("Terminate \n");
+  Djinni.Renderable->Entity->destroy(e);
 
   Djinni.terminate();
 
