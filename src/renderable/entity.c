@@ -11,6 +11,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->alwaysUpdate = 0;
   e->keepAlive = 0;
   e->texture = NULL;
+  e->children = NULL;
 
   return e;
 }

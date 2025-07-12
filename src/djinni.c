@@ -12,6 +12,8 @@ static int initialize(WindowSettings ws, VideoSettings vs) {
   Djinni_Physics.initialize();
 
   Djinni.Logger = &Djinni_Util_Logger;
+  Djinni.Array = &Djinni_Util_Array;
+
   Djinni.Video = &Djinni_Video;
   Djinni.Geometry = &Djinni_Geometry;
   Djinni.Renderable = &Djinni_Renderable;

@@ -3,15 +3,24 @@
 
 #include "djinni/video/shared.h"
 
+typedef struct ColorStruct {
+  int r;
+  int g;
+  int b;
+  int a;
+} Color;
+
 typedef struct RendererStruct {
   SDL_Renderer* instance;
+  Color backgroundColor;
 } Renderer;
 
 struct Djinni_Video_RendererStruct {
   Renderer* (*create)(Window *window, int index, int flags);
   void (*destroy)(Renderer *renderer);
 
-  void (*drawColor)(Renderer *renderer, int r, int g, int b, int a);
+  void (*setBackgroundColor)(Renderer *renderer, Color c);
+  void (*setDrawColor)(Renderer *renderer, Color c);
   void (*present)(Renderer *renderer);
   void (*clear)(Renderer *renderer);
 };

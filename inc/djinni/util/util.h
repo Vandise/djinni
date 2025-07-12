@@ -3,5 +3,6 @@
 
 #include "djinni/util/shared.h"
 #include "djinni/util/logger.h"
+#include "djinni/util/array.h"
 
 #endif

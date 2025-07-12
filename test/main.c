@@ -40,6 +40,21 @@ int main(void) {
 
   Djinni.initialize(ws, vs);
 
+  Color background = {
+    .r = 0,
+    .g = 0,
+    .b = 0,
+    .a = 255
+  };
+
+  Color rectColor = {
+    .r = 255,
+    .g = 255,
+    .b = 255,
+    .a = 255
+  };
+
+  Djinni.Video->Renderer->setBackgroundColor(Djinni.renderer, background);
 
   Coordinate c = Djinni.Geometry->Coordinate->create(10,10);
   Coordinate c2 = Djinni.Geometry->Coordinate->create(20,20);
@@ -53,14 +68,21 @@ int main(void) {
   Djinni.Geometry->Rectangle->inspect(&r);
 
   Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
+  Entity* rectEntity = Djinni.Renderable->Shape->Rectangle->create(100,100,10,10);
+
+  Djinni.Renderable->Shape->Rectangle->inspect(rectEntity);
+
+  Djinni.Renderable->Shape->setOutlineColor(rectEntity, rectColor);
+
+  Djinni.Renderable->Shape->Rectangle->inspect(rectEntity);
 
   while (terminate == 0) {
-    Djinni.Video->Renderer->drawColor(Djinni.renderer, 0, 0, 0, 255);
+    Djinni.Video->Renderer->setDrawColor(Djinni.renderer, Djinni.renderer->backgroundColor);
     Djinni.Video->Renderer->clear(Djinni.renderer);
 
     pollEvents();
 
-    Djinni.Renderable->Entity->move(e,5,0);
+    //Djinni.Renderable->Entity->move(e,5,0);
     Coordinate position = Djinni.Renderable->Entity->getPosition(e);
 
     Djinni.Video->Texture->blit(
@@ -68,6 +90,10 @@ int main(void) {
       e->texture,
       position.x, position.y
     );
+
+    Djinni.Video->Renderer->setDrawColor(Djinni.renderer, rectColor);
+    SDL_RenderDrawRect(Djinni.renderer->instance, &(rectEntity->bounds.instance));
+    SDL_RenderDrawRect(Djinni.renderer->instance, &(e->bounds.instance));
 
     Djinni.Video->Renderer->present(Djinni.renderer);
 

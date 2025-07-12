@@ -6,5 +6,6 @@
 
 typedef struct EntityStruct Entity;
 typedef struct SpriteStruct Sprite;
+typedef struct ShapeStruct Shape;
 
 #endif

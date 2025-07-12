@@ -1,6 +1,7 @@
 #ifndef DJINNI_RENDERABLE_ENTITY
 #define DJINNI_RENDERABLE_ENTITY 1
 
+#include "djinni/util/shared.h"
 #include "djinni/video/shared.h"
 #include "djinni/renderable/shared.h"
 #include "djinni/geometry/shared.h"
@@ -9,6 +10,8 @@
 #include "djinni/geometry/rectangle.h"
 #include "djinni/video/texture.h"
 #include "djinni/physics/physics.h"
+#include "djinni/renderable/shape/shape.h"
+#include "djinni/util/array.h"
 
 typedef enum {
   ENTITY_DEAD,
@@ -17,7 +20,8 @@ typedef enum {
 
 typedef enum {
   ENTITY_TYPE_NONE,
-  ENTITY_TYPE_SPRITE
+  ENTITY_TYPE_SPRITE,
+  ENTITY_TYPE_SHAPE,
 } ENTITY_TYPE;
 
 typedef struct EntityStruct {
@@ -33,6 +37,9 @@ typedef struct EntityStruct {
   PhysicsBody body;
 
   Texture* texture;
+  Shape shape;
+
+  DjinniArray* children;
 } Entity;
 
 struct Djinni_Renderable_EntityStruct {

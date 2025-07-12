@@ -11,8 +11,12 @@ static Renderer* create(Window *window, int index, int flags) {
   return r;
 }
 
-static void drawColor(Renderer *renderer, int r, int g, int b, int a) {
-  SDL_SetRenderDrawColor(renderer->instance, r, g, b, a);
+static void setBackgroundColor(Renderer *renderer, Color c) {
+  renderer->backgroundColor = c;
+}
+
+static void setDrawColor(Renderer *renderer, Color c) {
+  SDL_SetRenderDrawColor(renderer->instance, c.r, c.g, c.b, c.a);
 }
 
 static void present(Renderer *renderer) {
@@ -35,7 +39,8 @@ static void destroy(Renderer *renderer) {
 struct Djinni_Video_RendererStruct Djinni_Video_Renderer = {
   .create = create,
   .destroy = destroy,
-  .drawColor = drawColor,
+  .setBackgroundColor = setBackgroundColor,
+  .setDrawColor = setDrawColor,
   .present = present,
   .clear = clear
 };

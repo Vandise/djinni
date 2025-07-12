@@ -35,6 +35,8 @@ struct DjinniStruct {
   struct VideoSettingsStruct videoSettings;
 
   struct Djinni_Util_LoggerStruct* Logger;
+  struct Djinni_Util_ArrayStruct* Array;
+
   struct Djinni_VideoStruct* Video;
   struct Djinni_GeometryStruct* Geometry;
   struct Djinni_RenderableStruct* Renderable;

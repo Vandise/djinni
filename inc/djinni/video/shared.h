@@ -7,5 +7,6 @@
 typedef struct WindowStruct Window;
 typedef struct RendererStruct Renderer;
 typedef struct TextureStruct Texture;
+typedef struct ColorStruct Color;
 
 #endif

@@ -6,6 +6,9 @@ void initialize() {
 
   Djinni_Renderable.Entity = &Djinni_Renderable_Entity;
   Djinni_Renderable.Sprite = &Djinni_Renderable_Sprite;
+  Djinni_Renderable.Shape  = &Djinni_Renderable_Shape;
+
+  Djinni_Renderable.Shape->initialize();
 }
 
 struct Djinni_RenderableStruct Djinni_Renderable = {
