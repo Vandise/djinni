@@ -3,3 +3,4 @@
 *.o
 bin/test
 bin/test.dSYM
+gfx/

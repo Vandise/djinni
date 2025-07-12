@@ -3,7 +3,7 @@
 #include "djinni/video/video.h"
 
 static Entity* create(int x, int y, char* filename) {
-  Texture* t = Djinni_Video.Texture->load(Djinni_Video.renderer, filename);  
+  Texture* t = Djinni_Video.Texture->load(Djinni_Video.renderer, filename);
 
   Entity* e = Djinni_Renderable_Entity.create(
     x, y, t->bounds.instance.w, t->bounds.instance.h, ENTITY_TYPE_SPRITE

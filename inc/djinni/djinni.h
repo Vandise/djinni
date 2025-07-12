@@ -6,8 +6,9 @@
 #include <SDL2/SDL.h>
 #include "djinni/util/util.h"
 #include "djinni/video/video.h"
-#include "djinni/geometry/geometry.h"
 #include "djinni/renderable/renderable.h"
+#include "djinni/geometry/geometry.h"
+#include "djinni/physics/physics.h"
 
 typedef struct WindowSettingsStruct {
   char* name;
@@ -37,6 +38,7 @@ struct DjinniStruct {
   struct Djinni_VideoStruct* Video;
   struct Djinni_GeometryStruct* Geometry;
   struct Djinni_RenderableStruct* Renderable;
+  struct Djinni_PhysicsStruct* Physics;
 
   int (*initialize)(WindowSettings, VideoSettings);
   void (*setFlag)(const char* name, const char* value);

@@ -4,9 +4,11 @@
 #include "djinni/video/shared.h"
 #include "djinni/renderable/shared.h"
 #include "djinni/geometry/shared.h"
+#include "djinni/physics/shared.h"
 
 #include "djinni/geometry/rectangle.h"
 #include "djinni/video/texture.h"
+#include "djinni/physics/physics.h"
 
 typedef enum {
   ENTITY_DEAD,
@@ -24,8 +26,11 @@ typedef struct EntityStruct {
   int keepAlive;
   int alwaysUpdate;
 
+  // draw-size bounds
   Rectangle bounds;
-  Rectangle body;
+
+  // physic size
+  PhysicsBody body;
 
   Texture* texture;
 } Entity;
@@ -33,6 +38,8 @@ typedef struct EntityStruct {
 struct Djinni_Renderable_EntityStruct {
   Entity* (*create)(int, int, int, int, ENTITY_TYPE);
   Coordinate (*getPosition)(Entity*);
+  void (*move)(Entity*, int, int);
+  void (*setPosition)(Entity*, int, int);
   void (*inspect)(Entity*);
   void (*destroy)(Entity*);
 };

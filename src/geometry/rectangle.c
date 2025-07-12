@@ -12,8 +12,13 @@ static Rectangle create(int x, int y, int w, int h) {
   return r;
 }
 
-static Coordinate getPosition(Rectangle* e) {
-  return Djinni_Geometry_Coordinate.create(e->instance.x, e->instance.y);
+static Coordinate getPosition(Rectangle* r) {
+  return Djinni_Geometry_Coordinate.create(r->instance.x, r->instance.y);
+}
+
+static void setPosition(Rectangle* r, int x, int y) {
+  r->instance.x = x;
+  r->instance.y = y;
 }
 
 static void inspect(Rectangle* r) {
@@ -26,5 +31,6 @@ static void inspect(Rectangle* r) {
 struct Djinni_Geometry_RectangleStruct Djinni_Geometry_Rectangle = {
   .create = create,
   .getPosition = getPosition,
+  .setPosition = setPosition,
   .inspect = inspect
 };

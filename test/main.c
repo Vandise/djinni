@@ -7,9 +7,7 @@ int terminate = 0;
 
 void pollEvents() {
   SDL_Event* event = malloc(sizeof(SDL_Event));
-  printf("polling events:\n");
     while (SDL_PollEvent(event)) {
-      printf("\tPulled event %d\n", event->type);
         switch (event->type) {
             case SDL_QUIT:
                 terminate = 1;
@@ -54,15 +52,7 @@ int main(void) {
   Rectangle r = Djinni.Geometry->Rectangle->create(0,0,10,20);
   Djinni.Geometry->Rectangle->inspect(&r);
 
-/*
-  Entity* e = Djinni.Renderable->Entity->create(0,0,10,10, ENTITY_TYPE_NONE);
-  Djinni.Renderable->Entity->inspect(e);
-  Djinni.Renderable->Entity->destroy(e);
-*/
-
-  Entity* e = Djinni.Renderable->Sprite->create(0,0,"bin/gfx/player.png");
-
-  SDL_Delay(1000);
+  Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
 
   while (terminate == 0) {
     Djinni.Video->Renderer->drawColor(Djinni.renderer, 0, 0, 0, 255);
@@ -70,10 +60,13 @@ int main(void) {
 
     pollEvents();
 
+    Djinni.Renderable->Entity->move(e,5,0);
+    Coordinate position = Djinni.Renderable->Entity->getPosition(e);
+
     Djinni.Video->Texture->blit(
       Djinni.renderer,
       e->texture,
-      100, 100
+      position.x, position.y
     );
 
     Djinni.Video->Renderer->present(Djinni.renderer);
