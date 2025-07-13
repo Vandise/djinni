@@ -46,6 +46,10 @@ static void start(Game* game) {
   Djinni_Game.Runner->execute(game);
 }
 
+static void freeze(int ms) {
+  SDL_Delay(ms);
+}
+
 static void terminate() {
   Djinni_Util_Logger.log_dev("Djinni.terminate");
 
@@ -59,5 +63,6 @@ struct DjinniStruct Djinni = {
   .initialize = initialize,
   .setFlag = setFlag,
   .start = start,
+  .freeze = freeze,
   .terminate = terminate
 };

@@ -3,10 +3,13 @@
 #include <string.h>
 #include "djinni/djinni.h"
 
+int i = 0;
+float ax[] = {0.5, 0, 1, 1, 0};
+float ay[] = {0.5, 0, 0, 1, 1};
 Entity* player = NULL;
 
 void onCreate(Stage* self, Game* game, Stage* previous) {
-  Djinni_Util_Logger.log_dev("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
+  Djinni.Logger->log_debug("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
 
   player = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
 
@@ -16,18 +19,18 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni.Game->enableInput(game);
 }
 
-void prepare(Stage* self, Game* game) {
-  //Djinni_Util_Logger.log_dev("Stage.prepare( address:(%p) id:(%d) )", self, self->id);
-}
+void prepare(Stage* self, Game* game) {}
 
 void update(Stage* self, Game* game, double dt) {
-  //Djinni_Util_Logger.log_dev("Stage.update( address:(%p) id:(%d) )", self, self->id);
+  if (i+1>5) { i = 0; }
+
+  Djinni.Renderable->Entity->setAnchor(player, ax[i], ay[i]);
+
+  i++;
 }
 
 void draw(Stage* self, Game* game, double dt) {
-  //Djinni_Util_Logger.log_dev("Stage.draw( address:(%p) id:(%d) )", self, self->id);
-
-  Color outlineColor = {
+  Color white = {
     .r = 255,
     .g = 255,
     .b = 255,
@@ -35,7 +38,8 @@ void draw(Stage* self, Game* game, double dt) {
   };
 
   Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(100,100, 10, 10);
-  Djinni.Renderable->Shape->setOutlineColor(&rect, outlineColor);
+  Djinni.Renderable->Shape->setOutlineColor(&rect, white);
+  Djinni.Renderable->Shape->setFillColor(&rect, white);
   Djinni.Renderable->draw(Djinni.renderer, &rect);
 
   Coordinate pos = Djinni.Renderable->Entity->getRenderedPosition(player);
@@ -43,13 +47,15 @@ void draw(Stage* self, Game* game, double dt) {
   Shape playerRect;
     playerRect.type = SHAPE_RECTANGLE_PTR_TYPE;
     playerRect.outline = 1;
-    playerRect.outlineColor = outlineColor;
+    playerRect.outlineColor = white;
     playerRect.geometry.rectptr = &(player->body.bounds);
   Djinni.Renderable->Paint->shape(Djinni.renderer, &playerRect, pos.x, pos.y);
+
+  Djinni.freeze(500);
 }
 
 void onDestroy(Stage* self, Game* game, Stage* next) {
-  Djinni_Util_Logger.log_dev("Stage.onDestroy( address:(%p) id:(%d) )", self, self->id);
+  Djinni.Logger->log_debug("Stage.onDestroy( address:(%p) id:(%d) )", self, self->id);
 }
 
 int main(void) {
@@ -84,7 +90,6 @@ int main(void) {
   Djinni.Video->Renderer->setBackgroundColor(Djinni.renderer, background);
 
   Game* game = Djinni.Game->create();
-
   Stage* s = Djinni.Game->Stage->create(
     0,
     onCreate, prepare, update, draw, onDestroy
@@ -92,95 +97,11 @@ int main(void) {
 
   Djinni.Game->addStage(game, s);
   Djinni.Game->changeStage(game, 0);
-
   Djinni.start(game);
 
-  Djinni.Logger->log_dev("FPS:(%d)", game->stats.fps);
+  Djinni.Logger->log_debug("FPS:(%d)", game->stats.fps);
 
   Djinni.Game->destroy(game);
-
-/*
-
-
-  Color rectColor = {
-    .r = 0,
-    .g = 0,
-    .b = 255,
-    .a = 255
-  };
-
-  Color yellow = {
-    .r = 255,
-    .g = 255,
-    .b = 0,
-    .a = 255
-  };
-
-  Color ptColor = {
-    .r = 255,
-    .g = 255,
-    .b = 255,
-    .a = 255
-  };
-
-  Djinni.Video->Renderer->setBackgroundColor(Djinni.renderer, background);
-
-  Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
-  //Djinni.Renderable->Entity->inspect(e);
-
-
-  int i = 0;
-  float ax[] = {0, 0.5, 1, 0, 1};
-  float ay[] = {0, 0.5, 0, 1, 1};
-
-  while (terminate == 0) {
-    if (i+1>5) { i = 0; }
-
-    Djinni.Video->Renderer->setDrawColor(Djinni.renderer, Djinni.renderer->backgroundColor);
-    Djinni.Video->Renderer->clear(Djinni.renderer);
-
-    pollEvents();
-
-    //Djinni.Renderable->Entity->move(e,5,0);
-    Djinni.Renderable->Entity->setAnchor(e,ax[i],ay[i]);
-
-    Coordinate position = Djinni.Renderable->Entity->getRenderedPosition(e);
-    Coordinate anchorPos = Djinni.Renderable->Entity->getPosition(e);
-
-    Djinni.Video->Texture->blit(
-      Djinni.renderer,
-      e->texture,
-      position.x, position.y,
-      Djinni.Renderable->Entity->getRenderedWidth(e),
-      Djinni.Renderable->Entity->getRenderedHeight(e)
-    );
-
-    Djinni.Video->Renderer->setDrawColor(Djinni.renderer, rectColor);
-    SDL_RenderDrawRect(Djinni.renderer->instance, &(e->bounds.instance));
-
-    SDL_RenderDrawPoint(Djinni.renderer->instance,anchorPos.x,anchorPos.y);
-    SDL_RenderDrawPoint(Djinni.renderer->instance,anchorPos.x,anchorPos.y-1);
-    SDL_RenderDrawPoint(Djinni.renderer->instance,anchorPos.x-1,anchorPos.y);
-    SDL_RenderDrawPoint(Djinni.renderer->instance,anchorPos.x-1,anchorPos.y-1);
-
-    Djinni.Video->Renderer->setDrawColor(Djinni.renderer, yellow);
-    SDL_RenderDrawPoint(Djinni.renderer->instance, 100, 100);
-    SDL_RenderDrawPoint(Djinni.renderer->instance, 99, 99);
-    SDL_RenderDrawPoint(Djinni.renderer->instance, 98, 98);
-    SDL_RenderDrawPoint(Djinni.renderer->instance, 100, 99);
-    SDL_RenderDrawPoint(Djinni.renderer->instance, 99, 100);
-
-  
-    Djinni.Video->Renderer->present(Djinni.renderer);
-
-    Djinni.Renderable->Entity->scale(e, 1.1, 1.1);
-
-    SDL_Delay(2000);
-    i++;
-  }
-
-  Djinni.Renderable->Entity->destroy(e);
-*/
   Djinni.terminate();
 
   return 0;

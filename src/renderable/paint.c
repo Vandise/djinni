@@ -10,8 +10,8 @@ static void rectangle(Renderer* r, Shape* shape, int x, int y) {
   }
 
   if (shape->fill) {
-    //Djinni_Video.Renderer->setDrawColor(r, rectColor);
-    //SDL_RenderFillRect(SDL_Renderer * renderer, const SDL_Rect * rect);
+    Djinni_Video.Renderer->setDrawColor(r, shape->fillColor);
+    SDL_RenderFillRect(r->instance, &(shape->geometry.rectptr->instance));
   }
 }
 

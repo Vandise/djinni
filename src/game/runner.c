@@ -2,14 +2,14 @@
 #include "djinni/djinni.h"
 
 static void prepare(Game* game) {
-  game->activeStage->prepare(game->activeStage, game);
-
   Djinni.Video->Renderer->setDrawColor(Djinni.renderer, Djinni.renderer->backgroundColor);
   Djinni.Video->Renderer->clear(Djinni.renderer);
+
+  game->activeStage->prepare(game->activeStage, game);
 }
 
-static void logic(Game* game, double dt) {
-
+static void update(Game* game, double dt) {
+  game->activeStage->update(game->activeStage, game, dt);
 }
 
 static void draw(Game* game, double dt) {
@@ -71,13 +71,13 @@ static void execute(Game* game) {
   	while (dt > 1) {
   		tmpDelta = dt;
   		dt = 1;
-      logic(game, tmpDelta);
+      update(game, SDL_GetTicks());
   		dt = (tmpDelta - 1);
   	}
 
-    logic(game, tmpDelta);
+    update(game, SDL_GetTicks());
 
-    draw(game, dt);
+    draw(game, SDL_GetTicks());
     present(game);
 
     SDL_Delay(1);
