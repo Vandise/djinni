@@ -9,6 +9,7 @@
 #include "djinni/renderable/renderable.h"
 #include "djinni/geometry/geometry.h"
 #include "djinni/physics/physics.h"
+#include "djinni/game/game.h"
 
 typedef struct WindowSettingsStruct {
   char* name;
@@ -41,6 +42,7 @@ struct DjinniStruct {
   struct Djinni_GeometryStruct* Geometry;
   struct Djinni_RenderableStruct* Renderable;
   struct Djinni_PhysicsStruct* Physics;
+  struct Djinni_GameStruct* Game;
 
   int (*initialize)(WindowSettings, VideoSettings);
   void (*setFlag)(const char* name, const char* value);

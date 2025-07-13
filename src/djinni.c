@@ -10,6 +10,7 @@ static int initialize(WindowSettings ws, VideoSettings vs) {
   Djinni_Geometry.initialize();
   Djinni_Renderable.initialize();
   Djinni_Physics.initialize();
+  Djinni_Game.initialize();
 
   Djinni.Logger = &Djinni_Util_Logger;
   Djinni.Array = &Djinni_Util_Array;
@@ -18,6 +19,7 @@ static int initialize(WindowSettings ws, VideoSettings vs) {
   Djinni.Geometry = &Djinni_Geometry;
   Djinni.Renderable = &Djinni_Renderable;
   Djinni.Physics = &Djinni_Physics;
+  Djinni.Game = &Djinni_Game;
 
   Djinni_Video.initialize(vs.videoFlags);
 

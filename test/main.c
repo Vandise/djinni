@@ -3,6 +3,15 @@
 #include <string.h>
 #include "djinni/djinni.h"
 
+void onCreate(Stage* self, Game* game, Stage* previous) {
+  Djinni_Util_Logger.log_dev("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
+}
+
+void prepare(Stage* self, Game* game) {}
+void update(Stage* self, Game* game, double dt) {}
+void draw(Stage* self, Game* game, double dt) {}
+void onDestroy(Stage* self, Game* game, Stage* next) {}
+
 int terminate = 0;
 
 void pollEvents() {
@@ -47,6 +56,23 @@ int main(void) {
     .a = 255
   };
 
+  Djinni.Video->Renderer->setBackgroundColor(Djinni.renderer, background);
+
+  Game* game = Djinni.Game->create();
+
+  Stage* s = Djinni.Game->Stage->create(
+    0,
+    onCreate, prepare, update, draw, onDestroy
+  );
+
+  Djinni.Game->addStage(game, s);
+  Djinni.Game->changeStage(game, 0);
+
+  Djinni.Game->destroy(game);
+
+/*
+
+
   Color rectColor = {
     .r = 0,
     .g = 0,
@@ -73,6 +99,7 @@ int main(void) {
   Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
   //Djinni.Renderable->Entity->inspect(e);
 
+
   int i = 0;
   float ax[] = {0, 0.5, 1, 0, 1};
   float ay[] = {0, 0.5, 0, 1, 1};
@@ -91,7 +118,6 @@ int main(void) {
     Coordinate position = Djinni.Renderable->Entity->getRenderedPosition(e);
     Coordinate anchorPos = Djinni.Renderable->Entity->getPosition(e);
 
-/*
     Djinni.Video->Texture->blit(
       Djinni.renderer,
       e->texture,
@@ -99,7 +125,6 @@ int main(void) {
       Djinni.Renderable->Entity->getRenderedWidth(e),
       Djinni.Renderable->Entity->getRenderedHeight(e)
     );
-*/
 
     Djinni.Video->Renderer->setDrawColor(Djinni.renderer, rectColor);
     SDL_RenderDrawRect(Djinni.renderer->instance, &(e->bounds.instance));
@@ -126,7 +151,7 @@ int main(void) {
   }
 
   Djinni.Renderable->Entity->destroy(e);
-
+*/
   Djinni.terminate();
 
   return 0;
