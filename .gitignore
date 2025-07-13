@@ -2,5 +2,6 @@
 *.a
 *.o
 bin/test
-bin/test.dSYM
+bin/example
+bin/example.dSYM
 gfx/

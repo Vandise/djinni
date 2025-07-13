@@ -6,20 +6,20 @@ SYSINCDIR := /usr/include
 
 LIBRARIES := lib
 SOURCES   := src
-TESTS     := test
+EXAMPLES  := examples
 OBJECTS   := obj
 LIBNAME   := libdjinni.a
 
 ENGINE_MODULE_FILES := $(shell find $(SOURCES) -type f -name *.c)
 ENGINE_OBJECTS      := $(patsubst $(SOURCES)/%.c, $(OBJECTS)/%.o, $(ENGINE_MODULE_FILES))
 
-PROGRAM_FILES        := $(shell find $(TESTS) -type f -name "*.c")
+PROGRAM_FILES        := $(shell find $(EXAMPLES)/$(example) -type f -name "*.c")
 PROGRAM_OBJECTS      := $(patsubst $(TESTS)/%.c, obj/%.o, $(PROGRAM_FILES))
 
-all: clean engine program
+all: clean engine
 
 program: $(PROGRAM_OBJECTS)
-	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I inc/ -o bin/test $(PROGRAM_OBJECTS) $(LIBRARIES)/$(LIBNAME) -lsdl2 -lsdl2_mixer -lsdl2_ttf -lsdl2_image -lm
+	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I inc/ -o bin/example $(PROGRAM_OBJECTS) $(LIBRARIES)/$(LIBNAME) -lsdl2 -lsdl2_mixer -lsdl2_ttf -lsdl2_image -lm
 
 $(OBJECTS)/%.o: $(TESTS)/%.c
 	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I inc/ -c $< -o $@
@@ -33,5 +33,7 @@ $(OBJECTS)/%.o: $(SOURCES)/%.c
 clean:
 	rm -f bin/test
 	rm -rf bin/test.dSYM
+	rm -f bin/example
+	rm -rf bin/example.dSYM
 	rm -f $(LIBRARIES)/$(LIBNAME)
 	rm -f $(shell find obj -type f -name "*.o")

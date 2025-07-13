@@ -5,5 +5,6 @@
 
 typedef struct Djinni_Game_GameStruct Game;
 typedef struct Djinni_Game_StageStruct Stage;
+typedef struct Djinni_Game_WorldStruct World;
 
 #endif

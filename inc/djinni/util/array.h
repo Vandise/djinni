@@ -10,8 +10,9 @@ typedef struct DjinniArrayStruct {
 
 struct Djinni_Util_ArrayStruct {
   DjinniArray* (*initialize)(int);
-  void (*insert)(DjinniArray*, void*);
+  int (*insert)(DjinniArray*, void*);
   void (*delete)(DjinniArray*, void*, void (onDestroy)(void*));
+  void (*removeIndex)(DjinniArray*, int);
   void (*inspect)(DjinniArray*);
   void (*destroy)(DjinniArray*, void (*onDestroy)(void*));
 };

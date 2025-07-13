@@ -28,6 +28,8 @@ typedef enum {
 typedef struct EntityStruct {
   ENTITY_TYPE type;
   ENTITY_STATE status;
+
+  int id;
   int keepAlive;
   int alwaysUpdate;
 
@@ -62,6 +64,8 @@ struct Djinni_Renderable_EntityStruct {
   int (*getBodyHeight)(Entity*);
 
   void (*inspect)(Entity*);
+
+  void (*arrayDestroyCallback)(void*);
   void (*destroy)(Entity*);
 };
 

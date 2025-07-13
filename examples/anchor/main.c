@@ -64,6 +64,11 @@ int main(void) {
   Djinni.Game->addStage(game, s);
   Djinni.Game->changeStage(game, 0);
 
+  Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
+
+  Djinni.Game->World->addEntity(game->world, e);
+  Djinni.Game->World->removeEntity(game->world, e);
+
   Djinni.start(game);
 
   Djinni.Logger->log_dev("FPS:(%d)", game->stats.fps);

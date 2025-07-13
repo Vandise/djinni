@@ -7,6 +7,7 @@ static void initialize() {
   Djinni_Game.Stage = &Djinni_Stage;
   Djinni_Game.Runner = &Djinni_Game_Runner;
   Djinni_Game.Input = &Djinni_Game_Input;
+  Djinni_Game.World = &Djinni_World;
 }
 
 static Game* create() {
@@ -20,6 +21,7 @@ static Game* create() {
 
   g->activeStage = NULL;
   g->stages = Djinni_Util_Array.initialize(10);
+  g->world = Djinni_World.create();
 
   return g;
 }
@@ -92,6 +94,8 @@ static void destroy(Game* game) {
     game->stages,
     Djinni_Stage.arrayDestroyCallback
   );
+
+  Djinni_World.destroy(game->world);
 
   free(game);
 }

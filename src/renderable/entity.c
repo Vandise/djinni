@@ -19,6 +19,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->body = Djinni_Physics.Body->create(pos.x, pos.y, w, h);
 
   e->status = ENTITY_ALIVE;
+  e->id = -1;
   e->alwaysUpdate = 0;
   e->keepAlive = 0;
   e->texture = NULL;
@@ -132,7 +133,13 @@ static void inspect(Entity* e) {
 }
 
 static void destroy(Entity* e) {
+  Djinni_Util_Logger.log_dev("Djinni::Renderable::Entity.arrayDestroyCallback( address:(%p) )", e);
   free(e);
+}
+
+static void arrayDestroyCallback(void* e) {
+  Djinni_Util_Logger.log_dev("Djinni::Renderable::Entity.arrayDestroyCallback()");
+  destroy(e);
 }
 
 struct Djinni_Renderable_EntityStruct Djinni_Renderable_Entity = {
@@ -148,5 +155,7 @@ struct Djinni_Renderable_EntityStruct Djinni_Renderable_Entity = {
   .getBodyWidth = getBodyWidth,
   .getBodyHeight = getBodyHeight,
   .scale = scale,
+
+  .arrayDestroyCallback = arrayDestroyCallback,
   .destroy = destroy
 };

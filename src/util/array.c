@@ -15,8 +15,8 @@ static DjinniArray* initialize(int nElements) {
   return array;
 }
 
-static void insert(DjinniArray* array, void* data) {
-  Djinni_Util_Logger.log_dev("Djinni::Util::Array.insert(array:(%p), element:(%p))", array, data);
+static int insert(DjinniArray* array, void* data) {
+  Djinni_Util_Logger.log_dev("Djinni::Util::Array.insert( array:(%p), element:(%p), index:(%d) )", array, data, array->used);
 
   if (array->used == array->size) {
     Djinni_Util_Logger.log_debug("\tDjinni::Util::Array.insert(resizing array)");
@@ -26,7 +26,21 @@ static void insert(DjinniArray* array, void* data) {
     ));
   }
 
+  int index = array->used;
+
   array->data[array->used++] = data;
+
+  return index;
+}
+
+static void removeIndex(DjinniArray* array, int index) {
+  array->data[index] = NULL;
+
+  for (int i = index; i < array->used - 1; i++) {
+    array->data[i] = array->data[i + 1];
+  }
+
+  array->used--;
 }
 
 static void delete(DjinniArray* array, void* data, void (onDestroy)(void*)) {
@@ -80,6 +94,7 @@ struct Djinni_Util_ArrayStruct Djinni_Util_Array = {
   .initialize = initialize,
   .insert = insert,
   .delete = delete,
+  .removeIndex = removeIndex,
   .inspect = inspect,
   .destroy = destroy
 };
