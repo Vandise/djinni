@@ -12,6 +12,10 @@ typedef struct Djinni_Game_SettingsStruct {
   float logicRate;
 } Djinni_Game_Settings;
 
+typedef struct Djinni_Game_StatsStruct {
+  int fps;
+} Djinni_Game_Stats;
+
 typedef struct Djinni_Game_GameStruct {
   int paused;
   int terminated;
@@ -19,6 +23,7 @@ typedef struct Djinni_Game_GameStruct {
   int keyboard[MAX_IO_KEY_CODE];
 
   Djinni_Game_Settings settings;
+  Djinni_Game_Stats stats;
 
   Stage* activeStage;
 

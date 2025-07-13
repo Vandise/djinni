@@ -2,11 +2,18 @@
 #include "djinni/djinni.h"
 
 static void prepare(Game* game) {
-
   game->activeStage->prepare(game->activeStage, game);
 
   Djinni.Video->Renderer->setDrawColor(Djinni.renderer, Djinni.renderer->backgroundColor);
   Djinni.Video->Renderer->clear(Djinni.renderer);
+}
+
+static void logic(Game* game, double dt) {
+
+}
+
+static void draw(Game* game) {
+
 }
 
 static void present(Game* game) {
@@ -34,10 +41,12 @@ static void lockFrameRate(long *then, float *remainder, double maxfps) {
 static void execute(Game* game) {
   Djinni_Util_Logger.log_debug("Djinni::Game::Runner.execute( game:(%p) )", game);
 
-  long  then = 0;
-  float remainder = 0;
-  int   fps     = 0;
-  long  nextFPS = SDL_GetTicks() + 1000;
+  double dt        = 0.0;
+  double tmpDelta  = 0.0;
+  long   then      = 0;
+  float  remainder = 0;
+  int    fps       = 0;
+  long   nextFPS   = SDL_GetTicks() + 1000;
 
   /*
     1. prepare (bg color, clear)
@@ -53,13 +62,27 @@ static void execute(Game* game) {
 
     prepare(game);
     Djinni.Game->Input->process(game);
+
+    // lock logic to 60fps
+  	while (dt > 1) {
+  		tmpDelta = dt;
+  		dt = 1;
+      logic(game, tmpDelta);
+  		dt = (tmpDelta - 1);
+  	}
+
+    logic(game, tmpDelta);
+
+    draw(game);
     present(game);
 
     SDL_Delay(1);
 
+    dt = game->settings.logicRate * (SDL_GetTicks() - then);
+
     fps++;
     if (SDL_GetTicks() >= nextFPS) {
-      // todo: add debug to game object
+      game->stats.fps = fps;
 		  fps = 0;
 		  nextFPS = SDL_GetTicks() + 1000;
 	  }

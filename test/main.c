@@ -66,6 +66,8 @@ int main(void) {
 
   Djinni.start(game);
 
+  Djinni.Logger->log_dev("FPS:(%d)", game->stats.fps);
+
   Djinni.Game->destroy(game);
 
 /*
