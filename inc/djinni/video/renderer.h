@@ -22,6 +22,7 @@ struct Djinni_Video_RendererStruct {
   void (*setBackgroundColor)(Renderer *renderer, Color c);
   void (*setDrawColor)(Renderer *renderer, Color c);
   void (*present)(Renderer *renderer);
+  void (*resetDrawColor)(Renderer *renderer);
   void (*clear)(Renderer *renderer);
 };
 

@@ -13,6 +13,8 @@ static void rectangle(Renderer* r, Shape* shape, int x, int y) {
     Djinni_Video.Renderer->setDrawColor(r, shape->fillColor);
     SDL_RenderFillRect(r->instance, &(shape->geometry.rectptr->instance));
   }
+
+  Djinni_Video.Renderer->resetDrawColor(r);
 }
 
 static void shape(Renderer* r, Shape* shape, int x, int y) {

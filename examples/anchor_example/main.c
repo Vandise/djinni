@@ -3,50 +3,44 @@
 #include <string.h>
 #include "djinni/djinni.h"
 
+int i = 0;
+float ax[] = {0.5, 0, 1, 1, 0};
+float ay[] = {0.5, 0, 0, 1, 1};
 Entity* player = NULL;
 
-void playerUpdate(Entity* entity, Game* game, double dt) {
-  Point loc = Djinni.Renderable->Entity->getPosition(entity);
-  Point rloc = Djinni.Renderable->Entity->getRenderedPosition(entity);
-
-  if( Djinni.Game->Camera->inViewport(game->camera, loc) ) {
-    printf("In viewport( pos(x:%d y:%d) draw(x:%d y:%d) )\n", loc.x, loc.y, rloc.x, rloc.y);
-    Djinni.Renderable->Entity->move(entity, -1, 0);
-  } else {
-    printf("Exited viewport( pos(x:%d y:%d) draw(x:%d y:%d) )\n", loc.x, loc.y, rloc.x, rloc.y);
-    Djinni.Game->terminate(game);
-  }
-}
-
 void onCreate(Stage* self, Game* game, Stage* previous) {
+  Djinni.Logger->log_debug("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
+
   player = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
-  player->update = playerUpdate;
 
   Djinni.Game->World->addEntity(game->world, player);
-
-  Camera* camera = Djinni.Game->Camera->create(
-    Djinni.windowSettings.width/2,
-    Djinni.windowSettings.height/2,
-    Djinni.windowSettings.width,
-    Djinni.windowSettings.height
-  );
-
-  Djinni.Game->setCamera(game, camera);
-
-  Djinni.Game->Camera->inspect(camera);
+  //Djinni.Game->World->removeEntity(game->world, e);
 
   Djinni.Game->enableInput(game);
 }
 
 void prepare(Stage* self, Game* game) {}
 
-void update(Stage* self, Game* game, double dt) {}
+void update(Stage* self, Game* game, double dt) {
+  if (i+1>5) { i = 0; }
+
+  Djinni.Renderable->Entity->setAnchor(player, ax[i], ay[i]);
+
+  i++;
+}
 
 void draw(Stage* self, Game* game, double dt) {
   Color white = {
     .r = 255,
     .g = 255,
     .b = 255,
+    .a = 255
+  };
+
+  Color green = {
+    .r = 0,
+    .g = 255,
+    .b = 0,
     .a = 255
   };
 
@@ -57,15 +51,19 @@ void draw(Stage* self, Game* game, double dt) {
 
   Coordinate pos = Djinni.Renderable->Entity->getRenderedPosition(player);
 
+
   Shape playerRect;
     playerRect.type = SHAPE_RECTANGLE_PTR_TYPE;
     playerRect.outline = 1;
-    playerRect.outlineColor = white;
+    playerRect.fill = 0;
+    playerRect.outlineColor = green;
     playerRect.geometry.rectptr = &(player->body.bounds);
   Djinni.Renderable->Paint->shape(Djinni.renderer, &playerRect, pos.x, pos.y);
 }
 
-void onDestroy(Stage* self, Game* game, Stage* next) {}
+void onDestroy(Stage* self, Game* game, Stage* next) {
+  Djinni.Logger->log_debug("Stage.onDestroy( address:(%p) id:(%d) )", self, self->id);
+}
 
 int main(void) {
   WindowSettings ws = {
@@ -106,7 +104,6 @@ int main(void) {
 
   Djinni.Game->addStage(game, s);
   Djinni.Game->changeStage(game, 0);
-
   Djinni.start(game);
 
   Djinni.Logger->log_debug("FPS:(%d)", game->stats.fps);

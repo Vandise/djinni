@@ -14,14 +14,14 @@ ENGINE_MODULE_FILES := $(shell find $(SOURCES) -type f -name *.c)
 ENGINE_OBJECTS      := $(patsubst $(SOURCES)/%.c, $(OBJECTS)/%.o, $(ENGINE_MODULE_FILES))
 
 PROGRAM_FILES        := $(shell find $(EXAMPLES)/$(example) -type f -name "*.c")
-PROGRAM_OBJECTS      := $(patsubst $(TESTS)/%.c, obj/%.o, $(PROGRAM_FILES))
+PROGRAM_OBJECTS      := $(patsubst $(EXAMPLES)/$(example)/%.c, obj/$(example)/%.o, $(PROGRAM_FILES))
 
 all: clean engine
 
 program: $(PROGRAM_OBJECTS)
 	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I inc/ -o bin/example $(PROGRAM_OBJECTS) $(LIBRARIES)/$(LIBNAME) -lsdl2 -lsdl2_mixer -lsdl2_ttf -lsdl2_image -lm
 
-$(OBJECTS)/%.o: $(TESTS)/%.c
+$(OBJECTS)/$(example)/%.o: $(EXAMPLES)/$(example)/%.c
 	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I inc/ -c $< -o $@
 
 engine: $(ENGINE_OBJECTS)

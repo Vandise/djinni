@@ -11,7 +11,11 @@ static void prepare(Game* game) {
 static void update(Game* game, double dt) {
   for (int i = 0; i < game->world->entities->used; i++) {
     Entity* entity = (Entity*)(game->world->entities->data[i]);
-    if (entity->update != NULL) { entity->update(entity, game, dt); }
+
+    Point loc = Djinni.Renderable->Entity->getPosition(entity);
+    int vp = Djinni.Game->Camera->inViewport(game->camera, loc);
+
+    if (entity->update != NULL && vp) { entity->update(entity, game, dt); }
   }
 
   game->activeStage->update(game->activeStage, game, dt);
@@ -21,8 +25,9 @@ static void draw(Game* game, double dt) {
   for (int i = 0; i < game->world->entities->used; i++) {
     Entity* entity = (Entity*)(game->world->entities->data[i]);
     Djinni.Renderable->draw(Djinni.renderer, entity);
-    game->activeStage->draw(game->activeStage, game, dt);
   }
+
+  game->activeStage->draw(game->activeStage, game, dt);
 }
 
 static void present(Game* game) {
