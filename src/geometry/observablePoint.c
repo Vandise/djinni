@@ -1,31 +1,19 @@
 #include "djinni/geometry/observablePoint.h"
 #include <stdio.h>
 
-
 static Coordinate getAnchorPoint(ObservablePoint anchor, int x, int y, int w, int h) {
-  Coordinate c = {
-    .x = x,
-    .y = y
-  };
+  Coordinate c;
 
-  if (anchor.x == ANCHOR_DEFAULT || anchor.x == 0) {
-    c.x = x + (w * anchor.x);
+  if (anchor.x < ANCHOR_DEFAULT && anchor.x != 0) {
+    c.x = x + w * (ANCHOR_DEFAULT - anchor.x);
   } else {
-    if (anchor.x < ANCHOR_DEFAULT) {
-      c.x = x + (w * (ANCHOR_DEFAULT - anchor.x));
-    } else {
-      c.x = x + (w * (anchor.x));
-    }
+    c.x = x + w * anchor.x;
   }
 
-  if (anchor.y == ANCHOR_DEFAULT || anchor.y == 0) {
-    c.y = y + (h * anchor.y);
+  if (anchor.y < ANCHOR_DEFAULT && anchor.y != 0) {
+    c.y = y + h * (ANCHOR_DEFAULT - anchor.y);
   } else {
-    if (anchor.y < ANCHOR_DEFAULT) {
-      c.y = y + (h * (ANCHOR_DEFAULT - anchor.y));
-    } else {
-      c.y = y + (h * (anchor.y));
-    }
+    c.y = y + h * anchor.y;
   }
 
   return c;
