@@ -15,10 +15,10 @@ static void rectangle(Renderer* r, Shape* shape, int x, int y) {
   }
 }
 
-static void shape(Renderer* r, Entity* subject, int x, int y) {
-  switch(subject->shape.type) {
+static void shape(Renderer* r, Shape* shape, int x, int y) {
+  switch(shape->type) {
     case SHAPE_RECTANGLE_PTR_TYPE:
-      rectangle(r, &(subject->shape), x, y);
+      rectangle(r, shape, x, y);
       break;
     default:
       break;
@@ -41,7 +41,7 @@ static void entity(Renderer* r, Entity* subject) {
       sprite(r, subject, pos.x, pos.y);
       break;
     case ENTITY_TYPE_SHAPE:
-      shape(r, subject, pos.x, pos.y);
+      shape(r, &(subject->shape), pos.x, pos.y);
       break;
     default:
       break;

@@ -3,12 +3,14 @@
 #include <string.h>
 #include "djinni/djinni.h"
 
+Entity* player = NULL;
+
 void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni_Util_Logger.log_dev("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
 
-  Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
+  player = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
 
-  Djinni.Game->World->addEntity(game->world, e);
+  Djinni.Game->World->addEntity(game->world, player);
   //Djinni.Game->World->removeEntity(game->world, e);
 
   Djinni.Game->enableInput(game);
@@ -35,6 +37,15 @@ void draw(Stage* self, Game* game, double dt) {
   Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(100,100, 10, 10);
   Djinni.Renderable->Shape->setOutlineColor(&rect, outlineColor);
   Djinni.Renderable->draw(Djinni.renderer, &rect);
+
+  Coordinate pos = Djinni.Renderable->Entity->getRenderedPosition(player);
+
+  Shape playerRect;
+    playerRect.type = SHAPE_RECTANGLE_PTR_TYPE;
+    playerRect.outline = 1;
+    playerRect.outlineColor = outlineColor;
+    playerRect.geometry.rectptr = &(player->body.bounds);
+  Djinni.Renderable->Paint->shape(Djinni.renderer, &playerRect, pos.x, pos.y);
 }
 
 void onDestroy(Stage* self, Game* game, Stage* next) {

@@ -7,7 +7,7 @@
 struct Djinni_Renderable_PaintStruct {
   void (*entity)(Renderer*, Entity*);
   void (*sprite)(Renderer*, Entity*, int, int);
-  void (*shape)(Renderer*, Entity*, int, int);
+  void (*shape)(Renderer*, Shape*, int, int);
 };
 
 extern struct Djinni_Renderable_PaintStruct Djinni_Renderable_Paint;

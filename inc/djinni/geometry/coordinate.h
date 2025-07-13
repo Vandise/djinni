@@ -6,7 +6,7 @@
 typedef struct CoordinateStruct {
   int x;
   int y;
-} Coordinate;
+} Coordinate, Point;
 
 struct Djinni_Geometry_CoordinateStruct {
   Coordinate (*create)(int, int);
