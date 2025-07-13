@@ -6,11 +6,11 @@
 void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni_Util_Logger.log_dev("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
 
-  Djinni.Game->enableInput();
+  Djinni.Game->enableInput(game);
 }
 
 void prepare(Stage* self, Game* game) {
-  Djinni_Util_Logger.log_dev("Stage.prepare( address:(%p) id:(%d) )", self, self->id);
+  //Djinni_Util_Logger.log_dev("Stage.prepare( address:(%p) id:(%d) )", self, self->id);
 }
 
 void update(Stage* self, Game* game, double dt) {

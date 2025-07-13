@@ -13,8 +13,31 @@ static void present(Game* game) {
   Djinni.Video->Renderer->present(Djinni.renderer);
 }
 
+static void lockFrameRate(long *then, float *remainder, double maxfps) {
+  long wait, frameTime;
+
+  wait = 16 + *remainder;
+  *remainder -= (int)*remainder;
+  frameTime = SDL_GetTicks() - *then;
+  wait -= frameTime;
+
+  if (wait < 1) {
+    wait = 1;
+  }
+
+  SDL_Delay(wait);
+
+  *remainder += (1000/maxfps)/100;
+  *then = SDL_GetTicks();
+}
+
 static void execute(Game* game) {
   Djinni_Util_Logger.log_debug("Djinni::Game::Runner.execute( game:(%p) )", game);
+
+  long  then = 0;
+  float remainder = 0;
+  int   fps     = 0;
+  long  nextFPS = SDL_GetTicks() + 1000;
 
   /*
     1. prepare (bg color, clear)
@@ -25,11 +48,24 @@ static void execute(Game* game) {
     5. Present to window
   */
 
-  //while(game->terminated == 0) {
+  while(game->terminated == 0) {
+    then = SDL_GetTicks();
+
     prepare(game);
     Djinni.Game->Input->process(game);
     present(game);
-  //}
+
+    SDL_Delay(1);
+
+    fps++;
+    if (SDL_GetTicks() >= nextFPS) {
+      // todo: add debug to game object
+		  fps = 0;
+		  nextFPS = SDL_GetTicks() + 1000;
+	  }
+
+    lockFrameRate(&then, &remainder, game->settings.fpsLock);
+  }
 }
 
 struct Djinni_Game_RunnerStruct Djinni_Game_Runner = {
