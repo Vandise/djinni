@@ -48,6 +48,7 @@ typedef struct EntityStruct {
 } Entity;
 
 struct Djinni_Renderable_EntityStruct {
+  Entity (*entity)(int, int, int, int, ENTITY_TYPE);
   Entity* (*create)(int, int, int, int, ENTITY_TYPE);
 
   Coordinate (*getPosition)(Entity*);

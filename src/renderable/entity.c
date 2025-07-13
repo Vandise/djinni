@@ -3,6 +3,17 @@
 #include "djinni/renderable/entity.h"
 
 static Coordinate getPosition(Entity* e);
+static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type);
+static void destroy(Entity* e);
+
+static Entity entity(int x, int y, int w, int h, ENTITY_TYPE type) {
+  Entity* eptr = create(x,y,w,h,type);
+  Entity e = *eptr;
+
+  destroy(eptr);
+
+  return e;
+}
 
 static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   Entity* e = malloc(sizeof(Entity));
@@ -143,6 +154,7 @@ static void arrayDestroyCallback(void* e) {
 }
 
 struct Djinni_Renderable_EntityStruct Djinni_Renderable_Entity = {
+  .entity = entity,
   .create = create,
   .getPosition = getPosition,
   .getRenderedPosition = getRenderedPosition,

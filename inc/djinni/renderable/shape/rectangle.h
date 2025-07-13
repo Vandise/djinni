@@ -5,6 +5,7 @@
 #include "djinni/renderable/renderable.h"
 
 struct Djinni_Renderable_Shape_RectangleStruct {
+  Entity (*rectangle)(int,int,int,int);
   Entity* (*create)(int,int,int,int);
   void (*inspect)(Entity*);
 };

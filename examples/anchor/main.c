@@ -24,6 +24,17 @@ void update(Stage* self, Game* game, double dt) {
 
 void draw(Stage* self, Game* game, double dt) {
   //Djinni_Util_Logger.log_dev("Stage.draw( address:(%p) id:(%d) )", self, self->id);
+
+  Color outlineColor = {
+    .r = 255,
+    .g = 255,
+    .b = 255,
+    .a = 255
+  };
+
+  Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(100,100, 10, 10);
+  Djinni.Renderable->Shape->setOutlineColor(&rect, outlineColor);
+  Djinni.Renderable->draw(Djinni.renderer, &rect);
 }
 
 void onDestroy(Stage* self, Game* game, Stage* next) {

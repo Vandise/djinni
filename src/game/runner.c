@@ -12,10 +12,11 @@ static void logic(Game* game, double dt) {
 
 }
 
-static void draw(Game* game) {
+static void draw(Game* game, double dt) {
   for (int i = 0; i < game->world->entities->used; i++) {
     Entity* entity = (Entity*)(game->world->entities->data[i]);
     Djinni.Renderable->draw(Djinni.renderer, entity);
+    game->activeStage->draw(game->activeStage, game, dt);
   }
 }
 
@@ -76,7 +77,7 @@ static void execute(Game* game) {
 
     logic(game, tmpDelta);
 
-    draw(game);
+    draw(game, dt);
     present(game);
 
     SDL_Delay(1);
