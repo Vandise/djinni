@@ -36,6 +36,9 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->texture = NULL;
   e->children = NULL;
 
+  e->update = NULL;
+  e->onCollide = NULL;
+
   return e;
 }
 

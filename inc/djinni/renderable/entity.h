@@ -6,6 +6,7 @@
 #include "djinni/renderable/shared.h"
 #include "djinni/geometry/shared.h"
 #include "djinni/physics/shared.h"
+#include "djinni/game/game.h"
 
 #include "djinni/geometry/observablePoint.h"
 #include "djinni/geometry/rectangle.h"
@@ -45,6 +46,9 @@ typedef struct EntityStruct {
   Shape shape;
 
   DjinniArray* children;
+
+  void (*update)(struct EntityStruct*, Game*, double dt);
+  void (*onCollide)(struct EntityStruct*, struct EntityStruct*, Game*, double dt);
 } Entity;
 
 struct Djinni_Renderable_EntityStruct {
