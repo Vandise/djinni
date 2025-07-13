@@ -24,13 +24,13 @@ static Texture* load(Renderer *r, char *filename) {
   return t;
 }
 
-static void blit(Renderer *r, Texture *texture, int x, int y) {
+static void blit(Renderer *r, Texture *texture, int x, int y, int w, int h) {
   SDL_Rect dest;
-
   dest.x = x;
   dest.y = y;
+  dest.w = h;
+  dest.h = h;
 
-  SDL_QueryTexture(texture->instance, NULL, NULL, &dest.w, &dest.h);
   SDL_RenderCopy(r->instance, texture->instance, NULL, &dest);
 }
 

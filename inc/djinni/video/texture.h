@@ -12,7 +12,7 @@ typedef struct TextureStruct {
 struct Djinni_TextureStruct {
   void (*initialize)(int flags);
   Texture* (*load)(Renderer*, char*);
-  void (*blit)(Renderer*, Texture*, int, int);
+  void (*blit)(Renderer*, Texture*, int, int, int, int);
   void (*destroy)(Texture*);
 };
 

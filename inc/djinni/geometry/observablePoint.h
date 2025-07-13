@@ -16,6 +16,7 @@ typedef struct ObservablePointStruct {
 
 struct Djinni_Geometry_ObservablePointStruct {
   Coordinate (*translate)(ObservablePoint, int, int, int, int);
+  Coordinate (*getAnchorPoint)(ObservablePoint, int, int, int, int);
 };
 
 extern struct Djinni_Geometry_ObservablePointStruct Djinni_Geometry_ObservablePoint;

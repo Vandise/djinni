@@ -47,10 +47,20 @@ typedef struct EntityStruct {
 
 struct Djinni_Renderable_EntityStruct {
   Entity* (*create)(int, int, int, int, ENTITY_TYPE);
+
   Coordinate (*getPosition)(Entity*);
+  Coordinate (*getRenderedPosition)(Entity*);
   void (*move)(Entity*, int, int);
   void (*setPosition)(Entity*, int, int);
+
   void (*setAnchor)(Entity*, float, float);
+
+  void (*scale)(Entity*, float, float);
+  int (*getRenderedWidth)(Entity*);
+  int (*getRenderedHeight)(Entity*);
+  int (*getBodyWidth)(Entity*);
+  int (*getBodyHeight)(Entity*);
+
   void (*inspect)(Entity*);
   void (*destroy)(Entity*);
 };

@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 
+#define ANCHOR_DEFAULT 0.5
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 

@@ -13,7 +13,7 @@ Entity* create(int x, int y, int w, int h) {
 }
 
 void inspect(Entity* e) {
-  Coordinate loc = Djinni_Renderable.Entity->getPosition(e);
+  Coordinate loc = Djinni_Renderable.Entity->getRenderedPosition(e);
 
   Djinni_Util_Logger.log_debug(
     "Djinni::Renderable::Shape::Rectangle(address:(%p), fill:(%d), outline:(%d), x:(%d), y:(%d))",

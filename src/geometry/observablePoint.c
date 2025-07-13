@@ -1,21 +1,41 @@
 #include "djinni/geometry/observablePoint.h"
 #include <stdio.h>
 
+
+static Coordinate getAnchorPoint(ObservablePoint anchor, int x, int y, int w, int h) {
+  Coordinate c = {
+    .x = x,
+    .y = y
+  };
+
+  if (anchor.x == ANCHOR_DEFAULT || anchor.x == 0) {
+    c.x = x + (w * anchor.x);
+  } else {
+    if (anchor.x < ANCHOR_DEFAULT) {
+      c.x = x + (w * (ANCHOR_DEFAULT - anchor.x));
+    } else {
+      c.x = x + (w * (anchor.x));
+    }
+  }
+
+  if (anchor.y == ANCHOR_DEFAULT || anchor.y == 0) {
+    c.y = y + (h * anchor.y);
+  } else {
+    if (anchor.y < ANCHOR_DEFAULT) {
+      c.y = y + (h * (ANCHOR_DEFAULT - anchor.y));
+    } else {
+      c.y = y + (h * (anchor.y));
+    }
+  }
+
+  return c;
+}
+
 static Coordinate translate(ObservablePoint pt, int x, int y, int w, int h) {
   int ax = w * pt.x;
   int ay = h * pt.y;
   int dx = x - ax;
   int dy = y - ay;
-
-  if (pt.x != 0.5) {
-    int ox = ((w * 0.5) + x);
-    dx = (pt.x < 0.5) ? ox + ax : ox - ax;
-  }
-
-  if (pt.y != 0.5) {
-    int oy = ((h * 0.5) + y);
-    dy = (pt.y < 0.5) ? oy + ay : oy - ay;
-  }
 
   Coordinate c = {
     .x = dx,
@@ -26,5 +46,6 @@ static Coordinate translate(ObservablePoint pt, int x, int y, int w, int h) {
 }
 
 struct Djinni_Geometry_ObservablePointStruct Djinni_Geometry_ObservablePoint = {
-  .translate = translate
+  .translate = translate,
+  .getAnchorPoint = getAnchorPoint
 };

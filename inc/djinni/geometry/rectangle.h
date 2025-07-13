@@ -12,6 +12,7 @@ struct Djinni_Geometry_RectangleStruct {
   Rectangle (*create)(int, int, int, int);
   Coordinate (*getPosition)(Rectangle*);
   void (*setPosition)(Rectangle*, int, int);
+  void (*resize)(Rectangle*, int, int);
   void (*inspect)(Rectangle*);
 };
 

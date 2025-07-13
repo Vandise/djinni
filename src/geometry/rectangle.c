@@ -21,6 +21,12 @@ static void setPosition(Rectangle* r, int x, int y) {
   r->instance.y = y;
 }
 
+static void resize(Rectangle* r, int w, int h) {
+  r->instance.w = w;
+  r->instance.h = h;
+}
+
+
 static void inspect(Rectangle* r) {
   Djinni_Util_Logger.log_debug(
     "Djinni::Geometry::Rectangle( address:(%p) x:(%d) y:(%d) w:(%d) h:(%d) )",
@@ -32,5 +38,6 @@ struct Djinni_Geometry_RectangleStruct Djinni_Geometry_Rectangle = {
   .create = create,
   .getPosition = getPosition,
   .setPosition = setPosition,
+  .resize = resize,
   .inspect = inspect
 };
