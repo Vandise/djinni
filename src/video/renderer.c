@@ -8,6 +8,11 @@ static Renderer* create(Window *window, int index, int flags) {
   Renderer *r = malloc(sizeof(Renderer));
   r->instance = SDL_CreateRenderer(window->instance, index, flags);
 
+  r->backgroundColor.r = 0;
+  r->backgroundColor.g = 0;
+  r->backgroundColor.b = 0;
+  r->backgroundColor.a = 255;
+
   return r;
 }
 

@@ -6,12 +6,14 @@ static void initialize() {
 
   Djinni_Game.Stage = &Djinni_Stage;
   Djinni_Game.Runner = &Djinni_Game_Runner;
+  Djinni_Game.Input = &Djinni_Game_Input;
 }
 
 static Game* create() {
   Game* g = malloc(sizeof(Game));
   g->paused = 0;
   g->terminated = 0;
+  g->inputEnabled = 0;
 
   g->settings.fpsLock = 60.0;
   g->settings.logicRate = (g->settings.fpsLock / 1000);
@@ -63,6 +65,26 @@ static void changeStage(Game* game, int id) {
   game->activeStage = stage;
 }
 
+static void pause(Game* game) {
+  game->paused = 1;
+}
+
+static void resume(Game* game) {
+  game->paused = 0;
+}
+
+static void enableInput(Game* game) {
+  game->inputEnabled = 1;
+}
+
+static void disableInput(Game* game) {
+  game->inputEnabled = 0;
+}
+
+static void terminate(Game* game) {
+  game->terminated = 1;
+}
+
 static void destroy(Game* game) {
   Djinni_Util_Logger.log_dev("Djinni::Game.destroy( address:(%p) )", game);
 
@@ -76,6 +98,12 @@ static void destroy(Game* game) {
 
 struct Djinni_GameStruct Djinni_Game = {
   .initialize = initialize,
+
+  .pause = pause,
+  .resume = resume,
+  .enableInput = enableInput,
+  .disableInput = disableInput,
+  .terminate = terminate,
 
   .create = create,
   .addStage = addStage,

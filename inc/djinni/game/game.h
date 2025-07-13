@@ -5,6 +5,7 @@
 #include "djinni/game/shared.h"
 #include "djinni/game/stage.h"
 #include "djinni/game/runner.h"
+#include "djinni/game/input.h"
 
 typedef struct Djinni_Game_SettingsStruct {
   float fpsLock;
@@ -14,6 +15,9 @@ typedef struct Djinni_Game_SettingsStruct {
 typedef struct Djinni_Game_GameStruct {
   int paused;
   int terminated;
+  int inputEnabled;
+  int keyboard[MAX_IO_KEY_CODE];
+
   Djinni_Game_Settings settings;
 
   Stage* activeStage;
@@ -24,8 +28,15 @@ typedef struct Djinni_Game_GameStruct {
 struct Djinni_GameStruct {
   struct Djinni_Game_RunnerStruct* Runner;
   struct Djinni_StageStruct* Stage;
+  struct Djinni_Game_InputStruct* Input;
 
   void (*initialize)();
+
+  void (*pause)(Game* game);
+  void (*resume)(Game* game);
+  void (*enableInput)(Game* game);
+  void (*disableInput)(Game* game);
+  void (*terminate)(Game* game);
 
   Game* (*create)();
   int (*addStage)(Game*, Stage*);

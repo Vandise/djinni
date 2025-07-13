@@ -5,28 +5,24 @@
 
 void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni_Util_Logger.log_dev("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
+
+  Djinni.Game->enableInput();
 }
 
-void prepare(Stage* self, Game* game) {}
-void update(Stage* self, Game* game, double dt) {}
-void draw(Stage* self, Game* game, double dt) {}
-void onDestroy(Stage* self, Game* game, Stage* next) {}
+void prepare(Stage* self, Game* game) {
+  Djinni_Util_Logger.log_dev("Stage.prepare( address:(%p) id:(%d) )", self, self->id);
+}
 
-int terminate = 0;
+void update(Stage* self, Game* game, double dt) {
+  Djinni_Util_Logger.log_dev("Stage.update( address:(%p) id:(%d) )", self, self->id);
+}
 
-void pollEvents() {
-  SDL_Event* event = malloc(sizeof(SDL_Event));
-    while (SDL_PollEvent(event)) {
-        switch (event->type) {
-            case SDL_QUIT:
-                terminate = 1;
-                break;
+void draw(Stage* self, Game* game, double dt) {
+  Djinni_Util_Logger.log_dev("Stage.draw( address:(%p) id:(%d) )", self, self->id);
+}
 
-            default:
-                break;
-        }
-    }
-  free(event);
+void onDestroy(Stage* self, Game* game, Stage* next) {
+  Djinni_Util_Logger.log_dev("Stage.onDestroy( address:(%p) id:(%d) )", self, self->id);
 }
 
 int main(void) {
