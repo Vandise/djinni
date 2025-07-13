@@ -36,7 +36,7 @@ int main(void) {
     .width = 800,
     .height = 800,
     .flags = 0
-  }; 
+  };
   ws.name = strdup("Demo");
 
   VideoSettings vs = {
@@ -67,6 +67,8 @@ int main(void) {
 
   Djinni.Game->addStage(game, s);
   Djinni.Game->changeStage(game, 0);
+
+  Djinni.start(game);
 
   Djinni.Game->destroy(game);
 

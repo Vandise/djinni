@@ -40,6 +40,12 @@ static void setFlag(const char *name, const char *value) {
   SDL_SetHint(name, value);
 }
 
+static void start(Game* game) {
+  Djinni_Util_Logger.log_dev("Djinni.start( game:(%p) )", game);
+
+  Djinni_Game.Runner->execute(game);
+}
+
 static void terminate() {
   Djinni_Util_Logger.log_dev("Djinni.terminate");
 
@@ -52,5 +58,6 @@ static void terminate() {
 struct DjinniStruct Djinni = {
   .initialize = initialize,
   .setFlag = setFlag,
+  .start = start,
   .terminate = terminate
 };

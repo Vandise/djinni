@@ -5,6 +5,7 @@ static void initialize() {
   Djinni_Util_Logger.log_dev("Djinni::Game.initialize");
 
   Djinni_Game.Stage = &Djinni_Stage;
+  Djinni_Game.Runner = &Djinni_Game_Runner;
 }
 
 static Game* create() {
