@@ -94,6 +94,8 @@ static void scale(Entity* e, float ws, float hs) {
   // todo: Shape entities other than Rect need to be scaled
   //       Rescale children
 
+  Coordinate pt = getPosition(e);
+
   Djinni_Geometry.Rectangle->resize(
     &(e->bounds),
     getRenderedWidth(e) * ws,
@@ -105,6 +107,14 @@ static void scale(Entity* e, float ws, float hs) {
     getBodyWidth(e) * ws,
     getBodyHeight(e) * hs
   );
+
+  Coordinate pos = Djinni_Geometry.ObservablePoint->translate(
+    e->anchorPoint,
+    pt.x, pt.y,
+    e->body.bounds.instance.w, e->body.bounds.instance.h
+  );
+
+  setPosition(e, pos.x, pos.y);
 }
 
 static void inspect(Entity* e) {

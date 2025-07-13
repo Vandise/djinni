@@ -115,11 +115,11 @@ int main(void) {
     SDL_RenderDrawPoint(Djinni.renderer->instance, 98, 98);
     SDL_RenderDrawPoint(Djinni.renderer->instance, 100, 99);
     SDL_RenderDrawPoint(Djinni.renderer->instance, 99, 100);
-  
+
   
     Djinni.Video->Renderer->present(Djinni.renderer);
 
-    //Djinni.Renderable->Entity->scale(e, 1.1, 1.1);
+    Djinni.Renderable->Entity->scale(e, 1.1, 1.1);
 
     SDL_Delay(2000);
     i++;
