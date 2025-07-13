@@ -5,12 +5,12 @@
 #include <stdarg.h>
 
 #define DJINNI_LOG_NONE  99
-#define DJINNI_LOG_DEVELOPMENT 6
-#define DJINNI_LOG_FATAL 5
-#define DJINNI_LOG_ERROR 4
-#define DJINNI_LOG_WARN  3
-#define DJINNI_LOG_INFO  2
-#define DJINNI_LOG_DEBUG 1
+#define DJINNI_LOG_FATAL 6
+#define DJINNI_LOG_ERROR 5
+#define DJINNI_LOG_WARN  4
+#define DJINNI_LOG_INFO  3
+#define DJINNI_LOG_DEBUG 2
+#define DJINNI_LOG_DEVELOPMENT 1
 #define DJINNI_LOG_ALL   0
 
 struct Djinni_Util_LoggerStruct {

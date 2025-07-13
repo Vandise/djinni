@@ -72,6 +72,8 @@ int main(void) {
 
   Djinni.initialize(ws, vs);
 
+  Djinni.Logger->log_level = DJINNI_LOG_DEBUG;
+
   Color background = {
     .r = 0,
     .g = 0,
