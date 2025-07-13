@@ -47,7 +47,6 @@ struct DjinniStruct {
   int (*initialize)(WindowSettings, VideoSettings);
   void (*setFlag)(const char* name, const char* value);
   void (*start)(Game*);
-  void (*freeze)(int);
   void (*terminate)();
 };
 

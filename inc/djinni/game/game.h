@@ -7,6 +7,7 @@
 #include "djinni/game/runner.h"
 #include "djinni/game/input.h"
 #include "djinni/game/world.h"
+#include "djinni/game/camera.h"
 
 typedef struct Djinni_Game_SettingsStruct {
   float fpsLock;
@@ -28,6 +29,7 @@ typedef struct Djinni_Game_GameStruct {
 
   World* world;
   Stage* activeStage;
+  Camera* camera;
 
   DjinniArray* stages;
 } Game;
@@ -37,8 +39,11 @@ struct Djinni_GameStruct {
   struct Djinni_StageStruct* Stage;
   struct Djinni_Game_InputStruct* Input;
   struct Djinni_Game_GameWorldStruct* World;
+  struct Djinni_Game_GameCameraStruct* Camera;
 
   void (*initialize)();
+
+  Game* (*create)();
 
   void (*pause)(Game* game);
   void (*resume)(Game* game);
@@ -46,9 +51,11 @@ struct Djinni_GameStruct {
   void (*disableInput)(Game* game);
   void (*terminate)(Game* game);
 
-  Game* (*create)();
   int (*addStage)(Game*, Stage*);
   void (*changeStage)(Game*, int);
+
+  void (*setCamera)(Game*, Camera*);
+
   void (*destroy)(Game*);
 };
 

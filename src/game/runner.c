@@ -9,6 +9,11 @@ static void prepare(Game* game) {
 }
 
 static void update(Game* game, double dt) {
+  for (int i = 0; i < game->world->entities->used; i++) {
+    Entity* entity = (Entity*)(game->world->entities->data[i]);
+    if (entity->update != NULL) { entity->update(entity, game, dt); }
+  }
+
   game->activeStage->update(game->activeStage, game, dt);
 }
 
@@ -71,13 +76,13 @@ static void execute(Game* game) {
   	while (dt > 1) {
   		tmpDelta = dt;
   		dt = 1;
-      update(game, SDL_GetTicks());
+      update(game, then);
   		dt = (tmpDelta - 1);
   	}
 
-    update(game, SDL_GetTicks());
+    update(game, then);
 
-    draw(game, SDL_GetTicks());
+    draw(game, then);
     present(game);
 
     SDL_Delay(1);

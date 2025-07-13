@@ -43,11 +43,17 @@ static void setFlag(const char *name, const char *value) {
 static void start(Game* game) {
   Djinni_Util_Logger.log_dev("Djinni.start( game:(%p) )", game);
 
-  Djinni_Game.Runner->execute(game);
-}
+  if (game->camera == NULL) {
+    Djinni_Util_Logger.log_debug("Djinni.start() - No camera detected, setting default");
+    game->camera = Djinni_Game.Camera->create(
+      Djinni.windowSettings.width/2,
+      Djinni.windowSettings.height/2,
+      Djinni.windowSettings.width,
+      Djinni.windowSettings.height
+    );
+  }
 
-static void freeze(int ms) {
-  SDL_Delay(ms);
+  Djinni_Game.Runner->execute(game);
 }
 
 static void terminate() {
@@ -63,6 +69,5 @@ struct DjinniStruct Djinni = {
   .initialize = initialize,
   .setFlag = setFlag,
   .start = start,
-  .freeze = freeze,
   .terminate = terminate
 };

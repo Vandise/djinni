@@ -8,6 +8,7 @@ static void initialize() {
   Djinni_Game.Runner = &Djinni_Game_Runner;
   Djinni_Game.Input = &Djinni_Game_Input;
   Djinni_Game.World = &Djinni_World;
+  Djinni_Game.Camera = &Djinni_Camera;
 }
 
 static Game* create() {
@@ -22,6 +23,7 @@ static Game* create() {
   g->activeStage = NULL;
   g->stages = Djinni_Util_Array.initialize(10);
   g->world = Djinni_World.create();
+  g->camera = NULL;
 
   return g;
 }
@@ -32,6 +34,10 @@ static int addStage(Game* game, Stage* stage) {
   Djinni_Util_Array.insert(game->stages, stage);
 
   return index;
+}
+
+void setCamera(Game* game, Camera* camera) {
+  game->camera = camera;
 }
 
 static void changeStage(Game* game, int id) {
@@ -96,6 +102,7 @@ static void destroy(Game* game) {
   );
 
   Djinni_World.destroy(game->world);
+  Djinni_Camera.destroy(game->camera);
 
   free(game);
 }
@@ -112,5 +119,8 @@ struct Djinni_GameStruct Djinni_Game = {
   .create = create,
   .addStage = addStage,
   .changeStage = changeStage,
+
+  .setCamera = setCamera,
+
   .destroy = destroy
 };

@@ -3,31 +3,44 @@
 #include <string.h>
 #include "djinni/djinni.h"
 
-int i = 0;
-float ax[] = {0.5, 0, 1, 1, 0};
-float ay[] = {0.5, 0, 0, 1, 1};
 Entity* player = NULL;
 
-void onCreate(Stage* self, Game* game, Stage* previous) {
-  Djinni.Logger->log_debug("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
+void playerUpdate(Entity* entity, Game* game, double dt) {
+  Point loc = Djinni.Renderable->Entity->getPosition(entity);
+  Point rloc = Djinni.Renderable->Entity->getRenderedPosition(entity);
 
+  if( Djinni.Game->Camera->inViewport(game->camera, loc) ) {
+    printf("In viewport( pos(x:%d y:%d) draw(x:%d y:%d) )\n", loc.x, loc.y, rloc.x, rloc.y);
+    Djinni.Renderable->Entity->move(entity, -1, 0);
+  } else {
+    printf("Exited viewport( pos(x:%d y:%d) draw(x:%d y:%d) )\n", loc.x, loc.y, rloc.x, rloc.y);
+    Djinni.Game->terminate(game);
+  }
+}
+
+void onCreate(Stage* self, Game* game, Stage* previous) {
   player = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
+  player->update = playerUpdate;
 
   Djinni.Game->World->addEntity(game->world, player);
-  //Djinni.Game->World->removeEntity(game->world, e);
+
+  Camera* camera = Djinni.Game->Camera->create(
+    Djinni.windowSettings.width/2,
+    Djinni.windowSettings.height/2,
+    Djinni.windowSettings.width,
+    Djinni.windowSettings.height
+  );
+
+  Djinni.Game->setCamera(game, camera);
+
+  Djinni.Game->Camera->inspect(camera);
 
   Djinni.Game->enableInput(game);
 }
 
 void prepare(Stage* self, Game* game) {}
 
-void update(Stage* self, Game* game, double dt) {
-  if (i+1>5) { i = 0; }
-
-  Djinni.Renderable->Entity->setAnchor(player, ax[i], ay[i]);
-
-  i++;
-}
+void update(Stage* self, Game* game, double dt) {}
 
 void draw(Stage* self, Game* game, double dt) {
   Color white = {
@@ -52,9 +65,7 @@ void draw(Stage* self, Game* game, double dt) {
   Djinni.Renderable->Paint->shape(Djinni.renderer, &playerRect, pos.x, pos.y);
 }
 
-void onDestroy(Stage* self, Game* game, Stage* next) {
-  Djinni.Logger->log_debug("Stage.onDestroy( address:(%p) id:(%d) )", self, self->id);
-}
+void onDestroy(Stage* self, Game* game, Stage* next) {}
 
 int main(void) {
   WindowSettings ws = {
@@ -95,6 +106,7 @@ int main(void) {
 
   Djinni.Game->addStage(game, s);
   Djinni.Game->changeStage(game, 0);
+
   Djinni.start(game);
 
   Djinni.Logger->log_debug("FPS:(%d)", game->stats.fps);
