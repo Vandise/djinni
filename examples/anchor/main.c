@@ -6,6 +6,11 @@
 void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni_Util_Logger.log_dev("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
 
+  Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
+
+  Djinni.Game->World->addEntity(game->world, e);
+  //Djinni.Game->World->removeEntity(game->world, e);
+
   Djinni.Game->enableInput(game);
 }
 
@@ -14,11 +19,11 @@ void prepare(Stage* self, Game* game) {
 }
 
 void update(Stage* self, Game* game, double dt) {
-  Djinni_Util_Logger.log_dev("Stage.update( address:(%p) id:(%d) )", self, self->id);
+  //Djinni_Util_Logger.log_dev("Stage.update( address:(%p) id:(%d) )", self, self->id);
 }
 
 void draw(Stage* self, Game* game, double dt) {
-  Djinni_Util_Logger.log_dev("Stage.draw( address:(%p) id:(%d) )", self, self->id);
+  //Djinni_Util_Logger.log_dev("Stage.draw( address:(%p) id:(%d) )", self, self->id);
 }
 
 void onDestroy(Stage* self, Game* game, Stage* next) {
@@ -63,11 +68,6 @@ int main(void) {
 
   Djinni.Game->addStage(game, s);
   Djinni.Game->changeStage(game, 0);
-
-  Entity* e = Djinni.Renderable->Sprite->create(100,100,"bin/gfx/player.png");
-
-  Djinni.Game->World->addEntity(game->world, e);
-  Djinni.Game->World->removeEntity(game->world, e);
 
   Djinni.start(game);
 

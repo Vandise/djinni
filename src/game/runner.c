@@ -13,7 +13,10 @@ static void logic(Game* game, double dt) {
 }
 
 static void draw(Game* game) {
-
+  for (int i = 0; i < game->world->entities->used; i++) {
+    Entity* entity = (Entity*)(game->world->entities->data[i]);
+    Djinni.Renderable->draw(Djinni.renderer, entity);
+  }
 }
 
 static void present(Game* game) {

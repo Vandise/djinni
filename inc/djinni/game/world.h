@@ -7,6 +7,12 @@
 #include "djinni/util/array.h"
 #include "djinni/renderable/entity.h"
 
+/*
+  todo:
+    revisit entities once isometric processing begins
+    entities will likely need to be a binary tree sorted by the X-Y coordinate
+    for rendering precedence
+*/
 typedef struct Djinni_Game_WorldStruct {
   DjinniArray* entities;
 } World;
