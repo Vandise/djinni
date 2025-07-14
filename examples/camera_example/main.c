@@ -59,8 +59,8 @@ void draw(Stage* self, Game* game, double dt) {
   int startY = 100;
 
   Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(
-    startX - game->camera->point.x,
-    startY - game->camera->point.y,
+    startX,
+    startY,
     10, 10
   );
   Djinni.Renderable->Shape->setOutlineColor(&rect, white);
@@ -68,11 +68,11 @@ void draw(Stage* self, Game* game, double dt) {
   Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
 
   int predrawX = 500;
-  int predrawY = 300;
+  int predrawY = 100;
 
   rect = Djinni.Renderable->Shape->Rectangle->rectangle(
-    predrawX - game->camera->point.x,
-    predrawY - game->camera->point.y,
+    predrawX,
+    predrawY,
     10, 10
   );
   Djinni.Renderable->Shape->setOutlineColor(&rect, blue);
@@ -80,10 +80,10 @@ void draw(Stage* self, Game* game, double dt) {
   Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
 
 
-  Point p = Djinni.Game->Camera->entityCoordinateToScreen(game->camera, player);
+  Coordinate coords = Djinni.Renderable->Entity->getPosition(player);
   rect = Djinni.Renderable->Shape->Rectangle->rectangle(
-    p.x,
-    p.y,
+    coords.x,
+    coords.y,
     player->body.bounds.instance.w, player->body.bounds.instance.h
   );
   Djinni.Renderable->Shape->setOutlineColor(&rect, white);
