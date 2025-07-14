@@ -1,6 +1,12 @@
 #include "djinni/util/util.h"
 #include "djinni/djinni.h"
 
+/*
+  Todo:
+    entities will need to be sorted. Likely to a binary tree, to support Painter's Algorithm
+    for isometric
+*/
+
 static void prepare(Game* game) {
   Djinni.Video->Renderer->setDrawColor(Djinni.renderer, Djinni.renderer->backgroundColor);
   Djinni.Video->Renderer->clear(Djinni.renderer);

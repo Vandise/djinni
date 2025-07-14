@@ -17,12 +17,7 @@ static Camera* create(int x, int y, int screenWidth, int screenHeight) {
   return c;
 }
 
-//
-// converts a given Entity Coordinate X-Y to a anchored position point
-//
-static Point entityCoordinateToScreen(Camera* c, Entity* entity) {
-  Coordinate coords = Djinni_Renderable_Entity.getPosition(entity);
-
+static Point coordinateToScreen(Camera* c, Coordinate coords) {
   if (c->settings.fixed) {
     return coords;
   }
@@ -33,6 +28,14 @@ static Point entityCoordinateToScreen(Camera* c, Entity* entity) {
   };
 
   return p;
+}
+
+//
+// converts a given Entity Coordinate X-Y to a anchored position point
+//
+static Point entityCoordinateToScreen(Camera* c, Entity* entity) {
+  Coordinate coords = Djinni_Renderable_Entity.getPosition(entity);
+  return coordinateToScreen(c, coords);
 }
 
 /*
@@ -86,14 +89,6 @@ static void inspect(Camera* c) {
   int rw = c->screenWidth;
   int rh = c->screenHeight;
 
-/*
--  x1 = !(c->settings.fixed) ? c->point.x : c->point.x + ((rw/2) * -1);
-   x2 = x1 + rw;
- 
--  y1 = !(c->settings.fixed) ? c->point.y : c->point.y + ((rh/2) * -1);
-   y2 = y1 + rh;
-*/
-
   x1 = c->point.x;
   x2 = x1 + rw;
 
@@ -114,6 +109,7 @@ struct Djinni_Game_GameCameraStruct Djinni_Camera = {
   .create = create,
   .inViewport = inViewport,
   .entityCoordinateToScreen = entityCoordinateToScreen,
+  .coordinateToScreen = coordinateToScreen,
   .follow = follow,
   .update = update,
   .inspect = inspect,

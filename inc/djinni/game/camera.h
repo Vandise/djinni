@@ -28,7 +28,8 @@ struct Djinni_Game_GameCameraStruct {
   Camera* (*create)(int, int, int, int);
   int (*inViewport)(Camera*, Point);
   void (*follow)(Camera*, Entity*, int, int);
-  Point (*entityCoordinateToScreen)(Camera* , Entity* );
+  Point (*entityCoordinateToScreen)(Camera*, Entity*);
+  Point (*coordinateToScreen)(Camera*, Coordinate);
   void (*update)(Camera*, double);
   void (*inspect)(Camera*);
   void (*destroy)(Camera*);
