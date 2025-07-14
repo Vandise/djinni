@@ -45,10 +45,10 @@ static int inViewport(Camera* c, Point p) {
   int rw = c->screenWidth;
   int rh = c->screenHeight;
 
-  x1 = !(c->settings.fixed) ? c->point.x : c->point.x + ((rw/2) * -1);
+  x1 = c->point.x;
   x2 = x1 + rw;
 
-  y1 = !(c->settings.fixed) ? c->point.y : c->point.y + ((rh/2) * -1);
+  y1 = c->point.y;
   y2 = y1 + rh;
 
   int x = p.x;
@@ -86,10 +86,18 @@ static void inspect(Camera* c) {
   int rw = c->screenWidth;
   int rh = c->screenHeight;
 
-  x1 = !(c->settings.fixed) ? c->point.x : c->point.x + ((rw/2) * -1);
+/*
+-  x1 = !(c->settings.fixed) ? c->point.x : c->point.x + ((rw/2) * -1);
+   x2 = x1 + rw;
+ 
+-  y1 = !(c->settings.fixed) ? c->point.y : c->point.y + ((rh/2) * -1);
+   y2 = y1 + rh;
+*/
+
+  x1 = c->point.x;
   x2 = x1 + rw;
 
-  y1 = !(c->settings.fixed) ? c->point.y : c->point.y + ((rh/2) * -1);
+  y1 = c->point.y;
   y2 = y1 + rh;
 
   Djinni_Util_Logger.log_debug(

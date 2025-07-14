@@ -24,8 +24,8 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni.Game->World->addEntity(game->world, player);
 
   Camera* camera = Djinni.Game->Camera->create(
-    Djinni.windowSettings.width/2,
-    Djinni.windowSettings.height/2,
+    0,
+    0,
     Djinni.windowSettings.width,
     Djinni.windowSettings.height
   );

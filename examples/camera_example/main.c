@@ -14,7 +14,7 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
   player = Djinni.Renderable->Sprite->create(0, 0, "bin/gfx/player.png");
   player->update = playerUpdate;
 
-  enemy = Djinni.Renderable->Sprite->create(0, 0, "bin/gfx/enemy.png");
+  enemy = Djinni.Renderable->Sprite->create(0, 50, "bin/gfx/enemy.png");
 
   Djinni.Game->World->addEntity(game->world, player);
   Djinni.Game->World->addEntity(game->world, enemy);
@@ -55,8 +55,8 @@ void draw(Stage* self, Game* game, double dt) {
   };
 
 
-  int startX = 200;
-  int startY = 400;
+  int startX = 100;
+  int startY = 100;
 
   Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(
     startX - game->camera->point.x,
@@ -67,8 +67,8 @@ void draw(Stage* self, Game* game, double dt) {
   Djinni.Renderable->Shape->setFillColor(&rect, white);
   Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
 
-  int predrawX = 1100;
-  int predrawY = 500;
+  int predrawX = 500;
+  int predrawY = 300;
 
   rect = Djinni.Renderable->Shape->Rectangle->rectangle(
     predrawX - game->camera->point.x,
