@@ -47,9 +47,9 @@ void draw(Stage* self, Game* game, double dt) {
   Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(100,100, 10, 10);
   Djinni.Renderable->Shape->setOutlineColor(&rect, white);
   Djinni.Renderable->Shape->setFillColor(&rect, white);
-  Djinni.Renderable->draw(Djinni.renderer, &rect);
+  Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
 
-  Coordinate pos = Djinni.Renderable->Entity->getRenderedPosition(player);
+  Coordinate pos = Djinni.Renderable->Entity->getRenderPoint(player);
 
 
   Shape playerRect;

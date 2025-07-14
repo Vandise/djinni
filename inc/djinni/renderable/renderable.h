@@ -3,6 +3,7 @@
 
 #include "djinni/renderable/shared.h"
 #include "djinni/video/video.h"
+#include "djinni/game/camera.h"
 
 #include "djinni/renderable/entity.h"
 #include "djinni/renderable/sprite.h"
@@ -16,7 +17,7 @@ struct Djinni_RenderableStruct {
   struct Djinni_Renderable_PaintStruct*  Paint;
 
   void (*initialize)();
-  void (*draw)(Renderer*, Entity*);
+  void (*draw)(Renderer*, Entity*, Camera*);
 };
 
 extern struct Djinni_RenderableStruct Djinni_Renderable;

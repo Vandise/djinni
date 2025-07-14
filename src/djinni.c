@@ -45,6 +45,7 @@ static void start(Game* game) {
 
   if (game->camera == NULL) {
     Djinni_Util_Logger.log_debug("Djinni.start() - No camera detected, setting default");
+    // set default anchor to top left for 0,0
     game->camera = Djinni_Game.Camera->create(
       Djinni.windowSettings.width/2,
       Djinni.windowSettings.height/2,

@@ -1,25 +1,54 @@
 #include "djinni/util/util.h"
 #include "djinni/game/camera.h"
 
-static Camera* create(int x, int y, int rWidth, int rHeight) {
+static Camera* create(int x, int y, int screenWidth, int screenHeight) {
   Camera* c = malloc(sizeof(Camera));
-  c->renderWidth = rWidth;
-  c->renderHeight = rHeight;
+  c->screenWidth = screenWidth;
+  c->screenHeight = screenHeight;
   c->point.x = x;
   c->point.y = y;
+  c->settings.fixed = 1;
+  c->settings.xOffset = 0;
+  c->settings.yOffset = 0;
+  c->settings.following = NULL;
+
+  c->update = NULL;
 
   return c;
 }
 
+//
+// converts a given Entity Coordinate X-Y to a anchored position point
+//
+static Point entityCoordinateToScreen(Camera* c, Entity* entity) {
+  Coordinate coords = Djinni_Renderable_Entity.getPosition(entity);
+
+  if (c->settings.fixed) {
+    return coords;
+  }
+
+  Point p = {
+    .x = coords.x - c->point.x,
+    .y = coords.y - c->point.y
+  };
+
+  return p;
+}
+
+/*
+
+todo: review camera incorporatation of point to position
+      when follow is set camera point x/y are the x1 + y1
+*/
 static int inViewport(Camera* c, Point p) {
   int x1, x2, y1, y2;
-  int rw = c->renderWidth;
-  int rh = c->renderHeight;
+  int rw = c->screenWidth;
+  int rh = c->screenHeight;
 
-  x1 = c->point.x + ((rw/2) * -1);
+  x1 = !(c->settings.fixed) ? c->point.x : c->point.x + ((rw/2) * -1);
   x2 = x1 + rw;
 
-  y1 = c->point.y + ((rh/2) * -1);
+  y1 = !(c->settings.fixed) ? c->point.y : c->point.y + ((rh/2) * -1);
   y2 = y1 + rh;
 
   int x = p.x;
@@ -32,20 +61,40 @@ static int inViewport(Camera* c, Point p) {
   return 1;
 }
 
+static void update(Camera* c, double dt) {
+  if (!c->settings.fixed && c->settings.following != NULL) {
+    Coordinate pos = Djinni_Renderable_Entity.getPosition(c->settings.following);
+    c->point.x = (pos.x - (c->screenWidth / 2)) + c->settings.xOffset;
+    c->point.y = (pos.y - (c->screenHeight / 2)) + c->settings.yOffset;
+  }
+}
+
+static void follow(Camera* c, Entity* e, int xOffset, int yOffset) {
+  c->settings.fixed = 0;
+  c->settings.xOffset = xOffset;
+  c->settings.yOffset = yOffset;
+  c->settings.following = e;
+
+  Coordinate coords = Djinni_Renderable_Entity.getPosition(c->settings.following);
+
+  c->point.x = (coords.x - (c->screenWidth / 2)) + c->settings.xOffset;
+  c->point.y = (coords.y - (c->screenHeight / 2)) + c->settings.yOffset;
+}
+
 static void inspect(Camera* c) {
   int x1, x2, y1, y2;
-  int rw = c->renderWidth;
-  int rh = c->renderHeight;
+  int rw = c->screenWidth;
+  int rh = c->screenHeight;
 
-  x1 = c->point.x + ((rw/2) * -1);
+  x1 = !(c->settings.fixed) ? c->point.x : c->point.x + ((rw/2) * -1);
   x2 = x1 + rw;
 
-  y1 = c->point.y + ((rh/2) * -1);
+  y1 = !(c->settings.fixed) ? c->point.y : c->point.y + ((rh/2) * -1);
   y2 = y1 + rh;
 
   Djinni_Util_Logger.log_debug(
-    "Djinni::Game::Camera( address:(%p) w:(%d) h:(%d) Point:( x:(%d) y:(%d) ) Bounds:( x1:(%d) x2:(%d) y1:(%d) y2:(%d) ) )",
-    c, rw, rh, c->point.x, c->point.y, x1, x2, y1, y2
+    "Djinni::Game::Camera( address:(%p) w:(%d) h:(%d) Point:( x:(%d) y:(%d) ) Bounds:( x1:(%d) x2:(%d) y1:(%d) y2:(%d) ) Following:( address: %p ) )",
+    c, rw, rh, c->point.x, c->point.y, x1, x2, y1, y2, c->settings.following
   );
 }
 
@@ -56,6 +105,9 @@ static void destroy(Camera* c) {
 struct Djinni_Game_GameCameraStruct Djinni_Camera = {
   .create = create,
   .inViewport = inViewport,
+  .entityCoordinateToScreen = entityCoordinateToScreen,
+  .follow = follow,
+  .update = update,
   .inspect = inspect,
   .destroy = destroy
 };
