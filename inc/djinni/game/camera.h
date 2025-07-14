@@ -5,6 +5,13 @@
 #include "djinni/renderable/entity.h"
 #include "djinni/geometry/coordinate.h"
 
+typedef struct ViewportBoundsStruct {
+  int x1;
+  int y1;
+  int x2;
+  int y2;
+} ViewportBounds;
+
 typedef struct Djinni_Game_CameraSettingsStruct {
   int fixed;
   int xOffset;
@@ -26,10 +33,12 @@ typedef struct Djinni_Game_CameraStruct {
 
 struct Djinni_Game_GameCameraStruct {
   Camera* (*create)(int, int, int, int);
+  void (*setDrawPoint)(Camera*, Point);
   int (*inViewport)(Camera*, Point);
   void (*follow)(Camera*, Entity*, int, int);
   Point (*entityCoordinateToScreen)(Camera*, Entity*);
   Point (*coordinateToScreen)(Camera*, Coordinate);
+  ViewportBounds (*getViewportBounds)(Camera*);
   void (*update)(Camera*, double);
   void (*inspect)(Camera*);
   void (*destroy)(Camera*);

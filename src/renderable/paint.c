@@ -3,18 +3,19 @@
 #include "djinni/renderable/renderable.h"
 #include "djinni/video/video.h"
 
-//
-// todo: draw at specified XY or remove
-//
 static void rectangle(Renderer* r, Shape* shape, int x, int y) {
+  Rectangle proxy = *(shape->geometry.rectptr);
+  proxy.instance.x = x;
+  proxy.instance.y = y;
+
   if (shape->outline) {
     Djinni_Video.Renderer->setDrawColor(r, shape->outlineColor);
-    SDL_RenderDrawRect(r->instance, &(shape->geometry.rectptr->instance));
+    SDL_RenderDrawRect(r->instance, &(proxy.instance));
   }
 
   if (shape->fill) {
     Djinni_Video.Renderer->setDrawColor(r, shape->fillColor);
-    SDL_RenderFillRect(r->instance, &(shape->geometry.rectptr->instance));
+    SDL_RenderFillRect(r->instance, &(proxy.instance));
   }
 
   Djinni_Video.Renderer->resetDrawColor(r);

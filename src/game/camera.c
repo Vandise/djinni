@@ -17,6 +17,11 @@ static Camera* create(int x, int y, int screenWidth, int screenHeight) {
   return c;
 }
 
+static void setDrawPoint(Camera* c, Point p) {
+  c->point.x = p.x;
+  c->point.y = p.y;
+}
+
 static Point coordinateToScreen(Camera* c, Coordinate coords) {
   if (c->settings.fixed) {
     return coords;
@@ -36,6 +41,27 @@ static Point coordinateToScreen(Camera* c, Coordinate coords) {
 static Point entityCoordinateToScreen(Camera* c, Entity* entity) {
   Coordinate coords = Djinni_Renderable_Entity.getPosition(entity);
   return coordinateToScreen(c, coords);
+}
+
+static ViewportBounds getViewportBounds(Camera* c) {
+  int x1, x2, y1, y2;
+  int rw = c->screenWidth;
+  int rh = c->screenHeight;
+
+  x1 = c->point.x;
+  x2 = x1 + rw;
+
+  y1 = c->point.y;
+  y2 = y1 + rh;
+
+  ViewportBounds bounds = {
+    .x1 = x1,
+    .x2 = x2,
+    .y1 = y1,
+    .y2 = y2
+  };;
+
+  return bounds;
 }
 
 /*
@@ -107,9 +133,11 @@ static void destroy(Camera* c) {
 
 struct Djinni_Game_GameCameraStruct Djinni_Camera = {
   .create = create,
+  .setDrawPoint = setDrawPoint,
   .inViewport = inViewport,
   .entityCoordinateToScreen = entityCoordinateToScreen,
   .coordinateToScreen = coordinateToScreen,
+  .getViewportBounds = getViewportBounds,
   .follow = follow,
   .update = update,
   .inspect = inspect,

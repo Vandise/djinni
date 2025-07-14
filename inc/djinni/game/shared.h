@@ -7,5 +7,5 @@ typedef struct Djinni_Game_GameStruct Game;
 typedef struct Djinni_Game_StageStruct Stage;
 typedef struct Djinni_Game_WorldStruct World;
 typedef struct Djinni_Game_CameraStruct Camera;
-
+typedef struct ViewportBoundsStruct ViewportBounds;
 #endif

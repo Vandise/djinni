@@ -22,7 +22,7 @@ program: $(PROGRAM_OBJECTS)
 	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I inc/ -o bin/example $(PROGRAM_OBJECTS) $(LIBRARIES)/$(LIBNAME) -lsdl2 -lsdl2_mixer -lsdl2_ttf -lsdl2_image -lm
 
 $(OBJECTS)/$(example)/%.o: $(EXAMPLES)/$(example)/%.c
-	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I inc/ -c $< -o $@
+	$(CC) $(ADDFLAGS) -I $(SYSINCDIR) -I $(EXAMPLES)/$(example)/inc -I inc/ -c $< -o $@
 
 engine: $(ENGINE_OBJECTS)
 	$(ARCHIVER) rcs $(LIBRARIES)/$(LIBNAME) $(ENGINE_OBJECTS)
