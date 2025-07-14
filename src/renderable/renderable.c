@@ -12,8 +12,8 @@ static void initialize() {
   Djinni_Renderable.Shape->initialize();
 }
 
-static void draw(Renderer* r, Entity* e) {
-  Djinni_Renderable_Paint.entity(r, e);
+static void draw(Renderer* r, Entity* e, Camera* c) {
+  Djinni_Renderable_Paint.entity(r, e, c);
 }
 
 struct Djinni_RenderableStruct Djinni_Renderable = {

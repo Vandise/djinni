@@ -4,34 +4,30 @@
 #include "djinni/djinni.h"
 
 Entity* player = NULL;
+Entity* enemy = NULL;
 
 void playerUpdate(Entity* entity, Game* game, double dt) {
-  Point loc = Djinni.Renderable->Entity->getPosition(entity);
-  if( Djinni.Game->Camera->inViewport(game->camera, loc) ) {
-    Djinni.Renderable->Entity->move(entity, -1, 0);
-  }
+  Djinni.Renderable->Entity->move(player, 1, 0);
 }
 
 void onCreate(Stage* self, Game* game, Stage* previous) {
-
-  player = Djinni.Renderable->Sprite->create(
-    400, 400,
-    "bin/gfx/player.png"
-  );
-
+  player = Djinni.Renderable->Sprite->create(0, 0, "bin/gfx/player.png");
   player->update = playerUpdate;
 
+  enemy = Djinni.Renderable->Sprite->create(0, 50, "bin/gfx/enemy.png");
+
   Djinni.Game->World->addEntity(game->world, player);
+  Djinni.Game->World->addEntity(game->world, enemy);
 
   Camera* camera = Djinni.Game->Camera->create(
-    0,
-    0,
+    0,0,
     Djinni.windowSettings.width,
     Djinni.windowSettings.height
   );
 
-  Djinni.Game->setCamera(game, camera);
+  Djinni.Game->Camera->follow(camera, player, 0, 0);
 
+  Djinni.Game->setCamera(game, camera);
   Djinni.Game->Camera->inspect(camera);
 
   Djinni.Game->enableInput(game);
@@ -39,7 +35,9 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
 
 void prepare(Stage* self, Game* game) {}
 
-void update(Stage* self, Game* game, double dt) {}
+void update(Stage* self, Game* game, double dt) {
+  //Djinni.Game->Camera->inspect(game->camera);
+}
 
 void draw(Stage* self, Game* game, double dt) {
   Color white = {
@@ -49,21 +47,47 @@ void draw(Stage* self, Game* game, double dt) {
     .a = 255
   };
 
-  Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(100,100, 10, 10);
+  Color blue = {
+    .r = 0,
+    .g = 0,
+    .b = 255,
+    .a = 255
+  };
+
+
+  int startX = 100;
+  int startY = 100;
+
+  Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(
+    startX - game->camera->point.x,
+    startY - game->camera->point.y,
+    10, 10
+  );
   Djinni.Renderable->Shape->setOutlineColor(&rect, white);
   Djinni.Renderable->Shape->setFillColor(&rect, white);
   Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
 
-  Coordinate pos = Djinni.Renderable->Entity->getRenderPoint(player);
+  int predrawX = 500;
+  int predrawY = 300;
 
-  Shape playerRect;
-    playerRect.type = SHAPE_RECTANGLE_PTR_TYPE;
-    playerRect.outline = 1;
-    playerRect.fill = 0;
-    playerRect.outlineColor = white;
-    playerRect.fillColor = white;
-    playerRect.geometry.rectptr = &(player->body.bounds);
-  Djinni.Renderable->Paint->shape(Djinni.renderer, &playerRect, pos.x, pos.y);
+  rect = Djinni.Renderable->Shape->Rectangle->rectangle(
+    predrawX - game->camera->point.x,
+    predrawY - game->camera->point.y,
+    10, 10
+  );
+  Djinni.Renderable->Shape->setOutlineColor(&rect, blue);
+  Djinni.Renderable->Shape->setFillColor(&rect, blue);
+  Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
+
+
+  Point p = Djinni.Game->Camera->entityCoordinateToScreen(game->camera, player);
+  rect = Djinni.Renderable->Shape->Rectangle->rectangle(
+    p.x,
+    p.y,
+    player->body.bounds.instance.w, player->body.bounds.instance.h
+  );
+  Djinni.Renderable->Shape->setOutlineColor(&rect, white);
+  Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
 }
 
 void onDestroy(Stage* self, Game* game, Stage* next) {}

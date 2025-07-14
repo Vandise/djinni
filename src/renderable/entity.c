@@ -54,7 +54,7 @@ static void setPosition(Entity* e, int x, int y) {
   );
 }
 
-static Coordinate getRenderedPosition(Entity* e) {
+static Coordinate getRenderPoint(Entity* e) {
   return Djinni_Geometry.Rectangle->getPosition(&(e->body.bounds));
 }
 
@@ -96,7 +96,7 @@ static int getBodyHeight(Entity* e) {
 }
 
 static Coordinate getPosition(Entity* e) {
-  Coordinate rendPos = getRenderedPosition(e);
+  Coordinate rendPos = getRenderPoint(e);
 
   Coordinate pos = Djinni_Geometry.ObservablePoint->getAnchorPoint(
     e->anchorPoint, rendPos.x, rendPos.y, getRenderedWidth(e), getRenderedHeight(e)
@@ -142,7 +142,7 @@ static void inspect(Entity* e) {
   Djinni_Geometry.Rectangle->inspect(&(e->bounds));
   Djinni_Physics.Body->inspect(&(e->body));
 
-  Coordinate c = getRenderedPosition(e);
+  Coordinate c = getRenderPoint(e);
   Djinni_Geometry.Coordinate->inspect(&c);
 }
 
@@ -160,7 +160,7 @@ struct Djinni_Renderable_EntityStruct Djinni_Renderable_Entity = {
   .entity = entity,
   .create = create,
   .getPosition = getPosition,
-  .getRenderedPosition = getRenderedPosition,
+  .getRenderPoint = getRenderPoint,
   .inspect = inspect,
   .move = move,
   .setPosition = setPosition,

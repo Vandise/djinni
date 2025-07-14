@@ -3,6 +3,9 @@
 #include "djinni/renderable/renderable.h"
 #include "djinni/video/video.h"
 
+//
+// todo: draw at specified XY or remove
+//
 static void rectangle(Renderer* r, Shape* shape, int x, int y) {
   if (shape->outline) {
     Djinni_Video.Renderer->setDrawColor(r, shape->outlineColor);
@@ -35,15 +38,22 @@ static void sprite(Renderer* r, Entity* subject, int x, int y) {
   );
 }
 
-static void entity(Renderer* r, Entity* subject) {
-  Coordinate pos = Djinni_Renderable.Entity->getRenderedPosition(subject);
+/*
+  todo: handle camera 
+*/
+
+static void entity(Renderer* r, Entity* subject, Camera* camera) {
+  Coordinate pos = Djinni_Renderable.Entity->getRenderPoint(subject);
+
+  int x = pos.x - camera->point.x;
+  int y = pos.y - camera->point.y;
 
   switch(subject->type) {
     case ENTITY_TYPE_SPRITE:
-      sprite(r, subject, pos.x, pos.y);
+      sprite(r, subject, x, y);
       break;
     case ENTITY_TYPE_SHAPE:
-      shape(r, &(subject->shape), pos.x, pos.y);
+      shape(r, &(subject->shape), x, y);
       break;
     default:
       break;

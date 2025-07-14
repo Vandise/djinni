@@ -15,16 +15,27 @@ static void update(Game* game, double dt) {
     Point loc = Djinni.Renderable->Entity->getPosition(entity);
     int vp = Djinni.Game->Camera->inViewport(game->camera, loc);
 
-    if (entity->update != NULL && vp) { entity->update(entity, game, dt); }
+    if (entity->update != NULL && vp) {
+      entity->update(entity, game, dt);
+    }
+  }
+
+  Djinni.Game->Camera->update(game->camera, dt);
+
+  if (game->camera->update != NULL) {
+    game->camera->update(game->camera, game, dt);
   }
 
   game->activeStage->update(game->activeStage, game, dt);
 }
 
 static void draw(Game* game, double dt) {
+  //
+  // todo: draw entity relative to camera
+  //
   for (int i = 0; i < game->world->entities->used; i++) {
     Entity* entity = (Entity*)(game->world->entities->data[i]);
-    Djinni.Renderable->draw(Djinni.renderer, entity);
+    Djinni.Renderable->draw(Djinni.renderer, entity, game->camera);
   }
 
   game->activeStage->draw(game->activeStage, game, dt);

@@ -56,7 +56,7 @@ struct Djinni_Renderable_EntityStruct {
   Entity* (*create)(int, int, int, int, ENTITY_TYPE);
 
   Coordinate (*getPosition)(Entity*);
-  Coordinate (*getRenderedPosition)(Entity*);
+  Coordinate (*getRenderPoint)(Entity*);
   void (*move)(Entity*, int, int);
   void (*setPosition)(Entity*, int, int);
 

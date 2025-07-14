@@ -3,9 +3,10 @@
 
 #include "djinni/renderable/shared.h"
 #include "djinni/video/shared.h"
+#include "djinni/game/camera.h"
 
 struct Djinni_Renderable_PaintStruct {
-  void (*entity)(Renderer*, Entity*);
+  void (*entity)(Renderer*, Entity*, Camera*);
   void (*sprite)(Renderer*, Entity*, int, int);
   void (*shape)(Renderer*, Shape*, int, int);
 };
