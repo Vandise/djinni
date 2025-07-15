@@ -16,6 +16,9 @@ typedef struct PhysicsBodyStruct {
 
 struct Djinni_Physics_BodyStruct {
   PhysicsBody (*create)(int, int, int, int);
+
+  void (*tickVelocity)(Entity*, double);
+
   void (*inspect)(PhysicsBody*);
 };
 

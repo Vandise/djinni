@@ -1,5 +1,6 @@
 #include "djinni/util/util.h"
 #include "djinni/physics/body.h"
+#include "djinni/renderable/renderable.h"
 
 static PhysicsBody create(int x, int y, int w, int h) {
   PhysicsBody body;
@@ -13,6 +14,13 @@ static PhysicsBody create(int x, int y, int w, int h) {
   return body;
 }
 
+
+static void tickVelocity(Entity* entity, double dt) {
+  Djinni_Renderable.Entity->move(
+      entity, entity->body.velocity.dx, entity->body.velocity.dy
+  );
+}
+
 static void inspect(PhysicsBody* b) {
   Djinni_Util_Logger.log_debug(
     "Djinni::Physics::PhysicsBody( address:(%p))", b
@@ -22,5 +30,6 @@ static void inspect(PhysicsBody* b) {
 
 struct Djinni_Physics_BodyStruct Djinni_Physics_Body = {
   .create = create,
+  .tickVelocity = tickVelocity,
   .inspect = inspect
 };

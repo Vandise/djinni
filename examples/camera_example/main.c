@@ -6,13 +6,12 @@
 Entity* player = NULL;
 Entity* enemy = NULL;
 
-void playerUpdate(Entity* entity, Game* game, double dt) {
-  Djinni.Renderable->Entity->move(player, 1, 0);
-}
+void playerUpdate(Entity* entity, Game* game, double dt) {}
 
 void onCreate(Stage* self, Game* game, Stage* previous) {
   player = Djinni.Renderable->Sprite->create(0, 0, "bin/gfx/player.png");
   player->update = playerUpdate;
+  player->body.velocity.dx = 1;
 
   enemy = Djinni.Renderable->Sprite->create(0, 50, "bin/gfx/enemy.png");
 

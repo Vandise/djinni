@@ -8,6 +8,7 @@ struct Djinni_PhysicsStruct {
   struct Djinni_Physics_BodyStruct* Body;
 
   void (*initialize)();
+  void (*tick)(Entity*, double);
 };
 
 extern struct Djinni_PhysicsStruct Djinni_Physics;
