@@ -8,6 +8,7 @@ static void initialize() {
   Djinni_Geometry.Line = &Djinni_Geometry_Line;
   Djinni_Geometry.Rectangle = &Djinni_Geometry_Rectangle;
   Djinni_Geometry.ObservablePoint = &Djinni_Geometry_ObservablePoint;
+  Djinni_Geometry.Grid = &Djinni_Geometry_Grid;
 }
 
 struct Djinni_GeometryStruct Djinni_Geometry = {

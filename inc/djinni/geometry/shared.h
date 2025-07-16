@@ -12,5 +12,8 @@ typedef struct LineStruct Line;
 typedef struct LineSlopeStruct LineSlope;
 typedef struct RectangleStruct Rectangle;
 typedef struct ObservablePointStruct ObservablePoint;
+typedef struct GridCellStruct GridCell;
+typedef struct GridLevelStruct GridLevel;
+typedef struct GridStruct Grid;
 
 #endif
