@@ -8,6 +8,7 @@
 #include "djinni/physics/shared.h"
 #include "djinni/game/game.h"
 
+#include "djinni/geometry/grid.h"
 #include "djinni/geometry/observablePoint.h"
 #include "djinni/geometry/rectangle.h"
 #include "djinni/video/texture.h"
@@ -31,22 +32,28 @@ typedef struct EntityStruct {
   ENTITY_STATE status;
 
   int id;
+
+  // flags (todo: convert to single int)
+  int dirty;
   int keepAlive;
   int alwaysUpdate;
 
+  // draw-size and bounds
   ObservablePoint anchorPoint;
-
-  // draw-size bounds
   Rectangle bounds;
 
   // physic size
   PhysicsBody body;
 
+  // grid data
+  GridLocation locations[DJINNI_GRID_MAX_LEVELS];
+
+  // Gfx
   Texture* texture;
   Shape shape;
-
   DjinniArray* children;
 
+  // functions
   void (*update)(struct EntityStruct*, Game*, double dt);
   void (*onCollide)(struct EntityStruct*, struct EntityStruct*, Game*, double dt);
 } Entity;

@@ -4,7 +4,7 @@ int main(void) {
   WindowSettings ws = {
     .posx = SDL_WINDOWPOS_UNDEFINED,
     .posy = SDL_WINDOWPOS_UNDEFINED,
-    .width = 1200,
+    .width = 1280,
     .height = 720,
     .flags = 0
   };

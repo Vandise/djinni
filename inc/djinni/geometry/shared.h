@@ -15,5 +15,6 @@ typedef struct ObservablePointStruct ObservablePoint;
 typedef struct GridCellStruct GridCell;
 typedef struct GridLevelStruct GridLevel;
 typedef struct GridStruct Grid;
+typedef struct GridLocationStruct GridLocation;
 
 #endif

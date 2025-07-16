@@ -31,10 +31,22 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
 
   e->status = ENTITY_ALIVE;
   e->id = -1;
+
+  e->dirty = 1;
   e->alwaysUpdate = 0;
   e->keepAlive = 0;
+
+
   e->texture = NULL;
   e->children = NULL;
+
+  for(int i = 0; i < DJINNI_GRID_MAX_LEVELS; i++) {
+    e->locations[i].level = -1;
+    e->locations[i].minX = 0;
+    e->locations[i].minY = 0;
+    e->locations[i].maxX = 0;
+    e->locations[i].maxY = 0;
+  }
 
   e->update = NULL;
   e->onCollide = NULL;

@@ -2,9 +2,19 @@
 #define DJINNI_GEOMETRY_GRID 1
 
 #include "djinni/geometry/shared.h"
+#include "djinni/renderable/shared.h"
 #include "djinni/util/array.h"
 
 #define DJINNI_GRID_MAX_LEVELS 3
+
+//
+// A cache for an entity and its bounds in a grid cell
+//
+typedef struct GridLocationStruct {
+  int level;          // Grid level where the entity was inserted
+  int minX, minY;     // Cached previous grid cell bounds (min coords)
+  int maxX, maxY;     // Cached previous grid cell bounds (max coords)
+} GridLocation;
 
 //
 // A single cell in the grid storing pointers to entities occupying it
@@ -33,6 +43,9 @@ typedef struct GridStruct {
 
 struct Djinni_Geometry_GridStruct {
   Grid* (*create)(int,int,int,int,int,int);
+  void (*insert)(Grid*, Entity*);
+  void (*removeEntity)(Grid*, Entity*);
+  void (*inspect)(Grid*);
   void (*destroy)(Grid*);
 };
 
