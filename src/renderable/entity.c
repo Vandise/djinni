@@ -72,8 +72,10 @@ static Coordinate getRenderPoint(Entity* e) {
 
 static void move(Entity* e, int dx, int dy) {
   Coordinate c = Djinni_Geometry.Rectangle->getPosition(&(e->body.bounds));
-
   setPosition(e, c.x + dx, c.y + dy);
+
+  // needs grid update flag
+  e->dirty = 1;
 }
 
 static void setAnchor(Entity* e, float x, float y) {

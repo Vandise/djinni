@@ -15,38 +15,7 @@ static void prepare(Game* game) {
 }
 
 static void update(Game* game, double dt) {
-  for (int i = 0; i < game->world->entities->used; i++) {
-    Entity* e1 = (Entity*)(game->world->entities->data[i]);
-    Point loc = Djinni.Renderable->Entity->getPosition(e1);
-    int e1InViewport = Djinni.Game->Camera->inViewport(game->camera, loc);
-
-    if (e1InViewport) {
-      //
-      // physics
-      //
-      Djinni.Physics->tick(e1, dt);
-
-      //
-      // Update
-      //
-      if (e1->update != NULL) { e1->update(e1, game, dt); }
-
-      for (int j = 0; j < game->world->entities->used; j++) {
-        Entity* e2 = (Entity*)(game->world->entities->data[j]);
-
-        if (e1 == e2) { continue; }
-
-        Point e2loc = Djinni.Renderable->Entity->getPosition(e2);
-        int e2InViewport = Djinni.Game->Camera->inViewport(game->camera, e2loc);
-
-        if (e2InViewport) {
-          //
-          // collisions & collision physics (todo)
-          //
-        }
-      }
-    }
-  }
+  Djinni.Physics->tick(game, dt, DJINNI_RING_FINE);
 
   Djinni.Game->Camera->update(game->camera, dt);
 

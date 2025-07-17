@@ -9,6 +9,15 @@ Entity* enemy = NULL;
 void playerUpdate(Entity* entity, Game* game, double dt) {}
 
 void onCreate(Stage* self, Game* game, Stage* previous) {
+  Camera* camera = Djinni.Game->Camera->create(
+    0,0,
+    Djinni.windowSettings.width,
+    Djinni.windowSettings.height
+  );
+
+  Djinni.Game->setCamera(game, camera);
+  Djinni.Game->Camera->inspect(camera);
+
   player = Djinni.Renderable->Sprite->create(0, 0, "bin/gfx/player.png");
   player->update = playerUpdate;
   player->body.velocity.dx = 1;
@@ -18,16 +27,7 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni.Game->World->addEntity(game->world, player);
   Djinni.Game->World->addEntity(game->world, enemy);
 
-  Camera* camera = Djinni.Game->Camera->create(
-    0,0,
-    Djinni.windowSettings.width,
-    Djinni.windowSettings.height
-  );
-
   Djinni.Game->Camera->follow(camera, player, 0, 0);
-
-  Djinni.Game->setCamera(game, camera);
-  Djinni.Game->Camera->inspect(camera);
 
   Djinni.Game->enableInput(game);
 }
@@ -132,6 +132,7 @@ int main(void) {
   };
 
   Game* game = Djinni.Game->create(worldSettings);
+
   Stage* s = Djinni.Game->Stage->create(
     0,
     onCreate, prepare, update, draw, onDestroy
