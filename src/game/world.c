@@ -6,6 +6,14 @@ static World* create(WorldSettings settings) {
 
   w->settings = settings;
   w->entities = Djinni_Util_Array.initialize(10);
+  w->grid = Djinni_Geometry_Grid.create(
+    settings.gridCellCapacity,
+    settings.width,
+    settings.height,
+    settings.finestGridSize,
+    settings.mediumGridSize,
+    settings.coarseGridSize
+  );
 
   return w;
 }
@@ -33,6 +41,8 @@ static void removeEntity(World* w, Entity* e) {
 
 static void destroy(World* w) {
   Djinni_Util_Logger.log_dev("Djinni::Game::World.destroy( address:(%p) )", w);
+
+  Djinni_Geometry_Grid.destroy(w->grid);
 
   Djinni_Util_Array.destroy(
     w->entities,

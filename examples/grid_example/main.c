@@ -32,11 +32,11 @@ int main(void) {
   Djinni.Video->Renderer->setBackgroundColor(Djinni.renderer, background);
 
   WorldSettings worldSettings = {
-    .width = 800,
-    .height = 800,
-    .finestGridSize = 64,
-    .mediumGridSize = 128,
-    .coarseGridSize = 256,
+    .width = 2560,
+    .height = 1440,
+    .finestGridSize = 32,
+    .mediumGridSize = 64,
+    .coarseGridSize = 128,
     .gridCellCapacity = 10
   };
 
