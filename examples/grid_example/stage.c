@@ -23,7 +23,7 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
     "bin/gfx/player.png"
   );
 
-  Djinni.Geometry->Grid->insert(grid, player);
+  Djinni.Geometry->Grid->insert(grid, player, DJINNI_RING_FINE);
   Djinni.Geometry->Grid->inspect(grid);
 
   Djinni.Game->World->addEntity(game->world, player);

@@ -59,59 +59,58 @@ static void initializeLevel(
   }
 }
 
-static void insert(Grid* grid, Entity* e) {
-  for (int levelIdx = 0; levelIdx < grid->levelCount; levelIdx++) {
-    GridLevel* level = &grid->levels[levelIdx];
-    int cellSize = level->cellSize;
+static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
+  GridLevel* level = &grid->levels[levelIdx];
+  int cellSize = level->cellSize;
 
-    //
-    // Calculate grid cell bounds covering entity's bounding box
-    //
-    Point point = Djinni_Renderable.Entity->getRenderPoint(e);
-    int renderedWidth = Djinni_Renderable.Entity->getRenderedWidth(e);
-    int renderedHeight = Djinni_Renderable.Entity->getRenderedHeight(e);
+  //
+  // Calculate grid cell bounds covering entity's bounding box
+  //
+  Point point = Djinni_Renderable.Entity->getRenderPoint(e);
+  int renderedWidth = Djinni_Renderable.Entity->getRenderedWidth(e);
+  int renderedHeight = Djinni_Renderable.Entity->getRenderedHeight(e);
 
-    int minX = (int)(point.x / cellSize);
-    int minY = (int)(point.y / cellSize);
-    int maxX = (int)((point.x + renderedWidth) / cellSize);
-    int maxY = (int)((point.y + renderedHeight) / cellSize);
+  int minX = (int)(point.x / cellSize);
+  int minY = (int)(point.y / cellSize);
+  int maxX = (int)((point.x + renderedWidth) / cellSize);
+  int maxY = (int)((point.y + renderedHeight) / cellSize);
 
-    //
-    // Insert entity pointer into every overlapping cell
-    //
-    for (int y = minY; y <= maxY; y++) {
-      for (int x = minX; x <= maxX; x++) {
-        if (x < 0 || y < 0 || x >= level->width || y >= level->height) continue;
-        GridCell* cell = &level->cells[y * level->width + x];
+  //
+  // Insert entity pointer into every overlapping cell
+  //
+  for (int y = minY; y <= maxY; y++) {
+    for (int x = minX; x <= maxX; x++) {
+      if (x < 0 || y < 0 || x >= level->width || y >= level->height) continue;
+      GridCell* cell = &level->cells[y * level->width + x];
 
-        if (cell->entities->used >= cell->capacity) {
-          continue;  // Skip if cell full
-        }
-
-        Djinni_Util_Array.insert(cell->entities, e);
+      if (cell->entities->used >= cell->capacity) {
+        continue;  // Skip if cell full
       }
+
+      Djinni_Util_Array.insert(cell->entities, e);
     }
-
-    //
-    // Cache the occupied cells bounds and level in the entity
-    //
-    e->locations[levelIdx].level = levelIdx;
-    e->locations[levelIdx].minX = minX;
-    e->locations[levelIdx].minY = minY;
-    e->locations[levelIdx].maxX = maxX;
-    e->locations[levelIdx].maxY = maxY;
-
   }
+
+  //
+  // Cache the occupied cells bounds and level in the entity
+  //
+  e->locations[levelIdx].level = levelIdx;
+  e->locations[levelIdx].minX = minX;
+  e->locations[levelIdx].minY = minY;
+  e->locations[levelIdx].maxX = maxX;
+  e->locations[levelIdx].maxY = maxY;
 }
 
 void removeEntity(Grid* grid, Entity* e) {
-  //
-  // todo: add check to make sure entity is in the grid
-  //
   for (int l = 0; l < grid->levelCount; l++) {
+    GridLocation* b = &e->locations[l];
+
+    // entity is not in this ring
+    if (b->level < 0) {
+      continue;
+    }
 
     GridLevel* level = &grid->levels[l];
-    GridLocation* b = &e->locations[l];
 
     for (int y = b->minY; y <= b->maxY; y++) {
       for (int x = b->minX; x <= b->maxX; x++) {

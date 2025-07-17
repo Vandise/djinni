@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 
+#define DJINNI_GRID_MAX_LEVELS 3
 #define ANCHOR_DEFAULT 0.5
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))

@@ -5,7 +5,11 @@
 #include "djinni/renderable/shared.h"
 #include "djinni/util/array.h"
 
-#define DJINNI_GRID_MAX_LEVELS 3
+typedef enum {
+  DJINNI_RING_FINE,
+  DJINNI_RING_MEDIUM,
+  DJINNI_RING_COARSE
+} DJINNI_RING;
 
 //
 // A cache for an entity and its bounds in a grid cell
@@ -43,7 +47,7 @@ typedef struct GridStruct {
 
 struct Djinni_Geometry_GridStruct {
   Grid* (*create)(int,int,int,int,int,int);
-  void (*insert)(Grid*, Entity*);
+  void (*insert)(Grid*, Entity*, DJINNI_RING);
   void (*removeEntity)(Grid*, Entity*);
   void (*inspect)(Grid*);
   void (*destroy)(Grid*);
