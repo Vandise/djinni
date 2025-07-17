@@ -1,6 +1,7 @@
 #include "djinni/util/util.h"
 #include "djinni/geometry/grid.h"
 #include "djinni/renderable/renderable.h"
+#include "djinni/game/camera.h"
 
 static void initializeLevel(
   GridLevel* level,
@@ -138,6 +139,31 @@ void removeEntity(Grid* grid, Entity* e) {
   }
 }
 
+static DJINNI_RING computeRingLevel(ViewportBounds viewport, Entity* e) {
+  Point entitypt = Djinni_Renderable.Entity->getPosition(e);
+
+  if (
+    entitypt.x >= viewport.x1 && entitypt.x <= viewport.x2 &&
+    entitypt.y >= viewport.y1 && entitypt.y <= viewport.y2
+  ) {
+    return DJINNI_RING_FINE;
+  }
+
+  int screenWidth = viewport.x2 - viewport.x1;
+  int screenheight = viewport.y2 - viewport.y1;
+
+  int ptx = viewport.x1 - screenWidth / 2;
+  int pty = viewport.y1 - screenheight / 2;
+
+  if (
+    entitypt.x >= ptx && entitypt.x <= (screenWidth * 2) &&
+    entitypt.y >= pty && entitypt.y <= (screenheight * 2)
+  ) {
+    return DJINNI_RING_MEDIUM;
+  }
+
+  return DJINNI_RING_COARSE;
+}
 
 static void inspect(Grid* grid) {
 
@@ -187,6 +213,7 @@ struct Djinni_Geometry_GridStruct Djinni_Geometry_Grid = {
   .create = create,
   .insert = insert,
   .removeEntity = removeEntity,
+  .computeRingLevel = computeRingLevel,
   .inspect = inspect,
   .destroy = destroy
 };

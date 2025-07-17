@@ -1,6 +1,7 @@
 #ifndef DJINNI_GEOMETRY_GRID
 #define DJINNI_GEOMETRY_GRID 1
 
+#include "djinni/game/shared.h"
 #include "djinni/geometry/shared.h"
 #include "djinni/renderable/shared.h"
 #include "djinni/util/array.h"
@@ -49,6 +50,7 @@ struct Djinni_Geometry_GridStruct {
   Grid* (*create)(int,int,int,int,int,int);
   void (*insert)(Grid*, Entity*, DJINNI_RING);
   void (*removeEntity)(Grid*, Entity*);
+  DJINNI_RING (*computeRingLevel)(ViewportBounds, Entity*);
   void (*inspect)(Grid*);
   void (*destroy)(Grid*);
 };
