@@ -57,21 +57,11 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
     "bin/gfx/enemy.png"
   );
 
-  ViewportBounds bounds = Djinni.Game->Camera->getViewportBounds(camera);
-
-  DJINNI_RING playerRing = Djinni.Geometry->Grid->computeRingLevel(bounds, player);
-  DJINNI_RING e1Ring = Djinni.Geometry->Grid->computeRingLevel(bounds, enemy1);
-  DJINNI_RING e2Ring = Djinni.Geometry->Grid->computeRingLevel(bounds, enemy2);
-
-  Djinni.Geometry->Grid->insert(grid, player, playerRing);
-  Djinni.Geometry->Grid->insert(grid, enemy1, e1Ring);
-  Djinni.Geometry->Grid->insert(grid, enemy2, e2Ring);
-
-  Djinni.Geometry->Grid->inspect(grid);
-
   Djinni.Game->World->addEntity(game->world, player);
   Djinni.Game->World->addEntity(game->world, enemy1);
   Djinni.Game->World->addEntity(game->world, enemy2);
+
+  Djinni.Geometry->Grid->inspect(grid);
 
   Djinni.Game->enableInput(game);
 }

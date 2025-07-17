@@ -6,6 +6,7 @@
 #include "djinni/renderable/shared.h"
 
 #include "djinni/util/array.h"
+#include "djinni/game/camera.h"
 #include "djinni/renderable/entity.h"
 #include "djinni/geometry/grid.h"
 
@@ -28,6 +29,7 @@ typedef struct Djinni_Game_World_SettingsStruct {
 typedef struct Djinni_Game_WorldStruct {
   DjinniArray* entities;
   Grid* grid;
+  Camera* camera;
 
   WorldSettings settings;
 } World;

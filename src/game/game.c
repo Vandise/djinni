@@ -38,6 +38,7 @@ static int addStage(Game* game, Stage* stage) {
 
 void setCamera(Game* game, Camera* camera) {
   game->camera = camera;
+  game->world->camera = camera;
 }
 
 static void changeStage(Game* game, int id) {

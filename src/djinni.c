@@ -52,6 +52,7 @@ static void start(Game* game) {
       Djinni.windowSettings.width,
       Djinni.windowSettings.height
     );
+    game->world->camera = game->camera;
   }
 
   Djinni_Game.Runner->execute(game);

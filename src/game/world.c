@@ -14,6 +14,7 @@ static World* create(WorldSettings settings) {
     settings.mediumGridSize,
     settings.coarseGridSize
   );
+  w->camera = NULL;
 
   return w;
 }
@@ -24,6 +25,13 @@ static void addEntity(World* w, Entity* e) {
   e->id = w->entities->used;
 
   Djinni_Util_Array.insert(w->entities, e);
+
+  DJINNI_RING ring = Djinni_Geometry_Grid.computeRingLevel(
+    Djinni_Game.Camera->getViewportBounds(w->camera),
+    e
+  );
+
+  Djinni_Geometry_Grid.insert(w->grid, e, ring);
 }
 
 static void removeEntity(World* w, Entity* e) {
@@ -33,6 +41,8 @@ static void removeEntity(World* w, Entity* e) {
     Djinni_Util_Logger.log_warn("Djinni::Game::World.removeEntity( entity.id:(%d) ) - Entity does not exist", e->id);
     return;
   }
+
+  Djinni_Geometry_Grid.removeEntity(w->grid, e);
 
   Djinni_Util_Array.removeIndex(w->entities, e->id);
 
