@@ -8,4 +8,6 @@ typedef struct Djinni_Game_StageStruct Stage;
 typedef struct Djinni_Game_WorldStruct World;
 typedef struct Djinni_Game_CameraStruct Camera;
 typedef struct ViewportBoundsStruct ViewportBounds;
+typedef struct Djinni_Game_World_SettingsStruct WorldSettings;
+
 #endif

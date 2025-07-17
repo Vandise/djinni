@@ -1,9 +1,10 @@
 #include "djinni/util/util.h"
 #include "djinni/game/game.h"
 
-static World* create() {
+static World* create(WorldSettings settings) {
   World* w = malloc(sizeof(World));
 
+  w->settings = settings;
   w->entities = Djinni_Util_Array.initialize(10);
 
   return w;

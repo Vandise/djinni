@@ -122,7 +122,16 @@ int main(void) {
 
   Djinni.Video->Renderer->setBackgroundColor(Djinni.renderer, background);
 
-  Game* game = Djinni.Game->create();
+  WorldSettings worldSettings = {
+    .width = 800,
+    .height = 800,
+    .finestGridSize = 64,
+    .mediumGridSize = 128,
+    .coarseGridSize = 256,
+    .gridCellCapacity = 10
+  };
+
+  Game* game = Djinni.Game->create(worldSettings);
   Stage* s = Djinni.Game->Stage->create(
     0,
     onCreate, prepare, update, draw, onDestroy

@@ -43,7 +43,7 @@ struct Djinni_GameStruct {
 
   void (*initialize)();
 
-  Game* (*create)();
+  Game* (*create)(WorldSettings);
 
   void (*pause)(Game* game);
   void (*resume)(Game* game);

@@ -11,7 +11,7 @@ static void initialize() {
   Djinni_Game.Camera = &Djinni_Camera;
 }
 
-static Game* create() {
+static Game* create(WorldSettings ws) {
   Game* g = malloc(sizeof(Game));
   g->paused = 0;
   g->terminated = 0;
@@ -22,7 +22,7 @@ static Game* create() {
 
   g->activeStage = NULL;
   g->stages = Djinni_Util_Array.initialize(10);
-  g->world = Djinni_World.create();
+  g->world = Djinni_World.create(ws);
   g->camera = NULL;
 
   return g;

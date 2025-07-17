@@ -2,10 +2,22 @@
 #define DJINNI_GAME_WORLD 1
 
 #include "djinni/game/shared.h"
+#include "djinni/geometry/shared.h"
 #include "djinni/renderable/shared.h"
 
 #include "djinni/util/array.h"
 #include "djinni/renderable/entity.h"
+#include "djinni/geometry/grid.h"
+
+typedef struct Djinni_Game_World_SettingsStruct {
+  int width;
+  int height;
+
+  int finestGridSize;
+  int mediumGridSize;
+  int coarseGridSize;
+  int gridCellCapacity;
+} WorldSettings;
 
 /*
   todo:
@@ -15,10 +27,13 @@
 */
 typedef struct Djinni_Game_WorldStruct {
   DjinniArray* entities;
+  Grid* grid;
+
+  WorldSettings settings;
 } World;
 
 struct Djinni_Game_GameWorldStruct {
-  World* (*create)();
+  World* (*create)(WorldSettings);
   void (*addEntity)(World*, Entity*);
   void (*removeEntity)(World*, Entity*);
   void (*destroy)(World*);
