@@ -5,6 +5,7 @@
 
 Entity* player = NULL;
 Entity* enemy = NULL;
+Entity* enemy2 = NULL;
 
 void playerUpdate(Entity* entity, Game* game, double dt) {}
 
@@ -23,9 +24,11 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
   player->body.velocity.dx = 1;
 
   enemy = Djinni.Renderable->Sprite->create(0, 50, "bin/gfx/enemy.png");
+  enemy2 = Djinni.Renderable->Sprite->create(850, 50, "bin/gfx/enemy.png");
 
   Djinni.Game->World->addEntity(game->world, player);
   Djinni.Game->World->addEntity(game->world, enemy);
+  Djinni.Game->World->addEntity(game->world, enemy2);
 
   Djinni.Game->Camera->follow(camera, player, 0, 0);
 
@@ -123,8 +126,8 @@ int main(void) {
   Djinni.Video->Renderer->setBackgroundColor(Djinni.renderer, background);
 
   WorldSettings worldSettings = {
-    .width = 800,
-    .height = 800,
+    .width = 2000,
+    .height = 2000,
     .finestGridSize = 64,
     .mediumGridSize = 128,
     .coarseGridSize = 256,

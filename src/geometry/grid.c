@@ -22,7 +22,6 @@ static Grid* create(
   int midSize,
   int coarseSize
 ) {
-
   int cellSizes[DJINNI_GRID_MAX_LEVELS] = {
     finestSize, midSize, coarseSize
   };
@@ -61,6 +60,8 @@ static void initializeLevel(
 }
 
 static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
+  Djinni_Util_Logger.log_debug("Djinni::Geometry::Grid::insert( grid:(%p) entity:(%p) level:(%d) )", grid, e, levelIdx);
+
   GridLevel* level = &grid->levels[levelIdx];
   int cellSize = level->cellSize;
 
@@ -103,6 +104,8 @@ static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
 }
 
 void removeEntity(Grid* grid, Entity* e) {
+  Djinni_Util_Logger.log_debug("Djinni::Geometry::Grid::removeEntity( grid:(%p) entity:(%p) )", grid, e);
+
   for (int l = 0; l < grid->levelCount; l++) {
     GridLocation* b = &e->locations[l];
 
