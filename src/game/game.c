@@ -19,11 +19,14 @@ static Game* create(WorldSettings ws) {
 
   g->settings.fpsLock = 60.0;
   g->settings.logicRate = (g->settings.fpsLock / 1000);
+  g->settings.mediumRingTick = 0.1;
+  g->settings.coarseRingTick = 0.5;
 
   g->activeStage = NULL;
   g->stages = Djinni_Util_Array.initialize(10);
   g->world = Djinni_World.create(ws);
   g->camera = NULL;
+  g->stats.dt = g->stats.mediumdt = g->stats.coarsedt = 0.0;
 
   return g;
 }

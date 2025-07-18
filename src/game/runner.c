@@ -21,16 +21,39 @@ static void update(Game* game, double dt) {
     game->camera->update(game->camera, game, dt);
   }
 
+  ViewportBounds bounds = Djinni.Game->Camera->getViewportBounds(game->camera);
+
+  //
+  // tick fine ring every frame
+  //
   Djinni.Physics->tick(game, dt, DJINNI_RING_FINE);
-
-  game->activeStage->update(game->activeStage, game, dt);
-
 
   Djinni.Geometry->Grid->update(
     game->world->grid,
-    Djinni.Game->Camera->getViewportBounds(game->camera),
+    bounds,
     DJINNI_RING_FINE
   );
+
+  //
+  // tick medium ring tick to the locked frame rate
+  //      example: settings.mediumRingTick = 0.1
+  //      60fps = every 6 frames
+  //
+  if ( (dt - game->stats.mediumdt) > game->settings.mediumRingTick ) {
+    game->stats.mediumdt = dt;
+
+    Djinni.Physics->tick(game, dt, DJINNI_RING_MEDIUM);
+
+    Djinni.Geometry->Grid->update(
+      game->world->grid,
+      bounds,
+      DJINNI_RING_MEDIUM
+    );
+  }
+
+  game->activeStage->update(game->activeStage, game, dt);
+
+  game->stats.dt = dt;
 }
 
 static void draw(Game* game, double dt) {

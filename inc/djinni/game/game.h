@@ -12,10 +12,16 @@
 typedef struct Djinni_Game_SettingsStruct {
   float fpsLock;
   float logicRate;
+
+  float mediumRingTick;
+  float coarseRingTick;
 } Djinni_Game_Settings;
 
 typedef struct Djinni_Game_StatsStruct {
   int fps;
+  double dt;
+  double mediumdt;
+  double coarsedt;
 } Djinni_Game_Stats;
 
 typedef struct Djinni_Game_GameStruct {
