@@ -17,6 +17,7 @@
 #include "djinni/util/array.h"
 
 typedef enum {
+  ENTITY_DESTORYED,
   ENTITY_DEAD,
   ENTITY_ALIVE
 } ENTITY_STATE;

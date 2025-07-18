@@ -7,6 +7,7 @@ static void initialize() {
   Djinni_Util_Logger.log_dev("Djinni::Physics.initialize");
 
   Djinni_Physics.Body = &Djinni_Physics_Body;
+  Djinni_Physics.Collision = &Djinni_Physics_Collision;
 }
 
 static void tick(Game* game, double dt, DJINNI_RING ring) {
@@ -19,7 +20,24 @@ static void tick(Game* game, double dt, DJINNI_RING ring) {
 
       if (cell->entities->used > 0) {
         for (int i = 0; i < cell->entities->used; i++) {
-          Djinni_Physics_Body.tickVelocity(cell->entities->data[i], dt);
+  
+          Entity* entity = cell->entities->data[i];
+
+          Djinni_Physics_Body.tickVelocity(entity, dt);
+
+          //
+          // only check for collisions if the entity has moved
+          //
+          if (entity->dirty) {
+            Djinni_Physics_Collision.tick(
+              game,
+              entity,
+              cell,
+              i,
+              dt
+            );
+          }
+
         }
       }
 

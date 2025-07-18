@@ -59,18 +59,35 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
 
       if (cell->entities->used > 0) {
         for (int i = 0; i < cell->entities->used; i++) {
+          Entity* subject = cell->entities->data[i];
 
-           DJINNI_RING expectedRing = Djinni_Geometry_Grid.computeRingLevel(viewport, cell->entities->data[i]);
-           DJINNI_RING currentRing = Djinni_Geometry_Grid.getCurrentEntityRing(cell->entities->data[i]);
+          //
+          // if the entity is destoryed, remove from the entities list and grid
+          // decrement i so the shift is accounted for
+          //
+          if (subject->status == ENTITY_DESTORYED) {
+            removeEntity(game->world, subject);
+            i--;
+            continue;
+          }
+
+          //
+          // movement cleanup
+          //
+          subject->dirty = 0;
+
+          //
+          // Ring updates due to camera scrolls or movement
+          //
+          DJINNI_RING expectedRing = Djinni_Geometry_Grid.computeRingLevel(viewport, cell->entities->data[i]);
+          DJINNI_RING currentRing = Djinni_Geometry_Grid.getCurrentEntityRing(cell->entities->data[i]);
 
            if (expectedRing != currentRing) {
               Djinni_Util_Logger.log_debug(
                 "Djinni::Geometry::Grid.update( grid:(%p), entity:(%p) ring:(%d) nextRing:(%d) )",
                 game->world->grid, cell->entities->data[i], currentRing, expectedRing
               );
-              
-              Entity* subject = cell->entities->data[i];
-              
+
               Djinni_Geometry_Grid.removeEntity(game->world->grid, subject);
               Djinni_Geometry_Grid.insert(game->world->grid, subject, expectedRing);
 
