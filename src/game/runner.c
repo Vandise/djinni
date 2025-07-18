@@ -28,12 +28,15 @@ static void update(Game* game, double dt) {
 
 static void draw(Game* game, double dt) {
   //
-  // todo: draw entity relative to camera
+  // todo: draw only ring 0 in the grid
   //
+  /*
   for (int i = 0; i < game->world->entities->used; i++) {
     Entity* entity = (Entity*)(game->world->entities->data[i]);
     Djinni.Renderable->draw(Djinni.renderer, entity, game->camera);
   }
+  */
+  Djinni.Renderable->draw(Djinni.renderer, game->world->grid, game->camera, DJINNI_RING_FINE);
 
   game->activeStage->draw(game->activeStage, game, dt);
 }

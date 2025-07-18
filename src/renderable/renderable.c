@@ -12,8 +12,22 @@ static void initialize() {
   Djinni_Renderable.Shape->initialize();
 }
 
-static void draw(Renderer* r, Entity* e, Camera* c) {
-  Djinni_Renderable_Paint.entity(r, e, c);
+static void draw(Renderer* r, Grid* grid, Camera* c, DJINNI_RING ring) {
+  GridLevel* level = &grid->levels[ring];
+
+  for (int y = 0; y < level->height; y++) {
+    for (int x = 0; x < level->width; x++) {
+      
+      GridCell* cell = &level->cells[y * level->width + x];
+
+      if (cell->entities->used > 0) {
+        for (int i = 0; i < cell->entities->used; i++) {
+          Djinni_Renderable_Paint.entity(r, cell->entities->data[i], c);
+        }
+      }
+
+    }
+  }
 }
 
 struct Djinni_RenderableStruct Djinni_Renderable = {

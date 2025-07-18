@@ -1,6 +1,7 @@
 #ifndef DJINNI_RENDERABLE
 #define DJINNI_RENDERABLE 1
 
+#include "djinni/geometry/shared.h"
 #include "djinni/renderable/shared.h"
 #include "djinni/video/video.h"
 #include "djinni/game/camera.h"
@@ -17,7 +18,7 @@ struct Djinni_RenderableStruct {
   struct Djinni_Renderable_PaintStruct*  Paint;
 
   void (*initialize)();
-  void (*draw)(Renderer*, Entity*, Camera*);
+  void (*draw)(Renderer*, Grid*, Camera*, DJINNI_RING);
 };
 
 extern struct Djinni_RenderableStruct Djinni_Renderable;

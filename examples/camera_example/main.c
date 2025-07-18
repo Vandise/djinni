@@ -67,7 +67,8 @@ void draw(Stage* self, Game* game, double dt) {
   );
   Djinni.Renderable->Shape->setOutlineColor(&rect, white);
   Djinni.Renderable->Shape->setFillColor(&rect, white);
-  Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
+
+  Djinni.Renderable->Paint->entity(Djinni.renderer, &rect, game->camera);
 
   int predrawX = 500;
   int predrawY = 100;
@@ -79,7 +80,7 @@ void draw(Stage* self, Game* game, double dt) {
   );
   Djinni.Renderable->Shape->setOutlineColor(&rect, blue);
   Djinni.Renderable->Shape->setFillColor(&rect, blue);
-  Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
+  Djinni.Renderable->Paint->entity(Djinni.renderer, &rect, game->camera);
 
 
   Coordinate coords = Djinni.Renderable->Entity->getPosition(player);
@@ -89,7 +90,7 @@ void draw(Stage* self, Game* game, double dt) {
     player->body.bounds.instance.w, player->body.bounds.instance.h
   );
   Djinni.Renderable->Shape->setOutlineColor(&rect, white);
-  Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
+  Djinni.Renderable->Paint->entity(Djinni.renderer, &rect, game->camera);
 }
 
 void onDestroy(Stage* self, Game* game, Stage* next) {}
