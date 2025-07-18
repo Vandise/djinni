@@ -15,27 +15,25 @@ static void prepare(Game* game) {
 }
 
 static void update(Game* game, double dt) {
-  Djinni.Physics->tick(game, dt, DJINNI_RING_FINE);
-
   Djinni.Game->Camera->update(game->camera, dt);
 
   if (game->camera->update != NULL) {
     game->camera->update(game->camera, game, dt);
   }
 
+  Djinni.Physics->tick(game, dt, DJINNI_RING_FINE);
+
   game->activeStage->update(game->activeStage, game, dt);
+
+
+  Djinni.Geometry->Grid->update(
+    game->world->grid,
+    Djinni.Game->Camera->getViewportBounds(game->camera),
+    DJINNI_RING_FINE
+  );
 }
 
 static void draw(Game* game, double dt) {
-  //
-  // todo: draw only ring 0 in the grid
-  //
-  /*
-  for (int i = 0; i < game->world->entities->used; i++) {
-    Entity* entity = (Entity*)(game->world->entities->data[i]);
-    Djinni.Renderable->draw(Djinni.renderer, entity, game->camera);
-  }
-  */
   Djinni.Renderable->draw(Djinni.renderer, game->world->grid, game->camera, DJINNI_RING_FINE);
 
   game->activeStage->draw(game->activeStage, game, dt);

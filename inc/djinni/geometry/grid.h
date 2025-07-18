@@ -51,6 +51,8 @@ struct Djinni_Geometry_GridStruct {
   void (*insert)(Grid*, Entity*, DJINNI_RING);
   void (*removeEntity)(Grid*, Entity*);
   DJINNI_RING (*computeRingLevel)(ViewportBounds, Entity*);
+  DJINNI_RING (*getCurrentEntityRing)(Entity*);
+  void (*update)(Grid*, ViewportBounds, DJINNI_RING);
   void (*inspect)(Grid*);
   void (*destroy)(Grid*);
 };
