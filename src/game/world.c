@@ -49,8 +49,8 @@ static void removeEntity(World* w, Entity* e) {
   Djinni_Renderable.Entity->destroy(e);
 }
 
-static void update(World* w, ViewportBounds viewport, DJINNI_RING ring) {
-  GridLevel* level = &w->grid->levels[ring];
+static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double dt) {
+  GridLevel* level = &game->world->grid->levels[ring];
 
   for (int y = 0; y < level->height; y++) {
     for (int x = 0; x < level->width; x++) {
@@ -66,13 +66,24 @@ static void update(World* w, ViewportBounds viewport, DJINNI_RING ring) {
            if (expectedRing != currentRing) {
               Djinni_Util_Logger.log_debug(
                 "Djinni::Geometry::Grid.update( grid:(%p), entity:(%p) ring:(%d) nextRing:(%d) )",
-                w->grid, cell->entities->data[i], currentRing, expectedRing
+                game->world->grid, cell->entities->data[i], currentRing, expectedRing
               );
               
               Entity* subject = cell->entities->data[i];
               
-              Djinni_Geometry_Grid.removeEntity(w->grid, subject);
-              Djinni_Geometry_Grid.insert(w->grid, subject, expectedRing);
+              Djinni_Geometry_Grid.removeEntity(game->world->grid, subject);
+              Djinni_Geometry_Grid.insert(game->world->grid, subject, expectedRing);
+
+              if (expectedRing == DJINNI_RING_FINE || currentRing == DJINNI_RING_FINE) {
+                if(expectedRing == DJINNI_RING_FINE && subject->onEnterViewport != NULL) {
+                  subject->onEnterViewport(subject, game, dt);
+                  continue;
+                }
+  
+                if (currentRing == DJINNI_RING_FINE && expectedRing != DJINNI_RING_FINE && subject->onExitViewport != NULL) {
+                  subject->onExitViewport(subject, game, dt);
+                }
+              }
            }
         }
       }

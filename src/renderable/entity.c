@@ -50,6 +50,8 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
 
   e->update = NULL;
   e->onCollide = NULL;
+  e->onEnterViewport = NULL;
+  e->onExitViewport = NULL;
 
   return e;
 }

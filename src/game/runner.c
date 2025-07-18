@@ -31,9 +31,10 @@ static void update(Game* game, double dt) {
   Djinni.Physics->tick(game, dt, DJINNI_RING_FINE);
 
   Djinni.Game->World->update(
-    game->world,
+    game,
     bounds,
-    DJINNI_RING_FINE
+    DJINNI_RING_FINE,
+    dt
   );
 
   //
@@ -49,9 +50,10 @@ static void update(Game* game, double dt) {
     Djinni.Physics->tick(game, dt, DJINNI_RING_MEDIUM);
 
     Djinni.Game->World->update(
-      game->world,
+      game,
       bounds,
-      DJINNI_RING_MEDIUM
+      DJINNI_RING_MEDIUM,
+      dt
     );
   }
 
@@ -66,9 +68,10 @@ static void update(Game* game, double dt) {
     game->stats.coarsedt = dt;
 
     Djinni.Game->World->update(
-      game->world,
+      game,
       bounds,
-      DJINNI_RING_COARSE
+      DJINNI_RING_COARSE,
+      dt
     );
   }
 

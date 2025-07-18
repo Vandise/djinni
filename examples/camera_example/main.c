@@ -7,6 +7,14 @@ Entity* player = NULL;
 Entity* enemy = NULL;
 Entity* enemy2 = NULL;
 
+void enemyLeftViewport(Entity* e, Game* g, double dt) {
+  printf("Enemy left the viewport: %p \n", e);
+}
+
+void enemyEnteredViewport(Entity* e, Game* g, double dt) {
+  printf("Enemy entered the viewport: %p \n", e);
+}
+
 void playerUpdate(Entity* entity, Game* game, double dt) {}
 
 void onCreate(Stage* self, Game* game, Stage* previous) {
@@ -25,6 +33,10 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
 
   enemy = Djinni.Renderable->Sprite->create(0, 50, "bin/gfx/enemy.png");
   enemy2 = Djinni.Renderable->Sprite->create(850, 50, "bin/gfx/enemy.png");
+  enemy->onEnterViewport = enemyEnteredViewport;
+  enemy->onExitViewport = enemyLeftViewport;
+  enemy2->onEnterViewport = enemyEnteredViewport;
+  enemy2->onExitViewport = enemyLeftViewport;
 
   Djinni.Game->World->addEntity(game->world, player);
   Djinni.Game->World->addEntity(game->world, enemy);

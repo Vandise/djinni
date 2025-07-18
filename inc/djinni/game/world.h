@@ -38,7 +38,7 @@ struct Djinni_Game_GameWorldStruct {
   World* (*create)(WorldSettings);
   void (*addEntity)(World*, Entity*);
   void (*removeEntity)(World*, Entity*);
-  void (*update)(World*, ViewportBounds, DJINNI_RING);
+  void (*update)(Game*, ViewportBounds, DJINNI_RING, double);
   void (*destroy)(World*);
 };
 

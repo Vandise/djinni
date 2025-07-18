@@ -55,6 +55,8 @@ typedef struct EntityStruct {
 
   // functions
   void (*update)(struct EntityStruct*, Game*, double dt);
+  void (*onEnterViewport)(struct EntityStruct*, Game*, double dt);
+  void (*onExitViewport)(struct EntityStruct*, Game*, double dt);
   void (*onCollide)(struct EntityStruct*, struct EntityStruct*, Game*, double dt);
 } Entity;
 
