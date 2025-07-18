@@ -26,12 +26,12 @@ static void update(Game* game, double dt) {
   //
   // tick fine ring every frame
   //
-  // this will check for grid promotions/demotions, fine physics, collision, and advanced logic 
+  // this will check for grid promotions/demotions, fine physics, and advanced logic 
   //
   Djinni.Physics->tick(game, dt, DJINNI_RING_FINE);
 
-  Djinni.Geometry->Grid->update(
-    game->world->grid,
+  Djinni.Game->World->update(
+    game->world,
     bounds,
     DJINNI_RING_FINE
   );
@@ -48,8 +48,8 @@ static void update(Game* game, double dt) {
 
     Djinni.Physics->tick(game, dt, DJINNI_RING_MEDIUM);
 
-    Djinni.Geometry->Grid->update(
-      game->world->grid,
+    Djinni.Game->World->update(
+      game->world,
       bounds,
       DJINNI_RING_MEDIUM
     );
@@ -65,8 +65,8 @@ static void update(Game* game, double dt) {
   if ( (dt - game->stats.coarsedt) > game->settings.coarseRingTick ) {
     game->stats.coarsedt = dt;
 
-    Djinni.Geometry->Grid->update(
-      game->world->grid,
+    Djinni.Game->World->update(
+      game->world,
       bounds,
       DJINNI_RING_COARSE
     );

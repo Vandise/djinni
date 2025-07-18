@@ -181,38 +181,6 @@ static DJINNI_RING computeRingLevel(ViewportBounds viewport, Entity* e) {
   return DJINNI_RING_COARSE;
 }
 
-static void update(Grid* grid, ViewportBounds viewport, DJINNI_RING ring) {
-  GridLevel* level = &grid->levels[ring];
-
-  for (int y = 0; y < level->height; y++) {
-    for (int x = 0; x < level->width; x++) {
-      
-      GridCell* cell = &level->cells[y * level->width + x];
-
-      if (cell->entities->used > 0) {
-        for (int i = 0; i < cell->entities->used; i++) {
-
-           DJINNI_RING expectedRing = computeRingLevel(viewport, cell->entities->data[i]);
-           DJINNI_RING currentRing = getCurrentEntityRing(cell->entities->data[i]);
-
-           if (expectedRing != currentRing) {
-              Djinni_Util_Logger.log_debug(
-                "Djinni::Geometry::Grid.update( grid:(%p), entity:(%p) ring:(%d) nextRing:(%d) )",
-                grid, cell->entities->data[i], currentRing, expectedRing
-              );
-              
-              Entity* subject = cell->entities->data[i];
-              
-              removeEntity(grid, subject);
-              insert(grid, subject, expectedRing);
-           }
-        }
-      }
-
-    }
-  }
-}
-
 static void inspect(Grid* grid) {
 
   Djinni_Util_Logger.log_debug(
@@ -263,7 +231,6 @@ struct Djinni_Geometry_GridStruct Djinni_Geometry_Grid = {
   .removeEntity = removeEntity,
   .computeRingLevel = computeRingLevel,
   .getCurrentEntityRing = getCurrentEntityRing,
-  .update = update,
   .inspect = inspect,
   .destroy = destroy
 };

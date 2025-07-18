@@ -49,6 +49,38 @@ static void removeEntity(World* w, Entity* e) {
   Djinni_Renderable.Entity->destroy(e);
 }
 
+static void update(World* w, ViewportBounds viewport, DJINNI_RING ring) {
+  GridLevel* level = &w->grid->levels[ring];
+
+  for (int y = 0; y < level->height; y++) {
+    for (int x = 0; x < level->width; x++) {
+      
+      GridCell* cell = &level->cells[y * level->width + x];
+
+      if (cell->entities->used > 0) {
+        for (int i = 0; i < cell->entities->used; i++) {
+
+           DJINNI_RING expectedRing = Djinni_Geometry_Grid.computeRingLevel(viewport, cell->entities->data[i]);
+           DJINNI_RING currentRing = Djinni_Geometry_Grid.getCurrentEntityRing(cell->entities->data[i]);
+
+           if (expectedRing != currentRing) {
+              Djinni_Util_Logger.log_debug(
+                "Djinni::Geometry::Grid.update( grid:(%p), entity:(%p) ring:(%d) nextRing:(%d) )",
+                w->grid, cell->entities->data[i], currentRing, expectedRing
+              );
+              
+              Entity* subject = cell->entities->data[i];
+              
+              Djinni_Geometry_Grid.removeEntity(w->grid, subject);
+              Djinni_Geometry_Grid.insert(w->grid, subject, expectedRing);
+           }
+        }
+      }
+
+    }
+  }
+}
+
 static void destroy(World* w) {
   Djinni_Util_Logger.log_dev("Djinni::Game::World.destroy( address:(%p) )", w);
 
@@ -66,5 +98,6 @@ struct Djinni_Game_GameWorldStruct Djinni_World = {
   .create = create,
   .addEntity = addEntity,
   .removeEntity = removeEntity,
+  .update = update,
   .destroy = destroy
 };
