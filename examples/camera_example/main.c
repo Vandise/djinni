@@ -155,9 +155,8 @@ int main(void) {
   );
 
   Djinni.Game->addStage(game, s);
-  Djinni.Game->changeStage(game, 0);
 
-  Djinni.start(game);
+  Djinni.start(game, 0);
 
   Djinni.Logger->log_debug("FPS:(%d)", game->stats.fps);
 

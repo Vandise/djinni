@@ -40,7 +40,7 @@ static void setFlag(const char *name, const char *value) {
   SDL_SetHint(name, value);
 }
 
-static void start(Game* game) {
+static void start(Game* game, int level) {
   Djinni_Util_Logger.log_dev("Djinni.start( game:(%p) )", game);
 
   if (game->camera == NULL) {
@@ -54,6 +54,8 @@ static void start(Game* game) {
     );
     game->world->camera = game->camera;
   }
+
+  Djinni_Game.changeStage(game, level);
 
   Djinni_Game.Runner->execute(game);
 }
