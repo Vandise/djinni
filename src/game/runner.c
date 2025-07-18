@@ -26,6 +26,8 @@ static void update(Game* game, double dt) {
   //
   // tick fine ring every frame
   //
+  // this will check for grid promotions/demotions, fine physics, collision, and advanced logic 
+  //
   Djinni.Physics->tick(game, dt, DJINNI_RING_FINE);
 
   Djinni.Geometry->Grid->update(
@@ -39,6 +41,8 @@ static void update(Game* game, double dt) {
   //      example: settings.mediumRingTick = 0.1
   //      60fps = every 6 frames
   //
+  //  This should check for grid promotions/demotions, simple physics, and general logic
+  //
   if ( (dt - game->stats.mediumdt) > game->settings.mediumRingTick ) {
     game->stats.mediumdt = dt;
 
@@ -48,6 +52,23 @@ static void update(Game* game, double dt) {
       game->world->grid,
       bounds,
       DJINNI_RING_MEDIUM
+    );
+  }
+
+  //
+  // tick coarse ring tick to the locked frame rate
+  //      example: settings.mediumRingTick = 0.9
+  //      60fps = every 54 frames
+  //
+  //  this should only check grid promotions/demotions and not execute any physics
+  //
+  if ( (dt - game->stats.coarsedt) > game->settings.coarseRingTick ) {
+    game->stats.coarsedt = dt;
+
+    Djinni.Geometry->Grid->update(
+      game->world->grid,
+      bounds,
+      DJINNI_RING_COARSE
     );
   }
 
