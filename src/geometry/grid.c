@@ -84,17 +84,19 @@ static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
   int maxX = (int)((point.x + renderedWidth) / cellSize);
   int maxY = (int)((point.y + renderedHeight) / cellSize);
 
+  GridLocation* location = &e->locations[levelIdx];
+
   //
   // Cache the occupied cells bounds and level in the entity
   //
-  e->locations[levelIdx].level = levelIdx;
-  e->locations[levelIdx].minX = minX;
-  e->locations[levelIdx].minY = minY;
-  e->locations[levelIdx].maxX = maxX;
-  e->locations[levelIdx].maxY = maxY;
-  if (e->locations[levelIdx].cells == NULL) {
-    e->locations[levelIdx].cells = Djinni_Util_Array.initialize(4);
-    e->locations[levelIdx].indicies = Djinni_Util_Array.initialize(4);
+  location->level = levelIdx;
+  location->minX = minX;
+  location->minY = minY;
+  location->maxX = maxX;
+  location->maxY = maxY;
+  if (location->cells == NULL) {
+    location->cells = Djinni_Util_Array.initialize(4);
+    location->indicies = Djinni_Util_Array.initialize(4);
   }
 
   //
@@ -116,15 +118,13 @@ static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
       int* cellIdptr = malloc(sizeof(int));
       *cellIdptr = cellId;
 
-      Djinni_Util_Array.insert(e->locations[levelIdx].cells, cell);
-      Djinni_Util_Array.insert(e->locations[levelIdx].indicies, cellIdptr);
+      Djinni_Util_Array.insert(location->cells, cell);
+      Djinni_Util_Array.insert(location->indicies, cellIdptr);
     }
   }
 }
 
 void removeEntity(Grid* grid, Entity* e) {
-  Djinni_Util_Logger.log_dev("Djinni::Geometry::Grid::removeEntity( grid:(%p) entity:(%p) )", grid, e);
-
   for (int level = 0; level < grid->levelCount; level++) {
     GridLocation* location = &e->locations[level];
 
@@ -132,27 +132,23 @@ void removeEntity(Grid* grid, Entity* e) {
       continue;
     }
 
-    for(int i = 0; i < e->locations[level].cells->used; i++) {
-      int* entityIndex = (e->locations[level].indicies->data[i]);
-      GridCell* cell = e->locations[level].cells->data[i];
+    // Fast-path: remove entity from each stored cell by cached index
+    for (int i = 0; i < location->cells->used; i++) {
+      GridCell* cell = location->cells->data[i];
+      int* entityIndexPtr = (location->indicies->data[i]);
 
-      Djinni_Util_Array.removeIndex(cell->entities, *entityIndex);
+      // Remove entity at known index without searching
+      Djinni_Util_Array.removeIndex(cell->entities, *entityIndexPtr);
     }
 
-    //Djinni_Util_Array.destroy(e->locations[level].cells, NULL);
-    //Djinni_Util_Array.destroy(e->locations[level].indicies, free);
+    // Reset location metadata
+    location->level = -1;
+    location->minX = location->minY = 0;
+    location->maxX = location->maxY = 0;
 
-    e->locations[level].level = -1;
-    e->locations[level].minX = 0;
-    e->locations[level].minY = 0;
-    e->locations[level].maxX = 0;
-    e->locations[level].maxY = 0;
-
-    //
-    // preserve memory allocated to the arrays
-    //
-    e->locations[level].cells->used = 0;
-    e->locations[level].indicies->used = 0;
+    // Preserve allocation; just clear use count
+    location->cells->used = 0;
+    location->indicies->used = 0;
   }
 }
 

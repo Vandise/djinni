@@ -34,12 +34,23 @@ static int insert(DjinniArray* array, void* data) {
 }
 
 static void removeIndex(DjinniArray* array, int index) {
+  /*
   array->data[index] = NULL;
 
   for (int i = index; i < array->used - 1; i++) {
     array->data[i] = array->data[i + 1];
   }
 
+  array->used--;
+
+  preserve in case order for drawing
+
+  */
+  if (index < 0 || index >= array->used) {
+    return;
+  }
+
+  array->data[index] = array->data[array->used - 1];
   array->used--;
 }
 
