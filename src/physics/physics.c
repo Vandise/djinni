@@ -10,7 +10,6 @@ static void initialize() {
   Djinni_Physics.Collision = &Djinni_Physics_Collision;
 }
 
-static int logDT = 0;
 static void tick(Game* game, double dt, DJINNI_RING ring) {
   GridLevel* level = &game->world->grid->levels[ring];
 
@@ -22,6 +21,8 @@ static void tick(Game* game, double dt, DJINNI_RING ring) {
       if (cell->entities->used > 0) {
         for (int i = 0; i < cell->entities->used; i++) {
           Entity* entity = cell->entities->data[i];
+
+          if (entity->status == ENTITY_DESTORYED) { continue; }
 
           Djinni_Physics_Body.tickVelocity(entity, dt);
 

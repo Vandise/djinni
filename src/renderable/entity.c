@@ -166,6 +166,17 @@ static void inspect(Entity* e) {
 
 static void destroy(Entity* e) {
   Djinni_Util_Logger.log_dev("Djinni::Renderable::Entity.arrayDestroyCallback( address:(%p) )", e);
+
+  for(int i = 0; i < DJINNI_GRID_MAX_LEVELS; i++) {
+    GridLocation* location = &e->locations[i];
+    if (location->cells != NULL) {
+      Djinni_Util_Array.destroy(location->cells, NULL);
+      Djinni_Util_Array.destroy(location->indicies, free);
+      location->cells = NULL;
+      location->indicies = NULL;
+    }
+  }
+
   free(e);
 }
 
