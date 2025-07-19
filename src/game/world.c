@@ -78,7 +78,7 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
           DJINNI_RING currentRing = Djinni_Geometry_Grid.getCurrentEntityRing(cell->entities->data[i]);
 
           if (expectedRing != currentRing) {
-            Djinni_Util_Logger.log_debug(
+            Djinni_Util_Logger.log_dev(
               "Djinni::Geometry::Grid.update( grid:(%p), entity:(%p) ring:(%d) nextRing:(%d) )",
               game->world->grid, cell->entities->data[i], currentRing, expectedRing
             );

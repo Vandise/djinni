@@ -46,6 +46,8 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
     e->locations[i].minY = 0;
     e->locations[i].maxX = 0;
     e->locations[i].maxY = 0;
+    e->locations[i].cells    = NULL;
+    e->locations[i].indicies = NULL;
   }
 
   e->update = NULL;

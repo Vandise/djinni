@@ -133,7 +133,7 @@ static void execute(Game* game) {
     prepare(game);
     Djinni.Game->Input->process(game);
 
-    // lock logic to 60fps
+    // lock logic to 60fps if higher is set
   	while (dt > 1) {
   		tmpDelta = dt;
   		dt = 1;

@@ -60,7 +60,7 @@ static void initializeLevel(
 }
 
 static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
-  Djinni_Util_Logger.log_debug("Djinni::Geometry::Grid::insert( grid:(%p) entity:(%p) level:(%d) )", grid, e, levelIdx);
+  Djinni_Util_Logger.log_dev("Djinni::Geometry::Grid::insert( grid:(%p) entity:(%p) level:(%d) )", grid, e, levelIdx);
 
   GridLevel* level = &grid->levels[levelIdx];
   int cellSize = level->cellSize;
@@ -72,26 +72,17 @@ static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
   int renderedWidth = Djinni_Renderable.Entity->getRenderedWidth(e);
   int renderedHeight = Djinni_Renderable.Entity->getRenderedHeight(e);
 
+  if (point.x < 0 || point.y < 0) {
+    Djinni_Util_Logger.log_warn("Djinni::Geometry::Grid::insert( grid:(%p) entity:(%p) level:(%d) x:(%d) y:(%d) ) - outside of grid",
+      grid, e, levelIdx, point.x, point.y
+    );
+    return;
+  }
+
   int minX = (int)(point.x / cellSize);
   int minY = (int)(point.y / cellSize);
   int maxX = (int)((point.x + renderedWidth) / cellSize);
   int maxY = (int)((point.y + renderedHeight) / cellSize);
-
-  //
-  // Insert entity pointer into every overlapping cell
-  //
-  for (int y = minY; y <= maxY; y++) {
-    for (int x = minX; x <= maxX; x++) {
-      if (x < 0 || y < 0 || x >= level->width || y >= level->height) continue;
-      GridCell* cell = &level->cells[y * level->width + x];
-
-      if (cell->entities->used >= cell->capacity) {
-        continue;  // Skip if cell full
-      }
-
-      Djinni_Util_Array.insert(cell->entities, e);
-    }
-  }
 
   //
   // Cache the occupied cells bounds and level in the entity
@@ -101,47 +92,67 @@ static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
   e->locations[levelIdx].minY = minY;
   e->locations[levelIdx].maxX = maxX;
   e->locations[levelIdx].maxY = maxY;
+  if (e->locations[levelIdx].cells == NULL) {
+    e->locations[levelIdx].cells = Djinni_Util_Array.initialize(4);
+    e->locations[levelIdx].indicies = Djinni_Util_Array.initialize(4);
+  }
+
+  //
+  // Insert entity pointer into every overlapping cell
+  //
+  for (int y = minY; y <= maxY; y++) {
+    for (int x = minX; x <= maxX; x++) {
+      if (x < 0 || y < 0 || x >= level->width || y >= level->height) {
+        continue;
+      }
+  
+      GridCell* cell = &level->cells[y * level->width + x];
+
+      if (cell->entities->used >= cell->capacity) {
+        continue;  // Skip if cell full
+      }
+
+      int cellId = Djinni_Util_Array.insert(cell->entities, e);
+      int* cellIdptr = malloc(sizeof(int));
+      *cellIdptr = cellId;
+
+      Djinni_Util_Array.insert(e->locations[levelIdx].cells, cell);
+      Djinni_Util_Array.insert(e->locations[levelIdx].indicies, cellIdptr);
+    }
+  }
 }
 
-//
-// todo: this is very slow, cache cells where entity is stored
-//
 void removeEntity(Grid* grid, Entity* e) {
-  Djinni_Util_Logger.log_debug("Djinni::Geometry::Grid::removeEntity( grid:(%p) entity:(%p) )", grid, e);
+  Djinni_Util_Logger.log_dev("Djinni::Geometry::Grid::removeEntity( grid:(%p) entity:(%p) )", grid, e);
 
-  for (int l = 0; l < grid->levelCount; l++) {
-    GridLocation* b = &e->locations[l];
+  for (int level = 0; level < grid->levelCount; level++) {
+    GridLocation* location = &e->locations[level];
 
-    // entity is not in this ring
-    if (b->level < 0) {
+    if (location->level < 0) {
       continue;
     }
 
-    GridLevel* level = &grid->levels[l];
+    for(int i = 0; i < e->locations[level].cells->used; i++) {
+      int* entityIndex = (e->locations[level].indicies->data[i]);
+      GridCell* cell = e->locations[level].cells->data[i];
 
-    for (int y = b->minY; y <= b->maxY; y++) {
-      for (int x = b->minX; x <= b->maxX; x++) {
-        
-        if (x < 0 || y < 0 || x >= level->width || y >= level->height) {
-          continue;
-        }
-
-        GridCell* cell = &level->cells[y * level->width + x];
-        for (int i = 0; i < cell->entities->used; i++) {
-          if (cell->entities->data[i] == e) {
-            Djinni_Util_Array.removeIndex(cell->entities, i);
-            break;
-          }
-        }
-
-      }
+      Djinni_Util_Array.removeIndex(cell->entities, *entityIndex);
     }
 
-    e->locations[l].level = -1;
-    e->locations[l].minX = 0;
-    e->locations[l].minY = 0;
-    e->locations[l].maxX = 0;
-    e->locations[l].maxY = 0;
+    //Djinni_Util_Array.destroy(e->locations[level].cells, NULL);
+    //Djinni_Util_Array.destroy(e->locations[level].indicies, free);
+
+    e->locations[level].level = -1;
+    e->locations[level].minX = 0;
+    e->locations[level].minY = 0;
+    e->locations[level].maxX = 0;
+    e->locations[level].maxY = 0;
+
+    //
+    // preserve memory allocated to the arrays
+    //
+    e->locations[level].cells->used = 0;
+    e->locations[level].indicies->used = 0;
   }
 }
 

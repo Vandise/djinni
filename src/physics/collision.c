@@ -13,7 +13,7 @@ static void tick(Game* game, Entity* entity, GridCell* cell, int index, double d
     for (int i = 0; i < cell->entities->used; i++) {
       Entity* other = cell->entities->data[i];
 
-      if (entity == other) {
+      if (entity == other || i == index) {
         continue;
       }
 

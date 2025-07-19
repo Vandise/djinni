@@ -7,6 +7,7 @@
 typedef struct PhysicsVelocityStruct {
   int dx;
   int dy;
+  double dt;
 } PhysicsVelocity;
 
 typedef struct PhysicsBodyStruct {

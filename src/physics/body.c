@@ -9,7 +9,7 @@ static PhysicsBody create(int x, int y, int w, int h) {
     x,y,w,h
   );
 
-  body.velocity.dx = body.velocity.dy = 0;
+  body.velocity.dt = body.velocity.dx = body.velocity.dy = 0;
 
   return body;
 }
@@ -17,9 +17,12 @@ static PhysicsBody create(int x, int y, int w, int h) {
 
 static void tickVelocity(Entity* entity, double dt) {
   if (entity->body.velocity.dx != 0 || entity->body.velocity.dy != 0) {
-    Djinni_Renderable.Entity->move(
-      entity, entity->body.velocity.dx, entity->body.velocity.dy
-    );
+    if (dt - entity->body.velocity.dt >= 1) {
+      Djinni_Renderable.Entity->move(
+        entity, entity->body.velocity.dx, entity->body.velocity.dy
+      );
+      entity->body.velocity.dt = dt;
+    }
   }
 }
 

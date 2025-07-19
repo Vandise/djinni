@@ -13,15 +13,6 @@ typedef enum {
 } DJINNI_RING;
 
 //
-// A cache for an entity and its bounds in a grid cell
-//
-typedef struct GridLocationStruct {
-  int level;          // Grid level where the entity was inserted
-  int minX, minY;     // Cached previous grid cell bounds (min coords)
-  int maxX, maxY;     // Cached previous grid cell bounds (max coords)
-} GridLocation;
-
-//
 // A single cell in the grid storing pointers to entities occupying it
 //
 typedef struct GridCellStruct {
@@ -45,6 +36,18 @@ typedef struct GridStruct {
   GridLevel* levels; // Array of grid levels
   int levelCount;    // Number of levels (e.g., 3)
 } Grid;
+
+//
+// A cache for an entity and its bounds in a grid cell
+//
+typedef struct GridLocationStruct {
+  int level;             // Grid level where the entity was inserted
+  int minX, minY;        // Cached previous grid cell bounds (min coords)
+  int maxX, maxY;        // Cached previous grid cell bounds (max coords)
+
+  DjinniArray* cells;    // occupying cells
+  DjinniArray* indicies; // entities index for each cell
+} GridLocation;
 
 struct Djinni_Geometry_GridStruct {
   Grid* (*create)(int,int,int,int,int,int);
