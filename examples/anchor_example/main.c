@@ -8,6 +8,8 @@ float ax[] = {0.5, 0, 1, 1, 0};
 float ay[] = {0.5, 0, 0, 1, 1};
 Entity* player = NULL;
 
+static double updateDT = 0;
+
 void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni.Logger->log_debug("Stage.onCreate( address:(%p) id:(%d) )", self, self->id);
 
@@ -22,11 +24,14 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
 void prepare(Stage* self, Game* game) {}
 
 void update(Stage* self, Game* game, double dt) {
-  if (i+1>5) { i = 0; }
-
-  Djinni.Renderable->Entity->setAnchor(player, ax[i], ay[i]);
-
-  i++;
+  if ( dt - updateDT >= 1000 ) {
+    if (i+1>5) { i = 0; }
+  
+    Djinni.Renderable->Entity->setAnchor(player, ax[i], ay[i]);
+  
+    i++;
+    updateDT = dt;
+  }
 }
 
 void draw(Stage* self, Game* game, double dt) {
@@ -44,12 +49,15 @@ void draw(Stage* self, Game* game, double dt) {
     .a = 255
   };
 
+  Coordinate pos = Djinni.Renderable->Entity->getRenderPoint(player);
+
   Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(100,100, 10, 10);
   Djinni.Renderable->Shape->setOutlineColor(&rect, white);
   Djinni.Renderable->Shape->setFillColor(&rect, white);
-  Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
+  Djinni.Renderable->Paint->entity(Djinni.renderer, &rect, game->camera);
 
-  Coordinate pos = Djinni.Renderable->Entity->getRenderPoint(player);
+  // Renderer*, Grid*, Camera*, DJINNI_RING)
+  //Djinni.Renderable->draw(Djinni.renderer, game->world->grid, game->camera, DJINNI_RING_FINE);
 
 
   Shape playerRect;
@@ -120,8 +128,7 @@ int main(void) {
   );
 
   Djinni.Game->addStage(game, s);
-  Djinni.Game->changeStage(game, 0);
-  Djinni.start(game);
+  Djinni.start(game, 0);
 
   Djinni.Logger->log_debug("FPS:(%d)", game->stats.fps);
 
