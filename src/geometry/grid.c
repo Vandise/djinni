@@ -103,6 +103,9 @@ static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
   e->locations[levelIdx].maxY = maxY;
 }
 
+//
+// todo: this is very slow, cache cells where entity is stored
+//
 void removeEntity(Grid* grid, Entity* e) {
   Djinni_Util_Logger.log_debug("Djinni::Geometry::Grid::removeEntity( grid:(%p) entity:(%p) )", grid, e);
 
@@ -140,6 +143,32 @@ void removeEntity(Grid* grid, Entity* e) {
     e->locations[l].maxX = 0;
     e->locations[l].maxY = 0;
   }
+}
+
+static int entityNeedsCellUpdate(Grid* grid, Entity* e) {
+  Point point = Djinni_Renderable.Entity->getRenderPoint(e);
+  int renderedWidth = Djinni_Renderable.Entity->getRenderedWidth(e);
+  int renderedHeight = Djinni_Renderable.Entity->getRenderedHeight(e);
+  int result = 0;
+
+  for (int l = 0; l < DJINNI_GRID_MAX_LEVELS; l++) {
+    if (e->locations[l].level > -1) {
+      int cellSize = grid->levels[l].cellSize;
+      int minX = (int)(point.x / cellSize);
+      int minY = (int)(point.y / cellSize);
+      int maxX = (int)((point.x + renderedWidth) / cellSize);
+      int maxY = (int)((point.y + renderedHeight) / cellSize);
+
+      if (minX != e->locations[l].minX || minY != e->locations[l].minY ||
+          maxX != e->locations[l].maxX || maxY != e->locations[l].maxY
+      ) {
+        result = 1;
+        break;
+      }
+    }
+  }
+
+  return result;
 }
 
 static DJINNI_RING getCurrentEntityRing(Entity* e) {
@@ -231,6 +260,7 @@ struct Djinni_Geometry_GridStruct Djinni_Geometry_Grid = {
   .removeEntity = removeEntity,
   .computeRingLevel = computeRingLevel,
   .getCurrentEntityRing = getCurrentEntityRing,
+  .entityNeedsCellUpdate = entityNeedsCellUpdate,
   .inspect = inspect,
   .destroy = destroy
 };

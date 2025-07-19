@@ -32,7 +32,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->status = ENTITY_ALIVE;
   e->id = -1;
 
-  e->dirty = 1;
+  e->dirty = 0;
   e->alwaysUpdate = 0;
   e->keepAlive = 0;
 

@@ -11,11 +11,11 @@ static int rectangleOverlaps(int ax, int ay, int aw, int ah, int bx, int by, int
 static void tick(Game* game, Entity* entity, GridCell* cell, int index, double dt) {
   if (cell->entities->used > 0) {
     for (int i = 0; i < cell->entities->used; i++) {
-      if (i == index) {
+      Entity* other = cell->entities->data[i];
+
+      if (entity == other) {
         continue;
       }
-
-      Entity* other = cell->entities->data[i];
 
       Rectangle o = other->body.bounds;
       Rectangle e = entity->body.bounds;

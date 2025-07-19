@@ -72,36 +72,41 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
           }
 
           //
-          // movement cleanup
-          //
-          subject->dirty = 0;
-
-          //
           // Ring updates due to camera scrolls or movement
           //
           DJINNI_RING expectedRing = Djinni_Geometry_Grid.computeRingLevel(viewport, cell->entities->data[i]);
           DJINNI_RING currentRing = Djinni_Geometry_Grid.getCurrentEntityRing(cell->entities->data[i]);
 
-           if (expectedRing != currentRing) {
-              Djinni_Util_Logger.log_debug(
-                "Djinni::Geometry::Grid.update( grid:(%p), entity:(%p) ring:(%d) nextRing:(%d) )",
-                game->world->grid, cell->entities->data[i], currentRing, expectedRing
-              );
-
+          if (expectedRing != currentRing) {
+            Djinni_Util_Logger.log_debug(
+              "Djinni::Geometry::Grid.update( grid:(%p), entity:(%p) ring:(%d) nextRing:(%d) )",
+              game->world->grid, cell->entities->data[i], currentRing, expectedRing
+            );
+          
+            Djinni_Geometry_Grid.removeEntity(game->world->grid, subject);
+            Djinni_Geometry_Grid.insert(game->world->grid, subject, expectedRing);
+          
+            if (expectedRing == DJINNI_RING_FINE || currentRing == DJINNI_RING_FINE) {
+              if(expectedRing == DJINNI_RING_FINE && subject->onEnterViewport != NULL) {
+                subject->onEnterViewport(subject, game, dt);
+                continue;
+              }
+          
+              if (currentRing == DJINNI_RING_FINE && expectedRing != DJINNI_RING_FINE && subject->onExitViewport != NULL) {
+                subject->onExitViewport(subject, game, dt);
+              }
+            }
+          } else {
+            if (subject->dirty && Djinni_Geometry_Grid.entityNeedsCellUpdate(game->world->grid, subject)) {
               Djinni_Geometry_Grid.removeEntity(game->world->grid, subject);
               Djinni_Geometry_Grid.insert(game->world->grid, subject, expectedRing);
+            }
+          }
 
-              if (expectedRing == DJINNI_RING_FINE || currentRing == DJINNI_RING_FINE) {
-                if(expectedRing == DJINNI_RING_FINE && subject->onEnterViewport != NULL) {
-                  subject->onEnterViewport(subject, game, dt);
-                  continue;
-                }
-  
-                if (currentRing == DJINNI_RING_FINE && expectedRing != DJINNI_RING_FINE && subject->onExitViewport != NULL) {
-                  subject->onExitViewport(subject, game, dt);
-                }
-              }
-           }
+          //
+          // movement cleanup
+          //
+          subject->dirty = 0;
         }
       }
 

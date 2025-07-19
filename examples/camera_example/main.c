@@ -17,7 +17,7 @@ void enemyEnteredViewport(Entity* e, Game* g, double dt) {
 
 void onPlayerCollide(Entity* self, Entity* other, Game* g, double dt) {
   printf("Player collides with: %p\n", other);
-  other->status = ENTITY_DESTORYED;
+  //other->status = ENTITY_DESTORYED;
 }
 
 void playerUpdate(Entity* entity, Game* game, double dt) {}
@@ -32,13 +32,13 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
   Djinni.Game->setCamera(game, camera);
   Djinni.Game->Camera->inspect(camera);
 
-  player = Djinni.Renderable->Sprite->create(0, 0, "bin/gfx/player.png");
+  player = Djinni.Renderable->Sprite->create(400, 400, "bin/gfx/player.png");
   player->update = playerUpdate;
   player->onCollide = onPlayerCollide;
   player->body.velocity.dx = 1;
 
-  enemy = Djinni.Renderable->Sprite->create(70, 0, "bin/gfx/enemy.png");
-  enemy2 = Djinni.Renderable->Sprite->create(850, 50, "bin/gfx/enemy.png");
+  enemy = Djinni.Renderable->Sprite->create(520, 400, "bin/gfx/enemy.png");
+  enemy2 = Djinni.Renderable->Sprite->create(1250, 450, "bin/gfx/enemy.png");
   enemy->onEnterViewport = enemyEnteredViewport;
   enemy->onExitViewport = enemyLeftViewport;
   enemy2->onEnterViewport = enemyEnteredViewport;
