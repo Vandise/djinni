@@ -71,6 +71,10 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
             continue;
           }
 
+          if (subject->update != NULL) {
+            subject->update(subject, game, dt);
+          }
+
           //
           // Ring updates due to camera scrolls or movement
           //
@@ -82,16 +86,16 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
               "Djinni::Geometry::Grid.update( grid:(%p), entity:(%p) ring:(%d) nextRing:(%d) )",
               game->world->grid, cell->entities->data[i], currentRing, expectedRing
             );
-          
+
             Djinni_Geometry_Grid.removeEntity(game->world->grid, subject);
             Djinni_Geometry_Grid.insert(game->world->grid, subject, expectedRing);
-          
+
             if (expectedRing == DJINNI_RING_FINE || currentRing == DJINNI_RING_FINE) {
               if(expectedRing == DJINNI_RING_FINE && subject->onEnterViewport != NULL) {
                 subject->onEnterViewport(subject, game, dt);
                 continue;
               }
-          
+
               if (currentRing == DJINNI_RING_FINE && expectedRing != DJINNI_RING_FINE && subject->onExitViewport != NULL) {
                 subject->onExitViewport(subject, game, dt);
               }
