@@ -39,6 +39,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
 
   e->texture = NULL;
   e->children = NULL;
+  e->data = NULL;
 
   for(int i = 0; i < DJINNI_GRID_MAX_LEVELS; i++) {
     e->locations[i].level = -1;
@@ -54,6 +55,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->onCollide = NULL;
   e->onEnterViewport = NULL;
   e->onExitViewport = NULL;
+  e->onDestroy = NULL;
 
   return e;
 }

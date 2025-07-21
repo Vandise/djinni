@@ -66,6 +66,9 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
           // decrement i so the shift is accounted for
           //
           if (subject->status == ENTITY_DESTORYED) {
+            if (subject->onDestroy != NULL) {
+              subject->onDestroy(subject, game, dt);
+            }
             removeEntity(game->world, subject);
             i--;
             continue;

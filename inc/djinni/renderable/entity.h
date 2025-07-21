@@ -54,11 +54,15 @@ typedef struct EntityStruct {
   Shape shape;
   DjinniArray* children;
 
+  // user data
+  void* data;
+
   // functions
   void (*update)(struct EntityStruct*, Game*, double dt);
   void (*onEnterViewport)(struct EntityStruct*, Game*, double dt);
   void (*onExitViewport)(struct EntityStruct*, Game*, double dt);
   void (*onCollide)(struct EntityStruct*, struct EntityStruct*, Game*, double dt);
+  void (*onDestroy)(struct EntityStruct*, Game*, double dt);
 } Entity;
 
 struct Djinni_Renderable_EntityStruct {
