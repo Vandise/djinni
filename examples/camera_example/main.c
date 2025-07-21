@@ -20,7 +20,9 @@ void onPlayerCollide(Entity* self, Entity* other, Game* g, double dt) {
   other->status = ENTITY_DESTORYED;
 }
 
-void playerUpdate(Entity* entity, Game* game, double dt) {}
+void playerUpdate(Entity* entity, Game* game, double dt) {
+
+}
 
 void onCreate(Stage* self, Game* game, Stage* previous) {
   Camera* camera = Djinni.Game->Camera->create(
