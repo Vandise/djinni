@@ -52,7 +52,7 @@ void draw(Stage* self, Game* game, double dt) {
   Entity rect = Djinni.Renderable->Shape->Rectangle->rectangle(100,100, 10, 10);
   Djinni.Renderable->Shape->setOutlineColor(&rect, white);
   Djinni.Renderable->Shape->setFillColor(&rect, white);
-  Djinni.Renderable->draw(Djinni.renderer, &rect, game->camera);
+  Djinni.Renderable->Paint->entity(Djinni.renderer, &rect, game->camera);
 
   Coordinate pos = Djinni.Renderable->Entity->getRenderPoint(player);
 
@@ -115,9 +115,8 @@ int main(void) {
   );
 
   Djinni.Game->addStage(game, s);
-  Djinni.Game->changeStage(game, 0);
 
-  Djinni.start(game);
+  Djinni.start(game, 0);
 
   Djinni.Logger->log_debug("FPS:(%d)", game->stats.fps);
 
