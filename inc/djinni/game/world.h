@@ -37,7 +37,7 @@ typedef struct Djinni_Game_WorldStruct {
 struct Djinni_Game_GameWorldStruct {
   World* (*create)(WorldSettings);
   void (*addEntity)(World*, Entity*);
-  void (*removeEntity)(World*, Entity*);
+  void (*removeEntity)(Game*, Entity*, double);
   void (*update)(Game*, ViewportBounds, DJINNI_RING, double);
   void (*destroy)(World*);
 };

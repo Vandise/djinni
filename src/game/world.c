@@ -34,7 +34,9 @@ static void addEntity(World* w, Entity* e) {
   Djinni_Geometry_Grid.insert(w->grid, e, ring);
 }
 
-static void removeEntity(World* w, Entity* e) {
+static void removeEntity(Game* game, Entity* e, double dt) {
+  World* w = game->world;
+
   Djinni_Util_Logger.log_dev("Djinni::Game::World.removeEntity(world:(%p), entity:(%p) entity.id:(%d) )", w, e, e->id);
 
   int id = e->id;
@@ -46,6 +48,11 @@ static void removeEntity(World* w, Entity* e) {
 
   Djinni_Geometry_Grid.removeEntity(w->grid, e);
   Djinni_Util_Array.removeIndex(w->entities, e->id);
+
+  if (e->onDestroy != NULL) {
+    e->onDestroy(e, game, dt);
+  }
+
   Djinni_Renderable.Entity->destroy(e);
 
   for (int i = id; i < w->entities->used; i++) {
@@ -125,7 +132,7 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
 
   for (int i = 0; i < entitiesToDelete->used; i++) {
     Entity* e = (Entity*)entitiesToDelete->data[i];
-    removeEntity(game->world, e);
+    removeEntity(game, e, dt);
   }
 
   Djinni_Util_Array.destroy(entitiesToDelete, NULL);
