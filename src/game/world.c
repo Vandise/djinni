@@ -70,7 +70,7 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
               subject->onDestroy(subject, game, dt);
             }
             removeEntity(game->world, subject);
-            i--;
+            i = i == 0 ? 0 : i - 1;
             continue;
           }
 

@@ -243,6 +243,13 @@ static void inspect(Grid* grid) {
             x, y, cell->entities->used
           );
 
+          for (int i = 0; i < cell->entities->used; i++) {
+            Djinni_Util_Logger.log_debug(
+              "\t\t\tDjinni::Geometry::Grid::Cell::Entity( entity:(%p) )",
+              cell->entities->data[i]
+            );
+          }
+
           totalEntities += cell->entities->used;
         }
       }
