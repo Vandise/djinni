@@ -1,15 +1,15 @@
 #include "game.h"
 
+void onPlayerCollide(Entity* self, Entity* other, Game* g, double dt) {
+
+}
+
 Entity* createPlayer() {
   Entity* player = Djinni.Renderable->Sprite->create(800, 600, "bin/gfx/player.png");
   player->update = playerUpdate;
-  //player->onCollide = onPlayerCollide;
+  player->onCollide = onPlayerCollide;
 
   return player;
-}
-
-void onPlayerCollide(Entity* self, Entity* other, Game* g, double dt) {
-  printf("Player collides with: %p\n", other);
 }
 
 static double pdt = 0;

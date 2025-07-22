@@ -20,7 +20,7 @@ void updateStage(Stage* self, Game* game, double dt) {
 
     Djinni.Game->World->addEntity(game->world, enemy);
 
-    enemySpawnTimer = 30 + (rand() % 60);
+    enemySpawnTimer = 30 + (rand() % 180);
   }
 }
 
