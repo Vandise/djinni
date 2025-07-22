@@ -19,7 +19,7 @@ static int insert(DjinniArray* array, void* data) {
   Djinni_Util_Logger.log_dev("Djinni::Util::Array.insert( array:(%p), element:(%p), index:(%d) )", array, data, array->used);
 
   if (array->used == array->size) {
-    Djinni_Util_Logger.log_debug("\tDjinni::Util::Array.insert(resizing array)");
+    Djinni_Util_Logger.log_dev("\tDjinni::Util::Array.insert(resizing array)");
     array->size = (array->size * 3) / 2 + 8;
     array->data = (void**)(realloc(
       array->data, array->size * sizeof(void*)

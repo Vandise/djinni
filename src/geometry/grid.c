@@ -190,8 +190,8 @@ static DJINNI_RING computeRingLevel(ViewportBounds viewport, Entity* e) {
   Point entitypt = Djinni_Renderable.Entity->getPosition(e);
 
   if (
-    entitypt.x >= viewport.x1 && entitypt.x <= viewport.x2 &&
-    entitypt.y >= viewport.y1 && entitypt.y <= viewport.y2
+    entitypt.x > viewport.x1 && entitypt.x < viewport.x2 &&
+    entitypt.y > viewport.y1 && entitypt.y < viewport.y2
   ) {
     return DJINNI_RING_FINE;
   }
@@ -203,8 +203,8 @@ static DJINNI_RING computeRingLevel(ViewportBounds viewport, Entity* e) {
   int pty = viewport.y1 - screenheight / 2;
 
   if (
-    entitypt.x >= ptx && entitypt.x <= (screenWidth * 2) &&
-    entitypt.y >= pty && entitypt.y <= (screenheight * 2)
+    entitypt.x > ptx && entitypt.x < (screenWidth * 2) &&
+    entitypt.y > pty && entitypt.y < (screenheight * 2)
   ) {
     return DJINNI_RING_MEDIUM;
   }

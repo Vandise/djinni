@@ -28,6 +28,10 @@ static Game* create(WorldSettings ws) {
   g->camera = NULL;
   g->stats.dt = g->stats.mediumdt = g->stats.coarsedt = 0.0;
 
+  for (int i = 0; i < MAX_IO_KEY_CODE; i++) {
+    g->keyboard[i] = 0;
+  }
+
   return g;
 }
 
