@@ -15,7 +15,7 @@ void createBullet(Entity* player, Game* game) {
 }
 
 Entity* createPlayer() {
-  Entity* player = Djinni.Renderable->Sprite->create(800, 400, "bin/gfx/player.png");
+  Entity* player = Djinni.Renderable->Sprite->create(1150, 400, "bin/gfx/player.png");
   player->update = playerUpdate;
   //player->onCollide = onPlayerCollide;
 

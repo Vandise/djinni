@@ -35,6 +35,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->dirty = 0;
   e->alwaysUpdate = 0;
   e->keepAlive = 0;
+  e->deleteFlag = 0;
 
 
   e->texture = NULL;
@@ -47,8 +48,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
     e->locations[i].minY = 0;
     e->locations[i].maxX = 0;
     e->locations[i].maxY = 0;
-    e->locations[i].cells    = NULL;
-    e->locations[i].indicies = NULL;
+    e->locations[i].cells = NULL;
   }
 
   e->update = NULL;
@@ -159,23 +159,45 @@ static void inspect(Entity* e) {
     "Djinni::Renderable::Entity( address:(%p) type:(%d) status:(%d) alwaysUpdate:(%d) keepAlive:(%d) position:(x:%d y:%d))",
     e, e->type, e->status, e->alwaysUpdate, e->keepAlive, pos.x, pos.y
   );
+
   Djinni_Geometry.Rectangle->inspect(&(e->bounds));
   Djinni_Physics.Body->inspect(&(e->body));
 
   Coordinate c = getRenderPoint(e);
   Djinni_Geometry.Coordinate->inspect(&c);
+
+  for(int i = 0; i < DJINNI_GRID_MAX_LEVELS; i++) {
+    GridLocation* location = &e->locations[i];
+
+    Djinni_Util_Logger.log_debug("\tDjinni::Renderable::Entity( level:(%d) )",i);
+
+    if (location->cells != NULL) {
+      for (int j = 0; j < location->cells->used; j++) {
+        GridCell* cell = location->cells->data[j];
+        Djinni_Util_Logger.log_debug(
+          "\t\tDjinni::Renderable::Entity( cell:(%p) n-entities:(%d) )",
+          cell, cell->entities->used
+        );
+
+        for (int k = 0; k < cell->entities->used; k++) {
+          Djinni_Util_Logger.log_debug(
+            "\t\t\tDjinni::Renderable::Entity( entity:(%p) )",
+            cell->entities->data[k]
+          );
+        }
+      }
+    }
+  }
 }
 
 static void destroy(Entity* e) {
-  Djinni_Util_Logger.log_dev("Djinni::Renderable::Entity.arrayDestroyCallback( address:(%p) )", e);
+  Djinni_Util_Logger.log_dev("Djinni::Renderable::Entity.destroy( address:(%p) )", e);
 
   for(int i = 0; i < DJINNI_GRID_MAX_LEVELS; i++) {
     GridLocation* location = &e->locations[i];
     if (location->cells != NULL) {
       Djinni_Util_Array.destroy(location->cells, NULL);
-      Djinni_Util_Array.destroy(location->indicies, free);
       location->cells = NULL;
-      location->indicies = NULL;
     }
   }
 

@@ -46,7 +46,6 @@ typedef struct GridLocationStruct {
   int maxX, maxY;        // Cached previous grid cell bounds (max coords)
 
   DjinniArray* cells;    // occupying cells
-  DjinniArray* indicies; // entities index for each cell
 } GridLocation;
 
 struct Djinni_Geometry_GridStruct {

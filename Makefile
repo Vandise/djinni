@@ -1,7 +1,7 @@
 CC          := gcc
 ARCHIVER    := ar
 INC_DIR     := inc
-ADDFLAGS    := -g -O2 -std=c11
+ADDFLAGS    := -g -O0 -std=c11
 SYSINCDIR := /usr/include
 
 LIBRARIES := lib

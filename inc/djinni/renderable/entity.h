@@ -33,6 +33,7 @@ typedef struct EntityStruct {
   ENTITY_STATE status;
 
   int id;
+  int deleteFlag;
 
   // flags (todo: convert to single int)
   int dirty;

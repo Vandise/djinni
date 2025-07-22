@@ -37,40 +37,43 @@ static void addEntity(World* w, Entity* e) {
 static void removeEntity(World* w, Entity* e) {
   Djinni_Util_Logger.log_dev("Djinni::Game::World.removeEntity(world:(%p), entity:(%p) entity.id:(%d) )", w, e, e->id);
 
-  if (e->id < 0) {
-    Djinni_Util_Logger.log_warn("Djinni::Game::World.removeEntity( entity.id:(%d) ) - Entity does not exist", e->id);
+  int id = e->id;
+
+  if (id < 0) {
+    Djinni_Util_Logger.log_warn("Djinni::Game::World.removeEntity( entity.id:(%d) ) - Entity does not exist", id);
     return;
   }
 
   Djinni_Geometry_Grid.removeEntity(w->grid, e);
-
   Djinni_Util_Array.removeIndex(w->entities, e->id);
-
   Djinni_Renderable.Entity->destroy(e);
+
+  for (int i = id; i < w->entities->used; i++) {
+    Entity* entity = w->entities->data[i];
+    entity->id = i;
+  }
 }
 
 static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double dt) {
   GridLevel* level = &game->world->grid->levels[ring];
+  DjinniArray* entitiesToDelete = Djinni_Util_Array.initialize(16);
 
   for (int y = 0; y < level->height; y++) {
     for (int x = 0; x < level->width; x++) {
-      
       GridCell* cell = &level->cells[y * level->width + x];
 
       if (cell->entities->used > 0) {
         for (int i = 0; i < cell->entities->used; i++) {
           Entity* subject = cell->entities->data[i];
+          if (subject->deleteFlag) { continue; }
 
           //
           // if the entity is destoryed, remove from the entities list and grid
           // decrement i so the shift is accounted for
           //
-          if (subject->status == ENTITY_DESTORYED) {
-            if (subject->onDestroy != NULL) {
-              subject->onDestroy(subject, game, dt);
-            }
-            removeEntity(game->world, subject);
-            i = i == 0 ? 0 : i - 1;
+          if (subject->status == ENTITY_DESTORYED && !subject->deleteFlag) {
+            subject->deleteFlag = 1;
+            Djinni_Util_Array.insert(entitiesToDelete, subject);
             continue;
           }
 
@@ -119,6 +122,13 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
 
     }
   }
+
+  for (int i = 0; i < entitiesToDelete->used; i++) {
+    Entity* e = (Entity*)entitiesToDelete->data[i];
+    removeEntity(game->world, e);
+  }
+
+  Djinni_Util_Array.destroy(entitiesToDelete, NULL);
 }
 
 static void destroy(World* w) {

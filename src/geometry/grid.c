@@ -96,7 +96,6 @@ static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
   location->maxY = maxY;
   if (location->cells == NULL) {
     location->cells = Djinni_Util_Array.initialize(4);
-    location->indicies = Djinni_Util_Array.initialize(4);
   }
 
   //
@@ -114,12 +113,8 @@ static void insert(Grid* grid, Entity* e, DJINNI_RING levelIdx) {
         continue;  // Skip if cell full
       }
 
-      int cellId = Djinni_Util_Array.insert(cell->entities, e);
-      int* cellIdptr = malloc(sizeof(int));
-      *cellIdptr = cellId;
-
+      Djinni_Util_Array.insert(cell->entities, e);
       Djinni_Util_Array.insert(location->cells, cell);
-      Djinni_Util_Array.insert(location->indicies, cellIdptr);
     }
   }
 }
@@ -135,10 +130,11 @@ void removeEntity(Grid* grid, Entity* e) {
     // Fast-path: remove entity from each stored cell by cached index
     for (int i = 0; i < location->cells->used; i++) {
       GridCell* cell = location->cells->data[i];
-      int* entityIndexPtr = (location->indicies->data[i]);
-
-      // Remove entity at known index without searching
-      Djinni_Util_Array.removeIndex(cell->entities, *entityIndexPtr);
+      for (int j = 0; j < cell->entities->used; j++) {
+        if (cell->entities->data[j] == e) {
+          Djinni_Util_Array.removeIndex(cell->entities, j);
+        }
+      }
     }
 
     // Reset location metadata
@@ -148,7 +144,6 @@ void removeEntity(Grid* grid, Entity* e) {
 
     // Preserve allocation; just clear use count
     location->cells->used = 0;
-    location->indicies->used = 0;
   }
 }
 
@@ -218,7 +213,6 @@ static DJINNI_RING computeRingLevel(ViewportBounds viewport, Entity* e) {
 }
 
 static void inspect(Grid* grid) {
-
   Djinni_Util_Logger.log_debug(
     "Djinni::Geometry::Grid.inspect( grid:(%p), levels:(%d) )",
     grid, grid->levelCount
@@ -239,8 +233,8 @@ static void inspect(Grid* grid) {
         if (cell->entities->used > 0) {
 
           Djinni_Util_Logger.log_debug(
-            "\t\tDjinni::Geometry::Grid::Cell( x:(%d) y:(%d) entities:(%d) )",
-            x, y, cell->entities->used
+            "\t\tDjinni::Geometry::Grid::Cell( cell:(%p) x:(%d) y:(%d) entities:(%d) )",
+            cell, x, y, cell->entities->used
           );
 
           for (int i = 0; i < cell->entities->used; i++) {

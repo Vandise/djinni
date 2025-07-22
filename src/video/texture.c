@@ -10,7 +10,7 @@ static void initialize(int flags) {
 }
 
 static Texture* load(Renderer *r, char *filename) {
-  Djinni_Util_Logger.log_debug("Djinni::Video::Texture.load( name: %s )", filename);
+  Djinni_Util_Logger.log_dev("Djinni::Video::Texture.load( name: %s )", filename);
 
   Texture *t = malloc(sizeof(Texture));
   t->instance = IMG_LoadTexture(r->instance, filename);
