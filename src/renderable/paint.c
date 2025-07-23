@@ -3,10 +3,12 @@
 #include "djinni/renderable/renderable.h"
 #include "djinni/video/video.h"
 
-static void rectangle(Renderer* r, Shape* shape, int x, int y) {
+static void rectangle(Renderer* r, Shape* shape, int x, int y, float zoom) {
   Rectangle proxy = *(shape->geometry.rectptr);
-  proxy.instance.x = x;
-  proxy.instance.y = y;
+  proxy.instance.x = x * zoom;
+  proxy.instance.y = y * zoom;
+  proxy.instance.w = proxy.instance.w * zoom;
+  proxy.instance.h = proxy.instance.h * zoom;
 
   if (shape->outline) {
     Djinni_Video.Renderer->setDrawColor(r, shape->outlineColor);
@@ -21,21 +23,21 @@ static void rectangle(Renderer* r, Shape* shape, int x, int y) {
   Djinni_Video.Renderer->resetDrawColor(r);
 }
 
-static void shape(Renderer* r, Shape* shape, int x, int y) {
+static void shape(Renderer* r, Shape* shape, int x, int y, float zoom) {
   switch(shape->type) {
     case SHAPE_RECTANGLE_PTR_TYPE:
-      rectangle(r, shape, x, y);
+      rectangle(r, shape, x, y, zoom);
       break;
     default:
       break;
   }
 }
 
-static void sprite(Renderer* r, Entity* subject, int x, int y) {
+static void sprite(Renderer* r, Entity* subject, int x, int y, float zoom) {
   Djinni_Video.Texture->blit(
-    r, subject->texture, x, y,
-    Djinni_Renderable.Entity->getRenderedWidth(subject),
-    Djinni_Renderable.Entity->getRenderedHeight(subject)
+    r, subject->texture, x * zoom, y * zoom,
+    Djinni_Renderable.Entity->getRenderedWidth(subject) * zoom,
+    Djinni_Renderable.Entity->getRenderedHeight(subject) * zoom
   );
 }
 
@@ -51,10 +53,10 @@ static void entity(Renderer* r, Entity* subject, Camera* camera) {
 
   switch(subject->type) {
     case ENTITY_TYPE_SPRITE:
-      sprite(r, subject, x, y);
+      sprite(r, subject, x, y, camera->zoom);
       break;
     case ENTITY_TYPE_SHAPE:
-      shape(r, &(subject->shape), x, y);
+      shape(r, &(subject->shape), x, y, camera->zoom);
       break;
     default:
       break;

@@ -31,6 +31,8 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
     Djinni.windowSettings.height
   );
 
+  camera->zoom = 2.0;
+
   Djinni.Game->setCamera(game, camera);
   Djinni.Game->Camera->inspect(camera);
 
@@ -57,8 +59,12 @@ void onCreate(Stage* self, Game* game, Stage* previous) {
 
 void prepare(Stage* self, Game* game) {}
 
+static double updateDt = 0;
 void update(Stage* self, Game* game, double dt) {
-  //Djinni.Game->Camera->inspect(game->camera);
+  if (dt - updateDt >= 2000) {
+    Djinni.Game->Camera->inspect(game->camera);
+    updateDt = dt;
+  }
 }
 
 void draw(Stage* self, Game* game, double dt) {

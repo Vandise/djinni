@@ -11,6 +11,7 @@ void onStageCreate(Stage* self, Game* game, Stage* previous) {
 
   game->camera->point.x += 400;
   game->camera->point.y += 400;
+  game->camera->zoom = 1.0;
 
   Djinni.Game->enableInput(game);
 }

@@ -46,8 +46,8 @@ static Point entityCoordinateToScreen(Camera* c, Entity* entity) {
 
 static ViewportBounds getViewportBounds(Camera* c) {
   int x1, x2, y1, y2;
-  int rw = c->screenWidth;
-  int rh = c->screenHeight;
+  int rw = c->screenWidth / c->zoom;
+  int rh = c->screenHeight / c->zoom;
 
   x1 = c->point.x;
   x2 = x1 + rw;
@@ -69,11 +69,15 @@ static ViewportBounds getViewportBounds(Camera* c) {
 
 todo: review camera incorporatation of point to position
       when follow is set camera point x/y are the x1 + y1
+      
+      800x800
+      2x
+      400x400
 */
 static int inViewport(Camera* c, Point p) {
   int x1, x2, y1, y2;
-  int rw = c->screenWidth;
-  int rh = c->screenHeight;
+  int rw = c->screenWidth / c->zoom;
+  int rh = c->screenHeight / c->zoom;
 
   x1 = c->point.x;
   x2 = x1 + rw;
@@ -94,8 +98,8 @@ static int inViewport(Camera* c, Point p) {
 static void update(Camera* c, double dt) {
   if (!c->settings.fixed && c->settings.following != NULL) {
     Coordinate pos = Djinni_Renderable_Entity.getPosition(c->settings.following);
-    c->point.x = (pos.x - (c->screenWidth / 2)) + c->settings.xOffset;
-    c->point.y = (pos.y - (c->screenHeight / 2)) + c->settings.yOffset;
+    c->point.x = (pos.x - (c->screenWidth / (2 * c->zoom))) + c->settings.xOffset;
+    c->point.y = (pos.y - (c->screenHeight / (2 * c->zoom))) + c->settings.yOffset;
   }
 }
 
@@ -107,14 +111,14 @@ static void follow(Camera* c, Entity* e, int xOffset, int yOffset) {
 
   Coordinate coords = Djinni_Renderable_Entity.getPosition(c->settings.following);
 
-  c->point.x = (coords.x - (c->screenWidth / 2)) + c->settings.xOffset;
-  c->point.y = (coords.y - (c->screenHeight / 2)) + c->settings.yOffset;
+  c->point.x = (coords.x - (c->screenWidth / (2 * c->zoom))) + c->settings.xOffset;
+  c->point.y = (coords.y - (c->screenHeight / (2 * c->zoom))) + c->settings.yOffset;
 }
 
 static void inspect(Camera* c) {
   int x1, x2, y1, y2;
-  int rw = c->screenWidth;
-  int rh = c->screenHeight;
+  int rw = c->screenWidth / c->zoom;
+  int rh = c->screenHeight / c->zoom;
 
   x1 = c->point.x;
   x2 = x1 + rw;
