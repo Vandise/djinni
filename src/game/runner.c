@@ -80,6 +80,17 @@ static void update(Game* game, double dt) {
   game->stats.dt = dt;
 }
 
+/*
+  todo: draw should be multiple levels called to the stage:
+  1. Background
+  2. Assets
+  3. Ext. Assets
+  4. Collision
+  5. Entities
+  6. Effects
+  7. Overlay 1
+  8. Overlay 2
+*/
 static void draw(Game* game, double dt) {
   Djinni.Renderable->draw(Djinni.renderer, game->world->grid, game->camera, DJINNI_RING_FINE);
 
@@ -131,6 +142,7 @@ static void execute(Game* game) {
     then = SDL_GetTicks();
 
     prepare(game);
+
     Djinni.Game->Input->process(game);
 
     // lock logic to 60fps if higher is set
@@ -144,6 +156,7 @@ static void execute(Game* game) {
     update(game, then);
 
     draw(game, then);
+
     present(game);
 
     SDL_Delay(1);
