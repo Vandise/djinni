@@ -64,6 +64,7 @@ typedef struct EntityStruct {
   void (*onExitViewport)(struct EntityStruct*, Game*, double dt);
   void (*onCollide)(struct EntityStruct*, struct EntityStruct*, Game*, double dt);
   void (*onDestroy)(struct EntityStruct*, Game*, double dt);
+  void (*onTerminate)(struct EntityStruct*);
 } Entity;
 
 struct Djinni_Renderable_EntityStruct {

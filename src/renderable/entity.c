@@ -5,6 +5,7 @@
 static Coordinate getPosition(Entity* e);
 static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type);
 static void destroy(Entity* e);
+static void onTerminate(Entity* e);
 
 static Entity entity(int x, int y, int w, int h, ENTITY_TYPE type) {
   Entity* eptr = create(x,y,w,h,type);
@@ -56,6 +57,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->onEnterViewport = NULL;
   e->onExitViewport = NULL;
   e->onDestroy = NULL;
+  e->onTerminate = onTerminate;
 
   return e;
 }
@@ -205,15 +207,20 @@ static void destroy(Entity* e) {
     Djinni_Video.Texture->destroy(e->texture);
   }
 
-  /*
-    todo: a cleanup function on entity to free user data
-  */
 
   free(e);
 }
 
+static void onTerminate(Entity* e) {
+  if(e->data != NULL) {
+    free(e->data);
+  }
+}
+
 static void arrayDestroyCallback(void* e) {
   Djinni_Util_Logger.log_dev("Djinni::Renderable::Entity.arrayDestroyCallback()");
+
+  onTerminate(e);
   destroy(e);
 }
 
