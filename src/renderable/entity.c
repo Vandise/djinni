@@ -205,6 +205,10 @@ static void destroy(Entity* e) {
     Djinni_Video.Texture->destroy(e->texture);
   }
 
+  /*
+    todo: a cleanup function on entity to free user data
+  */
+
   free(e);
 }
 

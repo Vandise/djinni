@@ -52,8 +52,6 @@ static void initializeLevel(
   level->height = (worldHeight + cellSize - 1) / cellSize;
   level->cells = malloc(sizeof(GridCell) * level->width * level->height);
 
-  //
-  // todo: cell capacity memory leak
   // Initialize each cell with a fixed capacity array of entity pointers
   for (int i = 0; i < level->width * level->height; i++) {
     level->cells[i].capacity = cellCapacity;

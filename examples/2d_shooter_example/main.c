@@ -56,5 +56,7 @@ int main(void) {
   Djinni.Game->destroy(game);
   Djinni.terminate();
 
+  system("leaks example");
+
   return 0;
 }
