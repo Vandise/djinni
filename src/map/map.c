@@ -15,7 +15,9 @@ static void worldMapToISO(WorldMap* m) {
       MapObject* object = &(m->objects[index]);
 
       object->sx = object->x = ((x * m->tileWidth / 2) + (y * m->tileWidth / 2));
-      object->sy = object->y = ((y * (m->tileHeight / 2) / 2) - (x * (m->tileHeight / 2) / 2));
+
+      // keep the map in the grid
+      object->sy = object->y = (m->height / 2) - ((y * (m->tileHeight / 2) / 2) - (x * (m->tileHeight / 2) / 2));
       object->texture = m->tiles->data[ m->data[index].tileId ];
 		}
 	}
@@ -86,10 +88,10 @@ static void draw(WorldMap* m, Renderer* r, Camera* c, double dt) {
     Djinni_Video_Texture.blit(
       r,
       o->texture,
-      o->sx - c->point.x,
-      o->sy - c->point.y,
-      m->tileWidth,
-      m->tileHeight
+      o->sx * c->zoom - (c->point.x),
+      o->sy * c->zoom - (c->point.y),
+      m->tileWidth * c->zoom,
+      m->tileHeight * c->zoom
     );
   }
 }

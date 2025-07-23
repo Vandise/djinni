@@ -3,7 +3,8 @@
 WorldMap* wm = NULL;
 
 void onStageCreate(Stage* self, Game* game, Stage* previous) {
-  wm = Djinni.Map->create(2560, 1440, 64, 64, ISOMETRIC_MAP_TYPE);
+  game->camera->zoom = 2.0;
+  wm = Djinni.Map->create(1280, 1280, 64, 64, ISOMETRIC_MAP_TYPE);
   Djinni.Map->load(wm, Djinni.renderer);
   //Djinni.Map->destroy(wm);
   Djinni.Game->enableInput(game);
@@ -31,6 +32,27 @@ void updateStage(Stage* self, Game* game, double dt) {
 
 void drawStage(Stage* self, Game* game, double dt) {
   Djinni.Map->draw(wm, Djinni.renderer, game->camera, dt);
+
+  GridLevel* level = &game->world->grid->levels[0];
+  int gridCellWidth = level->cellSize;
+
+  for (int y = 0; y < level->height; y++) {
+    for (int x = 0; x < level->width; x++) {
+      
+      GridCell* cell = &level->cells[y * level->width + x];
+
+      SDL_Rect r = {
+        (x * gridCellWidth * game->camera->zoom) - game->camera->point.x,
+        (y * gridCellWidth * game->camera->zoom) - game->camera->point.y,
+        gridCellWidth * game->camera->zoom,
+        gridCellWidth * game->camera->zoom
+      };
+
+      SDL_SetRenderDrawColor(Djinni.renderer->instance, 128, 128, 128, 255);
+
+      SDL_RenderDrawRect(Djinni.renderer->instance, &r);
+    }
+  }
 }
 
 void onDestroyStage(Stage* self, Game* game, Stage* next) {}

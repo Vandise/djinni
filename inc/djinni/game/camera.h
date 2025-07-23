@@ -21,6 +21,7 @@ typedef struct Djinni_Game_CameraSettingsStruct {
 } CameraSettings;
 
 typedef struct Djinni_Game_CameraStruct {
+  float zoom;
   int screenWidth;
   int screenHeight;
 

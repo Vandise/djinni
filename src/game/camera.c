@@ -5,6 +5,7 @@ static Camera* create(int x, int y, int screenWidth, int screenHeight) {
   Camera* c = malloc(sizeof(Camera));
   c->screenWidth = screenWidth;
   c->screenHeight = screenHeight;
+  c->zoom = 1.0;
   c->point.x = x;
   c->point.y = y;
   c->settings.fixed = 1;
