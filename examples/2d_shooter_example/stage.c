@@ -1,9 +1,13 @@
 #include "game.h"
 
+Entity* player = NULL;
+
 static int enemySpawnTimer = 0;
 
 void onStageCreate(Stage* self, Game* game, Stage* previous) {
-  Djinni.Game->World->addEntity(game->world, createPlayer());
+  player = createPlayer();
+
+  Djinni.Game->World->addEntity(game->world, player);
 
   game->camera->point.x += 400;
   game->camera->point.y += 400;

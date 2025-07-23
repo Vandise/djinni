@@ -5,8 +5,18 @@ void enemyLeftViewport(Entity* e, Game* g, double dt) {
   e->body.velocity.dx = 0;
 }
 
-void onEnemyCollide(Entity* self, Entity* other, Game* g, double dt) {
+void onEnemyDestroy(Entity* e, Game* g, double dt) {
+  free(e->data);
+}
 
+void onEnemyCollide(Entity* self, Entity* other, Game* g, double dt) {}
+
+void enemyUpdate(Entity* entity, Game* game, double dt) {
+  EntityData* data = entity->data;
+  if (--data->reload <= 0) {
+    createEnemyBullet(entity, player, game);
+    data->reload = rand() % 500 * 2;
+  }
 }
 
 Entity* createEnemy(ViewportBounds bounds) {
@@ -15,8 +25,14 @@ Entity* createEnemy(ViewportBounds bounds) {
   Entity* enemy = Djinni.Renderable->Sprite->create(bounds.x2, y, "bin/gfx/enemy.png");
   enemy->onExitViewport = enemyLeftViewport;
 
-  //enemy->update = playerUpdate;
+  EntityData* data = malloc(sizeof(EntityData));
+  data->type = ENEMY_SHIP;
+  data->reload = rand() % 500 * 2;
+  enemy->data = data;
+
+  enemy->update = enemyUpdate;
   enemy->onCollide = onEnemyCollide;
+  enemy->onDestroy = onEnemyDestroy;
 
   enemy->body.velocity.dx = -(2 + (rand() % 4));
 
