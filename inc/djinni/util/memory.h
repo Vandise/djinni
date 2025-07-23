@@ -6,7 +6,7 @@
 #ifndef DJINNI_DEBUG_MEMORY
 
 #define DJINNI_MALLOC(X) malloc(X)
-#define DJINNI_REALLOC(X, S) realloc(X)
+#define DJINNI_REALLOC(X, S) realloc(X, S)
 #define DJINNI_FREE(X) free(X)
 
 #else
