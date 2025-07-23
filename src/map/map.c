@@ -1,5 +1,6 @@
 #include "djinni/util/util.h"
 #include "djinni/map/map.h"
+#include "djinni/game/camera.h"
 
 static int getIndex(int x, int y, int maxX) {
   return y * maxX + x;
@@ -75,14 +76,21 @@ static int drawComparator(const void *a, const void *b) {
   return o1->y - o2->y;
 }
 
-static void draw(WorldMap* m, Renderer* r, double dt) {
+static void draw(WorldMap* m, Renderer* r, Camera* c, double dt) {
   MapObject *o;
 
   qsort(m->objects, m->nObjects, sizeof(MapObject), drawComparator);
 
   for (int i = 0; i < m->nObjects; i++) {
     o = &(m->objects[i]);
-    Djinni_Video_Texture.blit(r, o->texture, o->sx, o->sy, m->tileWidth, m->tileHeight);
+    Djinni_Video_Texture.blit(
+      r,
+      o->texture,
+      o->sx - c->point.x,
+      o->sy - c->point.y,
+      m->tileWidth,
+      m->tileHeight
+    );
   }
 }
 

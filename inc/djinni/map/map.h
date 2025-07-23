@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include "djinni/map/shared.h"
+#include "djinni/game/shared.h"
 #include "djinni/util/array.h"
 #include "djinni/video/texture.h"
 
@@ -44,7 +45,7 @@ typedef struct Djinni_WorldMapStruct {
 struct Djinni_MapStruct {
   WorldMap* (*create)(int, int, int, int, DJINNI_MAP_TYPE);
   void (*load)(WorldMap*, Renderer*);
-  void (*draw)(WorldMap*, Renderer*, double);
+  void (*draw)(WorldMap*, Renderer*, Camera*, double);
   void (*inspect)(WorldMap*);
   void (*destroy)(WorldMap*);
 };
