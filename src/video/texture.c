@@ -39,9 +39,14 @@ static void destroy(Texture *t) {
   free(t);
 }
 
+static void arrayDestroyCallback(void* t) {
+  destroy(t);
+}
+
 struct Djinni_TextureStruct Djinni_Video_Texture = {
   .initialize = initialize,
   .load = load,
   .blit = blit,
+  .arrayDestroyCallback = arrayDestroyCallback,
   .destroy = destroy
 };

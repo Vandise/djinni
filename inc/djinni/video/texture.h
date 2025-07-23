@@ -13,6 +13,7 @@ struct Djinni_TextureStruct {
   void (*initialize)(int flags);
   Texture* (*load)(Renderer*, char*);
   void (*blit)(Renderer*, Texture*, int, int, int, int);
+  void (*arrayDestroyCallback)(void*);
   void (*destroy)(Texture*);
 };
 

@@ -22,6 +22,7 @@ static int initialize(WindowSettings ws, VideoSettings vs) {
   Djinni.Renderable = &Djinni_Renderable;
   Djinni.Physics = &Djinni_Physics;
   Djinni.Game = &Djinni_Game;
+  Djinni.Map = &Djinni_Map;
 
   Djinni_Video.initialize(vs.videoFlags);
 
