@@ -43,6 +43,7 @@ struct DjinniStruct {
   struct Djinni_RenderableStruct* Renderable;
   struct Djinni_PhysicsStruct* Physics;
   struct Djinni_GameStruct* Game;
+  struct Djinni_Util_MemoryStruct* Memory;
 
   int (*initialize)(WindowSettings, VideoSettings);
   void (*setFlag)(const char* name, const char* value);

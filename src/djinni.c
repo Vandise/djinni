@@ -11,9 +11,11 @@ static int initialize(WindowSettings ws, VideoSettings vs) {
   Djinni_Renderable.initialize();
   Djinni_Physics.initialize();
   Djinni_Game.initialize();
+  Djinni_Util_Memory.initialize();
 
   Djinni.Logger = &Djinni_Util_Logger;
   Djinni.Array = &Djinni_Util_Array;
+  Djinni.Memory = &Djinni_Util_Memory;
 
   Djinni.Video = &Djinni_Video;
   Djinni.Geometry = &Djinni_Geometry;
@@ -63,6 +65,7 @@ static void start(Game* game, int level) {
 static void terminate() {
   Djinni_Util_Logger.log_dev("Djinni.terminate");
 
+  Djinni.Memory->destroy();
   Djinni.Video->Renderer->destroy(Djinni.renderer);
   Djinni.Video->Window->destroy(Djinni.window);
 
