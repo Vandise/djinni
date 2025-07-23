@@ -52,6 +52,8 @@ static void initializeLevel(
   level->height = (worldHeight + cellSize - 1) / cellSize;
   level->cells = malloc(sizeof(GridCell) * level->width * level->height);
 
+  //
+  // todo: cell capacity memory leak
   // Initialize each cell with a fixed capacity array of entity pointers
   for (int i = 0; i < level->width * level->height; i++) {
     level->cells[i].capacity = cellCapacity;
@@ -256,8 +258,15 @@ static void inspect(Grid* grid) {
 
 static void destroy(Grid* grid) {
   for (int i = 0; i < grid->levelCount; i++) {
+    GridLevel* level = &grid->levels[i];
+
+    for (int j = 0; j < level->width * level->height; j++) {
+      Djinni_Util_Array.destroy(level->cells[j].entities, NULL);
+    }
+
     free(grid->levels[i].cells);
   }
+
   free(grid->levels);
   free(grid);
 }

@@ -96,6 +96,7 @@ static void destroy(DjinniArray* array, void (onDestroy)(void*)) {
     if(onDestroy != NULL) { onDestroy(array->data[i]); }
   }
 
+  free(array->data);
   free(array);
 
   array = NULL;

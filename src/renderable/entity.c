@@ -201,6 +201,10 @@ static void destroy(Entity* e) {
     }
   }
 
+  if (e->texture != NULL) {
+    Djinni_Video.Texture->destroy(e->texture);
+  }
+
   free(e);
 }
 
