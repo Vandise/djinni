@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include "djinni/map/shared.h"
 #include "djinni/game/shared.h"
+#include "djinni/util/shared.h"
 #include "djinni/util/array.h"
-#include "djinni/video/texture.h"
+#include "djinni/video/imageAtlas.h"
 
 #define DJINNI_MAX_MAP_LAYERS 10
 
@@ -38,7 +39,21 @@ typedef enum {
 } DJINNI_LAYER_TYPE;
 
 typedef struct Djinni_Map_TileStruct {
-  int tileId;
+  int layer;
+  int tileIndex;
+  int atlasIndex;
+
+  // map coords
+  int x;
+  int y;
+
+  // screen coords
+  int sx;
+  int sy;
+
+  // data
+  int width;
+  int height;
 } MapTile;
 
 typedef struct Djinni_Map_ObjectStruct {
@@ -46,7 +61,7 @@ typedef struct Djinni_Map_ObjectStruct {
   int y;
   int sx;
   int sy;
-  Texture* texture;
+  AtlasImage* img;
 } MapObject;
 
 typedef struct Djinni_WorldMapLayerStruct {
@@ -54,7 +69,7 @@ typedef struct Djinni_WorldMapLayerStruct {
   DJINNI_LAYER_TYPE type;
 
   int nObjects;
-  DjinniArray* textures;
+  DjinniArray* atlases;
   MapObject* objects;
 
   struct Djinni_MapLayerTilesStruct {
@@ -72,27 +87,16 @@ typedef struct Djinni_WorldMapStruct {
 
   int width;
   int height;
-  int tileWidth;
-  int tileHeight;
-
-  int nXTiles;
-  int nYTiles;
-  int nObjects;
-
-  DjinniArray* tiles;
-  MapTile* data;
-  MapObject* objects;
 
   WorldMapLayer layers[DJINNI_MAX_MAP_LAYERS];
 } WorldMap;
 
 struct Djinni_MapStruct {
-  WorldMap* (*create)(int, int, int, int, DJINNI_MAP_TYPE);
-  void (*load)(WorldMap*, Renderer*);
+  WorldMap* (*create)();
+  void (*load)(WorldMap*, Renderer*, char*);
   void (*draw)(WorldMap*, Renderer*, Camera*, double);
 
-  void (*addTexture)(WorldMap*, Texture*, DJINNI_MAP_LAYER);
-  void (*addTile)(WorldMap*, int, DJINNI_MAP_LAYER);
+  void (*addAtlas)(WorldMap*, ImageAtlas*, DJINNI_MAP_LAYER);
 
   void (*inspect)(WorldMap*);
   void (*destroy)(WorldMap*);

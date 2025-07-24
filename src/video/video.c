@@ -14,6 +14,7 @@ static int initialize(int flags) {
   Djinni_Video.Window = &Djinni_Video_Window;
   Djinni_Video.Renderer = &Djinni_Video_Renderer;
   Djinni_Video.Texture = &Djinni_Video_Texture;
+  Djinni_Video.ImageAtlas = &Djinni_Video_Image_Atlas;
 
   Djinni_Video_Texture.initialize(flags);
 

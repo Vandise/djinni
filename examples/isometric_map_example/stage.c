@@ -3,10 +3,13 @@
 WorldMap* wm = NULL;
 
 void onStageCreate(Stage* self, Game* game, Stage* previous) {
-  game->camera->zoom = 2.0;
-  wm = Djinni.Map->create(1280, 1280, 64, 64, ISOMETRIC_MAP_TYPE);
-  Djinni.Map->load(wm, Djinni.renderer);
+  //game->camera->zoom = 2.0;
+  wm = Djinni.Map->create();
+  Djinni.Map->load(wm, Djinni.renderer, "bin/data/map.json");
+  Djinni.Map->inspect(wm);
+
   //Djinni.Map->destroy(wm);
+  
   Djinni.Game->enableInput(game);
 }
 
@@ -31,7 +34,10 @@ void updateStage(Stage* self, Game* game, double dt) {
 }
 
 void drawStage(Stage* self, Game* game, double dt) {
+  //Djinni.Video->ImageAtlas->blit(Djinni.renderer, img, 200, 200, 64, 64);
+
   Djinni.Map->draw(wm, Djinni.renderer, game->camera, dt);
+
 
   GridLevel* level = &game->world->grid->levels[0];
   int gridCellWidth = level->cellSize;
