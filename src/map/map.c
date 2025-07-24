@@ -43,6 +43,16 @@ static WorldMap* create(int width, int height, int tileWidth, int tileHeight, DJ
   m->data = malloc(sizeof(MapTile) * m->nXTiles * m->nYTiles);
   m->objects = malloc(sizeof(MapObject) * m->nXTiles * m->nYTiles);
 
+  for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
+    WorldMapLayer* layer = &(m->layers[i]);
+    layer->id = i;
+    layer->type = UNINITIALIZED_LAYER_TYPE;
+    layer->nObjects = 0;
+    layer->textures = NULL;
+    layer->objects = NULL;
+    layer->tiles.data = NULL;
+  }
+
   return m;
 }
 

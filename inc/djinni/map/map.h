@@ -7,10 +7,35 @@
 #include "djinni/util/array.h"
 #include "djinni/video/texture.h"
 
+#define DJINNI_MAX_MAP_LAYERS 10
+
 typedef enum {
   STANDARD_MAP_TYPE,
   ISOMETRIC_MAP_TYPE
 } DJINNI_MAP_TYPE;
+
+typedef enum {
+  BACKGROUND_LAYER,
+
+  GROUND_LAYER,
+  GROUND_ANIMATION_LAYER,
+
+  OBJECT_BASE_LAYER,
+  OBJECT_DETAIL_LAYER,
+  OBJECT_ANIMATION_LAYER,
+
+  ENTITY_LAYER,
+
+  OCCLUSION_LAYER,
+  OCCLUSION_ANIMATION_LAYER,
+
+  OVERLAY_LAYER
+} DJINNI_MAP_LAYER;
+
+typedef enum {
+  UNINITIALIZED_LAYER_TYPE,
+  TILE_LAYER_TYPE
+} DJINNI_LAYER_TYPE;
 
 typedef struct Djinni_Map_TileStruct {
   int tileId;
@@ -23,6 +48,23 @@ typedef struct Djinni_Map_ObjectStruct {
   int sy;
   Texture* texture;
 } MapObject;
+
+typedef struct Djinni_WorldMapLayerStruct {
+  int id;
+  DJINNI_LAYER_TYPE type;
+
+  int nObjects;
+  DjinniArray* textures;
+  MapObject* objects;
+
+  struct Djinni_MapLayerTilesStruct {
+    int nxTiles;
+    int nyTiles;
+    int tileWidth;
+    int tileHeight;
+    DjinniArray* data;
+  } tiles;
+} WorldMapLayer;
 
 typedef struct Djinni_WorldMapStruct {
   DJINNI_MAP_TYPE type;
@@ -38,8 +80,9 @@ typedef struct Djinni_WorldMapStruct {
 
   DjinniArray* tiles;
   MapTile* data;
-
   MapObject* objects;
+
+  WorldMapLayer layers[DJINNI_MAX_MAP_LAYERS];
 } WorldMap;
 
 struct Djinni_MapStruct {
