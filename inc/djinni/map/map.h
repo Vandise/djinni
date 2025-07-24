@@ -58,11 +58,12 @@ typedef struct Djinni_WorldMapLayerStruct {
   MapObject* objects;
 
   struct Djinni_MapLayerTilesStruct {
+    int nTiles;
     int nxTiles;
     int nyTiles;
     int tileWidth;
     int tileHeight;
-    DjinniArray* data;
+    MapTile* data;
   } tiles;
 } WorldMapLayer;
 
@@ -89,6 +90,10 @@ struct Djinni_MapStruct {
   WorldMap* (*create)(int, int, int, int, DJINNI_MAP_TYPE);
   void (*load)(WorldMap*, Renderer*);
   void (*draw)(WorldMap*, Renderer*, Camera*, double);
+
+  void (*addTexture)(WorldMap*, Texture*, DJINNI_MAP_LAYER);
+  void (*addTile)(WorldMap*, int, DJINNI_MAP_LAYER);
+
   void (*inspect)(WorldMap*);
   void (*destroy)(WorldMap*);
 };

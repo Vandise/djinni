@@ -56,6 +56,28 @@ static WorldMap* create(int width, int height, int tileWidth, int tileHeight, DJ
   return m;
 }
 
+static void addTexture(WorldMap* m, Texture* texture, DJINNI_MAP_LAYER index) {
+  WorldMapLayer* layer = &(m->layers[index]);
+  Djinni_Util_Array.insert(layer->textures, texture);
+}
+
+static void addTile(WorldMap* m, int textureIndex, DJINNI_MAP_LAYER index) {
+  WorldMapLayer* layer = &(m->layers[index]);
+
+  if (layer->type != TILE_LAYER_TYPE) {
+    Djinni_Util_Logger.log_warn(
+      "Djinni::Map( address:(%p) layer(%p) index:(%d) )) - attempt to add tile to a non-tile layer",
+      m, layer, index
+    );  
+    return;
+  }
+
+  MapTile* tile =  &(layer->tiles.data[layer->tiles.nTiles]);
+  tile->tileId = textureIndex;
+
+  layer->tiles.nTiles += 1;
+}
+
 static void load(WorldMap* m, Renderer* r) {
 	for (int x = 0; x < m->nXTiles; x++) {
 		for (int y = 0; y < m->nYTiles; y++) {
