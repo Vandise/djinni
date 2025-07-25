@@ -5,11 +5,12 @@ WorldMap* wm = NULL;
 void onStageCreate(Stage* self, Game* game, Stage* previous) {
   //game->camera->zoom = 2.0;
   wm = Djinni.Map->create();
-  Djinni.Map->load(wm, Djinni.renderer, "bin/data/map.json");
+  Djinni.Map->setMapDataFile(wm, "bin/data/map.json");
+  Djinni.Map->load(wm, Djinni.renderer);
   Djinni.Map->inspect(wm);
 
   //Djinni.Map->destroy(wm);
-  
+
   Djinni.Game->enableInput(game);
 }
 
@@ -44,7 +45,7 @@ void drawStage(Stage* self, Game* game, double dt) {
 
   for (int y = 0; y < level->height; y++) {
     for (int x = 0; x < level->width; x++) {
-      
+
       GridCell* cell = &level->cells[y * level->width + x];
 
       SDL_Rect r = {

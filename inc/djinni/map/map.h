@@ -9,6 +9,7 @@
 #include "djinni/video/imageAtlas.h"
 
 #define DJINNI_MAX_MAP_LAYERS 10
+#define DJINNI_MAX_MAP_FILENAME 255
 
 typedef enum {
   STANDARD_MAP_TYPE,
@@ -85,6 +86,8 @@ typedef struct Djinni_WorldMapLayerStruct {
 typedef struct Djinni_WorldMapStruct {
   DJINNI_MAP_TYPE type;
 
+  char mapFileName[DJINNI_MAX_MAP_FILENAME];
+
   int width;
   int height;
 
@@ -93,10 +96,9 @@ typedef struct Djinni_WorldMapStruct {
 
 struct Djinni_MapStruct {
   WorldMap* (*create)();
-  void (*load)(WorldMap*, Renderer*, char*);
+  void (*load)(WorldMap*, Renderer*);
   void (*draw)(WorldMap*, Renderer*, Camera*, double);
-
-  void (*addAtlas)(WorldMap*, ImageAtlas*, DJINNI_MAP_LAYER);
+  void (*setMapDataFile)(WorldMap*, char*);
 
   void (*inspect)(WorldMap*);
   void (*destroy)(WorldMap*);

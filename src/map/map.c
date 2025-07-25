@@ -10,6 +10,8 @@ static int getIndex(int x, int y, int maxX) {
 static WorldMap* create() {
   WorldMap* m = malloc(sizeof(WorldMap));
 
+  m->mapFileName[0] = 0;
+
   for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
     WorldMapLayer* layer = &(m->layers[i]);
     layer->id = i;
@@ -94,37 +96,43 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
   }
 }
 
-static void load(WorldMap* m, Renderer* r, char* filename) {
-  char* text = djinniReadFile(filename);
-  cJSON *root = cJSON_Parse(text);
+static void setMapDataFile(WorldMap* m, char* filename) {
+  strncpy(m->mapFileName, filename, DJINNI_MAX_MAP_FILENAME);
+}
 
-  m->type = cJSON_GetObjectItem(root, "type")->valueint;
-  m->width = cJSON_GetObjectItem(root, "width")->valueint;
-  m->height = cJSON_GetObjectItem(root, "height")->valueint;
+static void load(WorldMap* m, Renderer* r) {
+  if (m->mapFileName[0] == 0) {
+    char* text = djinniReadFile(m->mapFileName);
+    cJSON *root = cJSON_Parse(text);
 
-  cJSON* layersNode = cJSON_GetObjectItem(root, "layers");
-  int nLayers = cJSON_GetArraySize(layersNode);
-  for (int i = 0; i < nLayers; i++) {
-    cJSON* layerNode = cJSON_GetArrayItem(layersNode, i);
-    loadLayer(m, r, layerNode);
+    m->type = cJSON_GetObjectItem(root, "type")->valueint;
+    m->width = cJSON_GetObjectItem(root, "width")->valueint;
+    m->height = cJSON_GetObjectItem(root, "height")->valueint;
+
+    cJSON* layersNode = cJSON_GetObjectItem(root, "layers");
+    int nLayers = cJSON_GetArraySize(layersNode);
+    for (int i = 0; i < nLayers; i++) {
+      cJSON* layerNode = cJSON_GetArrayItem(layersNode, i);
+      loadLayer(m, r, layerNode);
+    }
+
+    cJSON_Delete(root);
+    free(text);
   }
-
-  cJSON_Delete(root);
-  free(text);
 }
 
 static int drawComparator(const void *a, const void *b) {
   int result;
   MapTile *t1, *t2;
-  
+
   t1 = (MapTile*) a;
   t2 = (MapTile*) b;
-  
+
   result = t1->layer - t2->layer;
-  
+
   if (result == 0) {
     result = t1->y - t2->y;
-  
+
     if (result == 0) {
       result = (t1->sx + t1->width) - (t2->sx + t2->width);
     }
@@ -186,7 +194,7 @@ static void inspect(WorldMap* m) {
           Djinni_Util_Logger.log_debug(
             "\t\t\tDjinni::Map::Layer::Tile( x:(%d) y:(%d) sx:(%d) sy:(%d) atlas:(%d) index:(%d) )",
             tile.x, tile.y, tile.sx, tile.sy, tile.atlasIndex, tile.tileIndex
-          );        
+          );
       }
     }
   }
@@ -214,6 +222,7 @@ static void destroy(WorldMap* m) {
 
 struct Djinni_MapStruct Djinni_Map = {
   .create = create,
+  .setMapDataFile = setMapDataFile,
   .load = load,
   .draw = draw,
   .inspect = inspect,
