@@ -6,14 +6,19 @@ static World* create(WorldSettings settings) {
 
   w->settings = settings;
   w->entities = Djinni_Util_Array.initialize(10);
-  w->grid = Djinni_Geometry_Grid.create(
-    settings.gridCellCapacity,
-    settings.width,
-    settings.height,
-    settings.finestGridSize,
-    settings.mediumGridSize,
-    settings.coarseGridSize
-  );
+  w->grid = NULL;
+
+  if (settings.type != MAP_WORLD_TYPE) {
+    w->grid = Djinni_Geometry_Grid.create(
+      settings.gridCellCapacity,
+      settings.width,
+      settings.height,
+      settings.finestGridSize,
+      settings.mediumGridSize,
+      settings.coarseGridSize
+    );
+  }
+
   w->camera = NULL;
 
   return w;
@@ -62,6 +67,8 @@ static void removeEntity(Game* game, Entity* e, double dt) {
 }
 
 static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double dt) {
+  if (game->world->grid == NULL) { return; }
+
   GridLevel* level = &game->world->grid->levels[ring];
   DjinniArray* entitiesToDelete = Djinni_Util_Array.initialize(16);
 

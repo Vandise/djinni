@@ -11,6 +11,8 @@ static void initialize() {
 }
 
 static void tick(Game* game, double dt, DJINNI_RING ring) {
+  if (game->world->grid == NULL) { return; }
+
   GridLevel* level = &game->world->grid->levels[ring];
 
   for (int y = 0; y < level->height; y++) {

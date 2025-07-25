@@ -255,6 +255,8 @@ static void inspect(Grid* grid) {
 }
 
 static void destroy(Grid* grid) {
+  if (grid == NULL) { return; }
+
   for (int i = 0; i < grid->levelCount; i++) {
     GridLevel* level = &grid->levels[i];
 

@@ -13,6 +13,8 @@ static void initialize() {
 }
 
 static void draw(Renderer* r, Grid* grid, Camera* c, DJINNI_RING ring) {
+  if (grid == NULL) { return; }
+
   GridLevel* level = &grid->levels[ring];
 
   for (int y = 0; y < level->height; y++) {

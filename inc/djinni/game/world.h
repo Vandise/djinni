@@ -10,7 +10,15 @@
 #include "djinni/renderable/entity.h"
 #include "djinni/geometry/grid.h"
 
+typedef enum {
+  NO_GRID_WORLD_TYPE,
+  STANDARD_WORLD_TYPE,
+  MAP_WORLD_TYPE
+} DJINNI_WORLD_TYPE;
+
 typedef struct Djinni_Game_World_SettingsStruct {
+  DJINNI_WORLD_TYPE type;
+
   int width;
   int height;
 
