@@ -97,7 +97,15 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
   //
   // Objects
   //
-  
+  cJSON* objectsNode = cJSON_GetObjectItem(layerNode, "objects");
+  if (objectsNode != NULL) {
+    int nObjects = cJSON_GetArraySize(objectsNode);
+    mapLayer->objects = Djinni_Util_Array.initialize(nObjects);
+
+    for (int i = 0; i < nObjects; i++) {
+      cJSON* objectNode = cJSON_GetArrayItem(objectsNode, i);
+    }
+  }
 }
 
 static void setMapDataFile(WorldMap* m, char* filename) {
