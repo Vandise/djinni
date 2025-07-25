@@ -109,7 +109,8 @@ static void load(WorldMap* m, Renderer* r, char* filename) {
     loadLayer(m, r, layerNode);
   }
 
-  free(root);
+  cJSON_Delete(root);
+  free(text);
 }
 
 static int drawComparator(const void *a, const void *b) {
@@ -192,9 +193,22 @@ static void inspect(WorldMap* m) {
 }
 
 static void destroy(WorldMap* m) {
-  //Djinni_Util_Array.destroy(m->tiles, Djinni_Video_Texture.arrayDestroyCallback);
-  //free(m->data);
-  //free(m->objects);
+  for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
+    WorldMapLayer* mapLayer = &(m->layers[i]);
+
+    if (mapLayer->atlases != NULL) {
+      for (int j = 0; j < mapLayer->atlases->used; j++) {
+        Djinni_Video_Image_Atlas.destroy(mapLayer->atlases->data[j]);
+      }
+
+      Djinni_Util_Array.destroy(mapLayer->atlases, NULL);
+    }
+
+    if (mapLayer->type == TILE_LAYER_TYPE) {
+      free(mapLayer->tiles.data);
+    }
+  }
+
   free(m);
 }
 

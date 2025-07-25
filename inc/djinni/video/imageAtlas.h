@@ -32,6 +32,7 @@ struct Djinni_Video_ImageAtlasStruct {
   AtlasImage* (*getIndex)(ImageAtlas*, int);
   void (*blit)(Renderer*, AtlasImage*, int, int, int, int);
   AtlasImage* (*getImage)(ImageAtlas*, char*);
+  void (*destroy)(ImageAtlas*);
 };
 
 extern struct Djinni_Video_ImageAtlasStruct Djinni_Video_Image_Atlas;

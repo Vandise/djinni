@@ -73,9 +73,16 @@ static void blit(Renderer* r, AtlasImage* img, int x, int y, int w, int h) {
 	SDL_RenderCopy(r->instance, img->atlas->texture->instance, &src, &dest);
 }
 
+static void destroy(ImageAtlas* atlas) {
+  Djinni_Util_Array.destroy(atlas->images, free);
+  Djinni_Video_Texture.destroy(atlas->texture);
+  free(atlas);
+}
+
 struct Djinni_Video_ImageAtlasStruct Djinni_Video_Image_Atlas = {
   .load = load,
   .getImage = getImage,
   .getIndex = getIndex,
-  .blit = blit
+  .blit = blit,
+  .destroy = destroy,
 };
