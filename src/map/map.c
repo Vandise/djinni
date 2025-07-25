@@ -101,9 +101,9 @@ static void setMapDataFile(WorldMap* m, char* filename) {
 }
 
 static void load(WorldMap* m, Renderer* r) {
-  if (m->mapFileName[0] == 0) {
+  if (m->mapFileName[0] != 0) {
     char* text = djinniReadFile(m->mapFileName);
-    cJSON *root = cJSON_Parse(text);
+    cJSON* root = cJSON_Parse(text);
 
     m->type = cJSON_GetObjectItem(root, "type")->valueint;
     m->width = cJSON_GetObjectItem(root, "width")->valueint;
@@ -118,54 +118,6 @@ static void load(WorldMap* m, Renderer* r) {
 
     cJSON_Delete(root);
     free(text);
-  }
-}
-
-static int drawComparator(const void *a, const void *b) {
-  int result;
-  MapTile *t1, *t2;
-
-  t1 = (MapTile*) a;
-  t2 = (MapTile*) b;
-
-  result = t1->layer - t2->layer;
-
-  if (result == 0) {
-    result = t1->y - t2->y;
-
-    if (result == 0) {
-      result = (t1->sx + t1->width) - (t2->sx + t2->width);
-    }
-  }
-
-  return result;
-}
-
-static void draw(WorldMap* m, Renderer* r, Camera* c, double dt) {
-  for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
-    WorldMapLayer* mapLayer = &(m->layers[i]);
-
-    if (mapLayer->type == TILE_LAYER_TYPE) {
-      qsort(mapLayer->tiles.data, mapLayer->tiles.nTiles, sizeof(MapTile), drawComparator);
-
-      for (int i = 0; i < mapLayer->tiles.nTiles; i++) {
-        MapTile tile = mapLayer->tiles.data[i];
-
-        AtlasImage* img = Djinni_Video_Image_Atlas.getIndex(
-          mapLayer->atlases->data[tile.atlasIndex],
-          tile.tileIndex
-        );
-
-        Djinni_Video_Image_Atlas.blit(
-          r,
-          img,
-          tile.sx - c->point.x,
-          tile.sy - c->point.y,
-          tile.width,
-          tile.height
-        );
-      }
-    }
   }
 }
 
@@ -224,7 +176,6 @@ struct Djinni_MapStruct Djinni_Map = {
   .create = create,
   .setMapDataFile = setMapDataFile,
   .load = load,
-  .draw = draw,
   .inspect = inspect,
   .destroy = destroy
 };

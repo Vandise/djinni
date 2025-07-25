@@ -32,8 +32,7 @@ int main(void) {
   Djinni.Video->Renderer->setBackgroundColor(Djinni.renderer, background);
 
   WorldSettings worldSettings = {
-    .width = 1280,
-    .height = 1280,
+    .type = MAP_WORLD_TYPE,
     .finestGridSize = 32,
     .mediumGridSize = 64,
     .coarseGridSize = 128,
@@ -56,7 +55,7 @@ int main(void) {
   Djinni.Game->destroy(game);
   Djinni.terminate();
 
-  //system("leaks example");
+  system("leaks example");
 
   return 0;
 }

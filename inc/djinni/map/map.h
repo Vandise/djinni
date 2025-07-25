@@ -97,7 +97,6 @@ typedef struct Djinni_WorldMapStruct {
 struct Djinni_MapStruct {
   WorldMap* (*create)();
   void (*load)(WorldMap*, Renderer*);
-  void (*draw)(WorldMap*, Renderer*, Camera*, double);
   void (*setMapDataFile)(WorldMap*, char*);
 
   void (*inspect)(WorldMap*);

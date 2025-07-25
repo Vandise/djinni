@@ -4,11 +4,13 @@
 #include "djinni/game/shared.h"
 #include "djinni/geometry/shared.h"
 #include "djinni/renderable/shared.h"
+#include "djinni/map/shared.h"
 
 #include "djinni/util/array.h"
 #include "djinni/game/camera.h"
 #include "djinni/renderable/entity.h"
 #include "djinni/geometry/grid.h"
+#include "djinni/map/map.h"
 
 typedef enum {
   NO_GRID_WORLD_TYPE,
@@ -36,8 +38,10 @@ typedef struct Djinni_Game_World_SettingsStruct {
 */
 typedef struct Djinni_Game_WorldStruct {
   DjinniArray* entities;
+
   Grid* grid;
   Camera* camera;
+  WorldMap* worldMap;
 
   WorldSettings settings;
 } World;
@@ -46,7 +50,9 @@ struct Djinni_Game_GameWorldStruct {
   World* (*create)(WorldSettings);
   void (*addEntity)(World*, Entity*);
   void (*removeEntity)(Game*, Entity*, double);
+  void (*setWorldMap)(World*, WorldMap*);
   void (*update)(Game*, ViewportBounds, DJINNI_RING, double);
+  void (*draw)(Renderer*, Game*, double);
   void (*destroy)(World*);
 };
 

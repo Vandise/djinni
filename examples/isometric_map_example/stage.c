@@ -9,7 +9,7 @@ void onStageCreate(Stage* self, Game* game, Stage* previous) {
   Djinni.Map->load(wm, Djinni.renderer);
   Djinni.Map->inspect(wm);
 
-  //Djinni.Map->destroy(wm);
+  Djinni.Game->World->setWorldMap(game->world, wm);
 
   Djinni.Game->enableInput(game);
 }
@@ -37,7 +37,7 @@ void updateStage(Stage* self, Game* game, double dt) {
 void drawStage(Stage* self, Game* game, double dt) {
   //Djinni.Video->ImageAtlas->blit(Djinni.renderer, img, 200, 200, 64, 64);
 
-  Djinni.Map->draw(wm, Djinni.renderer, game->camera, dt);
+  //Djinni.Map->draw(game->world->worldMap, Djinni.renderer, game->camera, dt);
 
 
   GridLevel* level = &game->world->grid->levels[0];

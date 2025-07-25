@@ -7,6 +7,7 @@ static World* create(WorldSettings settings) {
   w->settings = settings;
   w->entities = Djinni_Util_Array.initialize(10);
   w->grid = NULL;
+  w->worldMap = NULL;
 
   if (settings.type != MAP_WORLD_TYPE) {
     w->grid = Djinni_Geometry_Grid.create(
@@ -63,6 +64,88 @@ static void removeEntity(Game* game, Entity* e, double dt) {
   for (int i = id; i < w->entities->used; i++) {
     Entity* entity = w->entities->data[i];
     entity->id = i;
+  }
+}
+
+static void setWorldMap(World* w, WorldMap* wm) {
+  if (w->settings.type == MAP_WORLD_TYPE) {
+    w->worldMap = wm;
+    w->settings.width = wm->width;
+    w->settings.height = wm->height;
+
+    w->grid = Djinni_Geometry_Grid.create(
+      w->settings.gridCellCapacity,
+      w->settings.width,
+      w->settings.height,
+      w->settings.finestGridSize,
+      w->settings.mediumGridSize,
+      w->settings.coarseGridSize
+    );
+
+    //
+    // todo: add entities to the grid from the entities layer
+    //
+  }
+}
+
+static int drawComparator(const void *a, const void *b) {
+  int result;
+  MapTile *t1, *t2;
+
+  t1 = (MapTile*) a;
+  t2 = (MapTile*) b;
+
+  result = t1->layer - t2->layer;
+
+  if (result == 0) {
+    result = t1->y - t2->y;
+
+    if (result == 0) {
+      result = (t1->sx + t1->width) - (t2->sx + t2->width);
+    }
+  }
+
+  return result;
+}
+
+static void draw(Renderer* r, Game* game, double dt) {
+  WorldMap* m = game->world->worldMap;
+  Camera* c = game->camera;
+  ViewportBounds viewport = Djinni_Camera.getViewportBounds(c);
+
+  for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
+    WorldMapLayer* mapLayer = &(m->layers[i]);
+
+    if (mapLayer->type == TILE_LAYER_TYPE) {
+      qsort(mapLayer->tiles.data, mapLayer->tiles.nTiles, sizeof(MapTile), drawComparator);
+
+      for (int i = 0; i < mapLayer->tiles.nTiles; i++) {
+        MapTile tile = mapLayer->tiles.data[i];
+
+        //
+        // draw tiles only in the viewport with some padding
+        //
+        if (
+          tile.sx > viewport.x1 - (tile.width * 2) && tile.sx < viewport.x2 + (tile.width * 2) &&
+          tile.sy > viewport.y1 - (tile.height * 2) && tile.sy < viewport.y2 + (tile.height * 2)
+        ) {
+          AtlasImage* img = Djinni_Video_Image_Atlas.getIndex(
+            mapLayer->atlases->data[tile.atlasIndex],
+            tile.tileIndex
+          );
+
+          Djinni_Video_Image_Atlas.blit(
+            r,
+            img,
+            tile.sx - c->point.x,
+            tile.sy - c->point.y,
+            tile.width,
+            tile.height
+          );
+        }
+
+      }
+    }
   }
 }
 
@@ -148,7 +231,13 @@ static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double
 static void destroy(World* w) {
   Djinni_Util_Logger.log_dev("Djinni::Game::World.destroy( address:(%p) )", w);
 
-  Djinni_Geometry_Grid.destroy(w->grid);
+  if (w->worldMap != NULL) {
+    Djinni_Map.destroy(w->worldMap);
+  }
+
+  if (w->grid != NULL) {
+    Djinni_Geometry_Grid.destroy(w->grid);
+  }
 
   Djinni_Util_Array.destroy(
     w->entities,
@@ -162,6 +251,8 @@ struct Djinni_Game_GameWorldStruct Djinni_World = {
   .create = create,
   .addEntity = addEntity,
   .removeEntity = removeEntity,
+  .setWorldMap = setWorldMap,
   .update = update,
+  .draw = draw,
   .destroy = destroy
 };

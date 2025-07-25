@@ -91,9 +91,10 @@ static void update(Game* game, double dt) {
   7. Overlay 1
   8. Overlay 2
 */
+static double dtTest = 0;
 static void draw(Game* game, double dt) {
+  Djinni.Game->World->draw(Djinni.renderer, game, dt);
   Djinni.Renderable->draw(Djinni.renderer, game->world->grid, game->camera, DJINNI_RING_FINE);
-
   game->activeStage->draw(game->activeStage, game, dt);
 }
 
