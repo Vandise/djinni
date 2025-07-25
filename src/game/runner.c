@@ -1,12 +1,6 @@
 #include "djinni/util/util.h"
 #include "djinni/djinni.h"
 
-/*
-  Todo:
-    entities will need to be sorted. Likely to a binary tree, to support Painter's Algorithm
-    for isometric
-*/
-
 static void prepare(Game* game) {
   Djinni.Video->Renderer->setDrawColor(Djinni.renderer, Djinni.renderer->backgroundColor);
   Djinni.Video->Renderer->clear(Djinni.renderer);
@@ -80,21 +74,13 @@ static void update(Game* game, double dt) {
   game->stats.dt = dt;
 }
 
-/*
-  todo: draw should be multiple levels called to the stage:
-  1. Background
-  2. Assets
-  3. Ext. Assets
-  4. Collision
-  5. Entities
-  6. Effects
-  7. Overlay 1
-  8. Overlay 2
-*/
-static double dtTest = 0;
 static void draw(Game* game, double dt) {
-  Djinni.Game->World->draw(Djinni.renderer, game, dt);
-  Djinni.Renderable->draw(Djinni.renderer, game->world->grid, game->camera, DJINNI_RING_FINE);
+  if (game->world->settings.type == MAP_WORLD_TYPE) {
+    Djinni.Game->World->draw(Djinni.renderer, game, dt);
+  } else {
+    Djinni.Renderable->draw(Djinni.renderer, game->world->grid, game->camera, DJINNI_RING_FINE);
+  }
+
   game->activeStage->draw(game->activeStage, game, dt);
 }
 

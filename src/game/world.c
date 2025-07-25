@@ -116,6 +116,17 @@ static void draw(Renderer* r, Game* game, double dt) {
   for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
     WorldMapLayer* mapLayer = &(m->layers[i]);
 
+    //
+    // Draw Entities only in the fine ring
+    //
+    if (mapLayer->id == ENTITY_LAYER) {
+      Djinni_Renderable.draw(r, game->world->grid, game->camera, DJINNI_RING_FINE);
+      continue;
+    }
+
+    //
+    // Tile Layers
+    //
     if (mapLayer->type == TILE_LAYER_TYPE) {
       qsort(mapLayer->tiles.data, mapLayer->tiles.nTiles, sizeof(MapTile), drawComparator);
 
@@ -143,9 +154,10 @@ static void draw(Renderer* r, Game* game, double dt) {
             tile.height
           );
         }
-
       }
+      continue;
     }
+
   }
 }
 

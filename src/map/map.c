@@ -16,7 +16,6 @@ static WorldMap* create() {
     WorldMapLayer* layer = &(m->layers[i]);
     layer->id = i;
     layer->type = UNINITIALIZED_LAYER_TYPE;
-    layer->nObjects = 0;
     layer->atlases = NULL;
     layer->objects = NULL;
     layer->tiles.nTiles = -1;
@@ -94,6 +93,11 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
       }
     }
   }
+
+  //
+  // Objects
+  //
+  
 }
 
 static void setMapDataFile(WorldMap* m, char* filename) {
@@ -131,8 +135,8 @@ static void inspect(WorldMap* m) {
     WorldMapLayer* mapLayer = &(m->layers[i]);
 
     Djinni_Util_Logger.log_debug(
-      "\tDjinni::Map::Layer( id:(%p) type:(%d) n-atlases:(%d) n-objects:(%d) )",
-      mapLayer->id, mapLayer->type, (mapLayer->atlases == NULL ? 0 : mapLayer->atlases->used), mapLayer->nObjects
+      "\tDjinni::Map::Layer( id:(%p) type:(%d) n-atlases:(%d) )",
+      mapLayer->id, mapLayer->type, (mapLayer->atlases == NULL ? 0 : mapLayer->atlases->used)
     );
 
     if (mapLayer->type == TILE_LAYER_TYPE) {
@@ -162,6 +166,10 @@ static void destroy(WorldMap* m) {
       }
 
       Djinni_Util_Array.destroy(mapLayer->atlases, NULL);
+    }
+
+    if (mapLayer->objects != NULL) {
+      Djinni_Util_Array.destroy(mapLayer->objects, free);
     }
 
     if (mapLayer->type == TILE_LAYER_TYPE) {

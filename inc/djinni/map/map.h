@@ -36,8 +36,14 @@ typedef enum {
 
 typedef enum {
   UNINITIALIZED_LAYER_TYPE,
-  TILE_LAYER_TYPE
+  TILE_LAYER_TYPE,
+  ENTITY_LAYER_TYPE,
+  OBJECT_LAYER_TYPE
 } DJINNI_LAYER_TYPE;
+
+typedef enum {
+  PLAYER_ENTITY_MAP_OBJECT
+} DJINNI_MAP_OBJECT_TYPE;
 
 typedef struct Djinni_Map_TileStruct {
   int layer;
@@ -57,21 +63,23 @@ typedef struct Djinni_Map_TileStruct {
   int height;
 } MapTile;
 
-typedef struct Djinni_Map_ObjectStruct {
+typedef struct Djinni_WorldMapObjectStruct {
+  int type;
+
   int x;
   int y;
-  int sx;
-  int sy;
-  AtlasImage* img;
-} MapObject;
+  int atlas;
+  int atlasIndex;
+
+  char textureFile[DJINNI_MAX_MAP_FILENAME];
+} WorldMapObject;
 
 typedef struct Djinni_WorldMapLayerStruct {
   int id;
   DJINNI_LAYER_TYPE type;
 
-  int nObjects;
   DjinniArray* atlases;
-  MapObject* objects;
+  DjinniArray* objects;
 
   struct Djinni_MapLayerTilesStruct {
     int nTiles;
