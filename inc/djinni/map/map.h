@@ -118,6 +118,8 @@ typedef struct Djinni_WorldMapStruct {
 
   int width;
   int height;
+  int baseTileWidth;
+  int baseTileHeight;
 
   WorldMapLayer layers[DJINNI_MAX_MAP_LAYERS];
 

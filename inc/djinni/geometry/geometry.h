@@ -7,6 +7,7 @@
 #include "djinni/geometry/rectangle.h"
 #include "djinni/geometry/observablePoint.h"
 #include "djinni/geometry/grid.h"
+#include "djinni/geometry/isometric.h"
 
 struct Djinni_GeometryStruct {
   struct Djinni_Geometry_CoordinateStruct* Coordinate;
@@ -14,6 +15,7 @@ struct Djinni_GeometryStruct {
   struct Djinni_Geometry_RectangleStruct* Rectangle;
   struct Djinni_Geometry_ObservablePointStruct* ObservablePoint;
   struct Djinni_Geometry_GridStruct* Grid;
+  struct Djinni_Geometry_IsometricStruct* Isometric;
 
   void (*initialize)();
 };

@@ -1,6 +1,7 @@
 #include "djinni/util/util.h"
 #include "djinni/map/map.h"
 #include "djinni/game/camera.h"
+#include "djinni/geometry/isometric.h"
 #include "djinni/util/json.h"
 
 static int getIndex(int x, int y, int maxX) {
@@ -89,10 +90,13 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
       mt->y = i / mapLayer->tiles.nxTiles;
 
       if (m->type == ISOMETRIC_MAP_TYPE) {
-        // object->sx = ((x * m->tileWidth / 2) + (y * m->tileWidth / 2));
-        mt->sx = ((mt->x * mapLayer->tiles.tileWidth / 2) + (mt->y * mapLayer->tiles.tileWidth / 2));
-        // object->sy = (m->height / 2) - ((y * (m->tileHeight / 2) / 2) - (x * (m->tileHeight / 2) / 2));
-        mt->sy = (m->height / 2) - ((mt->y * (mapLayer->tiles.tileHeight / 2) / 2) - (mt->x * (mapLayer->tiles.tileHeight / 2) / 2));
+        Coordinate isoxy = Djinni_Geometry_Isometric.xytoiso(
+          m->height, mt->x, mt->y, mapLayer->tiles.tileWidth, mapLayer->tiles.tileHeight
+        );
+
+        mt->sx = isoxy.x;
+        mt->sy = isoxy.y;
+
         mt->x = mt->sx;
         mt->y = mt->sy;
 
