@@ -45,6 +45,11 @@ typedef enum {
   PLAYER_ENTITY_MAP_OBJECT
 } DJINNI_MAP_OBJECT_TYPE;
 
+typedef enum {
+  ISOMETRIC_TILE_TYPE,
+  ISOMETRIC_ENTITY_TYPE
+} DJINNI_ISOMETRIC_OBJECT_TYPE;
+
 typedef struct Djinni_Map_TileStruct {
   int empty;
 
@@ -77,6 +82,18 @@ typedef struct Djinni_WorldMapObjectStruct {
   char textureFile[DJINNI_MAX_MAP_FILENAME];
 } WorldMapObject;
 
+typedef struct Djinni_WorldMapIsometricObjectStruct {
+  DJINNI_ISOMETRIC_OBJECT_TYPE type;
+
+  int* layer;
+  int* x;
+  int* y;
+  int* width;
+  int* height;
+
+  MapTile* tile;
+} IsometricObject;
+
 typedef struct Djinni_WorldMapLayerStruct {
   int id;
   DJINNI_LAYER_TYPE type;
@@ -103,6 +120,8 @@ typedef struct Djinni_WorldMapStruct {
   int height;
 
   WorldMapLayer layers[DJINNI_MAX_MAP_LAYERS];
+
+  DjinniArray* isometricObjects;
 
   void (*objectLoader)(World*, WorldMapObject*, DJINNI_MAP_LAYER);
 } WorldMap;

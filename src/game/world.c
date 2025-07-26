@@ -99,18 +99,18 @@ static void setWorldMap(World* w, WorldMap* wm) {
 
 static int drawComparator(const void *a, const void *b) {
   int result;
-  MapTile *t1, *t2;
+  IsometricObject *t1, *t2;
 
-  t1 = (MapTile*) a;
-  t2 = (MapTile*) b;
+  t1 = *(IsometricObject**)a;
+  t2 = *(IsometricObject**)b;
 
-  result = t1->layer - t2->layer;
+  result = (*(t1->layer)) - (*(t2->layer));
 
   if (result == 0) {
-    result = t1->y - t2->y;
+    result = (*(t1->y)) - (*(t2->y));
 
     if (result == 0) {
-      result = (t1->sx + t1->width) - (t2->sx + t2->width);
+      result = (*(t1->x) + (*(t1->width))) - (*(t2->x) + (*(t2->width)));
     }
   }
 
@@ -122,11 +122,56 @@ static void draw(Renderer* r, Game* game, double dt) {
   Camera* c = game->camera;
   ViewportBounds viewport = Djinni_Camera.getViewportBounds(c);
 
+  if (m->type == ISOMETRIC_MAP_TYPE) {
+    qsort(
+      m->isometricObjects->data,
+      m->isometricObjects->used,
+      sizeof(void*),
+      drawComparator
+    );
+
+    for (int i = 0; i < m->isometricObjects->used; i++) {
+      IsometricObject* object = m->isometricObjects->data[i];
+
+      int x = *(object->x);
+      int y = *(object->y);
+      int w = *(object->width);
+      int h = *(object->height);
+      int layer = *(object->layer);
+
+      if (
+        x > viewport.x1 - (w * 2) && x < viewport.x2 + (w * 2) &&
+        y > viewport.y1 - (h * 2) && y < viewport.y2 + (h * 2)
+      ) {
+
+        //
+        // Tiles
+        //
+        if (object->type == ISOMETRIC_TILE_TYPE) {
+          WorldMapLayer* mapLayer = &(m->layers[layer]);
+
+          AtlasImage* img = Djinni_Video_Image_Atlas.getIndex(
+            mapLayer->atlases->data[object->tile->atlasIndex],
+            object->tile->tileIndex
+          );
+
+          Djinni_Video_Image_Atlas.blit(
+            r,
+            img,
+            x - c->point.x,
+            y - c->point.y,
+            w,
+            h
+          );
+
+          continue;
+        }
+
+      }
+    }
+  }
 
   /*
-    todo: everything on the map will need to be qsorted
-          for x-y bounds.
-  */
 
   for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
     WorldMapLayer* mapLayer = &(m->layers[i]);
@@ -174,8 +219,8 @@ static void draw(Renderer* r, Game* game, double dt) {
       }
       continue;
     }
-
   }
+  */
 }
 
 static void update(Game* game, ViewportBounds viewport, DJINNI_RING ring, double dt) {

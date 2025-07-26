@@ -11,6 +11,7 @@ static WorldMap* create() {
   WorldMap* m = malloc(sizeof(WorldMap));
 
   m->mapFileName[0] = 0;
+  m->isometricObjects = NULL;
 
   for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
     WorldMapLayer* layer = &(m->layers[i]);
@@ -94,6 +95,18 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
         mt->sy = (m->height / 2) - ((mt->y * (mapLayer->tiles.tileHeight / 2) / 2) - (mt->x * (mapLayer->tiles.tileHeight / 2) / 2));
         mt->x = mt->sx;
         mt->y = mt->sy;
+
+        IsometricObject* iso = malloc(sizeof(IsometricObject));
+          iso->type = ISOMETRIC_TILE_TYPE;
+          iso->layer = &(mt->layer);
+          iso->x = &(mt->x);
+          iso->y = &(mt->y);
+          iso->width = &(mt->width);
+          iso->height = &(mt->height);
+          iso->tile = mt;
+
+        Djinni_Util_Array.insert(m->isometricObjects, iso);
+
       } else {
         mt->sx = mt->x;
         mt->sy = mt->y;
@@ -104,6 +117,7 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
   //
   // Objects
   //
+  /*
   cJSON* objectsNode = cJSON_GetObjectItem(layerNode, "objects");
   if (objectsNode != NULL) {
     int nObjects = cJSON_GetArraySize(objectsNode);
@@ -130,8 +144,8 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
 
       Djinni_Util_Array.insert(mapLayer->objects, obj);
     }
-
   }
+  */
 }
 
 static void setMapDataFile(WorldMap* m, char* filename) {
@@ -150,6 +164,10 @@ static void load(WorldMap* m, Renderer* r) {
     m->type = cJSON_GetObjectItem(root, "type")->valueint;
     m->width = cJSON_GetObjectItem(root, "width")->valueint;
     m->height = cJSON_GetObjectItem(root, "height")->valueint;
+
+    if (m->type == ISOMETRIC_MAP_TYPE) {
+      m->isometricObjects = Djinni_Util_Array.initialize(16);
+    }
 
     cJSON* layersNode = cJSON_GetObjectItem(root, "layers");
     int nLayers = cJSON_GetArraySize(layersNode);
@@ -229,6 +247,10 @@ static void destroy(WorldMap* m) {
     if (mapLayer->type == TILE_LAYER_TYPE) {
       free(mapLayer->tiles.data);
     }
+  }
+
+  if (m->isometricObjects != NULL) {
+    Djinni_Util_Array.destroy(m->isometricObjects, free);
   }
 
   free(m);

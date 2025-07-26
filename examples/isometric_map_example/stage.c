@@ -2,8 +2,14 @@
 
 WorldMap* wm = NULL;
 
-void objectLoader(WorldMap* m, WorldMapObject* obj, DJINNI_MAP_LAYER layer) {
+void objectLoader(World* w, WorldMapObject* obj, DJINNI_MAP_LAYER layer) {
   printf("world map object id:%d \n", obj->id);
+  /*
+  if (obj->id == 0) {
+    Entity* player = Djinni.Renderable->Sprite->create(800, 600, "bin/gfx/player.png");
+    Djinni.Game->World->addEntity(w, player);
+  }
+  */
 }
 
 void onStageCreate(Stage* self, Game* game, Stage* previous) {
@@ -40,11 +46,6 @@ void updateStage(Stage* self, Game* game, double dt) {
 }
 
 void drawStage(Stage* self, Game* game, double dt) {
-  //Djinni.Video->ImageAtlas->blit(Djinni.renderer, img, 200, 200, 64, 64);
-
-  //Djinni.Map->draw(game->world->worldMap, Djinni.renderer, game->camera, dt);
-
-
   GridLevel* level = &game->world->grid->levels[0];
   int gridCellWidth = level->cellSize;
 
@@ -65,6 +66,7 @@ void drawStage(Stage* self, Game* game, double dt) {
       SDL_RenderDrawRect(Djinni.renderer->instance, &r);
     }
   }
+
 }
 
 void onDestroyStage(Stage* self, Game* game, Stage* next) {}
