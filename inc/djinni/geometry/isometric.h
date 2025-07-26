@@ -4,7 +4,8 @@
 #include "djinni/geometry/shared.h"
 
 struct Djinni_Geometry_IsometricStruct {
-  Coordinate (*xytoiso)(int, int, int, int, int);
+  Coordinate (*translate)(int, int, int, int, int);
+  Coordinate (*cartesianToISO)(int, int, int, int, int, int);
 };
 
 extern struct Djinni_Geometry_IsometricStruct Djinni_Geometry_Isometric;

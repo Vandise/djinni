@@ -8,11 +8,13 @@ static int getIndex(int x, int y, int maxX) {
   return y * maxX + x;
 }
 
-static WorldMap* create() {
+static WorldMap* create(int baseTileWidth, int baseTileHeight) {
   WorldMap* m = malloc(sizeof(WorldMap));
 
   m->mapFileName[0] = 0;
   m->isometricObjects = NULL;
+  m->baseTileWidth = baseTileWidth;
+  m->baseTileHeight = baseTileHeight;
 
   for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
     WorldMapLayer* layer = &(m->layers[i]);
@@ -29,7 +31,7 @@ static WorldMap* create() {
   return m;
 }
 
-static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
+static void loadLayer(Game* game, WorldMap* m, Renderer* r, cJSON* layerNode) {
   int layerId = cJSON_GetObjectItem(layerNode, "layer")->valueint;
   WorldMapLayer* mapLayer = &(m->layers[layerId]);
   mapLayer->type = cJSON_GetObjectItem(layerNode, "type")->valueint;
@@ -87,10 +89,10 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
       mt->height = mapLayer->tiles.tileHeight;
 
       mt->x = i % mapLayer->tiles.nxTiles;
-      mt->y = i / mapLayer->tiles.nxTiles;
+      mt->y = i / mapLayer->tiles.nyTiles;
 
       if (m->type == ISOMETRIC_MAP_TYPE) {
-        Coordinate isoxy = Djinni_Geometry_Isometric.xytoiso(
+        Coordinate isoxy = Djinni_Geometry_Isometric.translate(
           m->height, mt->x, mt->y, mapLayer->tiles.tileWidth, mapLayer->tiles.tileHeight
         );
 
@@ -121,23 +123,20 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
   //
   // Objects
   //
-  /*
   cJSON* objectsNode = cJSON_GetObjectItem(layerNode, "objects");
   if (objectsNode != NULL) {
     int nObjects = cJSON_GetArraySize(objectsNode);
-
-    mapLayer->objects = Djinni_Util_Array.initialize(nObjects);
 
     for (int i = 0; i < nObjects; i++) {
       cJSON* objectNode = cJSON_GetArrayItem(objectsNode, i);
 
       WorldMapObject* obj = malloc(sizeof(WorldMapObject));
-      obj->id = cJSON_GetObjectItem(objectNode, "id")->valueint;
-      obj->type = cJSON_GetObjectItem(objectNode, "type")->valueint;
-      obj->x = cJSON_GetObjectItem(objectNode, "x")->valueint;
-      obj->y = cJSON_GetObjectItem(objectNode, "y")->valueint;
+        obj->id = cJSON_GetObjectItem(objectNode, "id")->valueint;
+        obj->type = cJSON_GetObjectItem(objectNode, "type")->valueint;
+        obj->x = cJSON_GetObjectItem(objectNode, "x")->valueint;
+        obj->y = cJSON_GetObjectItem(objectNode, "y")->valueint;
+        obj->layer = layerId;
 
-      // todo: convert x/y to ISO
 
       cJSON* atlasNode = cJSON_GetObjectItem(objectNode, "atlas");
 
@@ -146,21 +145,20 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
         obj->atlasIndex = cJSON_GetObjectItem(objectNode, "index")->valueint;
       }
 
-      Djinni_Util_Array.insert(mapLayer->objects, obj);
+      m->objectLoader(game, obj);
     }
   }
-  */
 }
 
 static void setMapDataFile(WorldMap* m, char* filename) {
   strncpy(m->mapFileName, filename, DJINNI_MAX_MAP_FILENAME);
 }
 
-static void setObjectLoader(WorldMap* w, void (*objectLoader)(World*, WorldMapObject*, DJINNI_MAP_LAYER)) {
+static void setObjectLoader(WorldMap* w, void (*objectLoader)(Game*, WorldMapObject*)) {
   w->objectLoader = objectLoader;
 }
 
-static void load(WorldMap* m, Renderer* r) {
+static void load(Game* game, WorldMap* m, Renderer* r) {
   if (m->mapFileName[0] != 0) {
     char* text = djinniReadFile(m->mapFileName);
     cJSON* root = cJSON_Parse(text);
@@ -177,7 +175,7 @@ static void load(WorldMap* m, Renderer* r) {
     int nLayers = cJSON_GetArraySize(layersNode);
     for (int i = 0; i < nLayers; i++) {
       cJSON* layerNode = cJSON_GetArrayItem(layersNode, i);
-      loadLayer(m, r, layerNode);
+      loadLayer(game, m, r, layerNode);
     }
 
     cJSON_Delete(root);

@@ -15,6 +15,7 @@
 #include "djinni/physics/physics.h"
 #include "djinni/renderable/shape/shape.h"
 #include "djinni/util/array.h"
+#include "djinni/map/map.h"
 
 typedef enum {
   ENTITY_DESTORYED,
@@ -43,6 +44,7 @@ typedef struct EntityStruct {
   // draw-size and bounds
   ObservablePoint anchorPoint;
   Rectangle bounds;
+  IsometricObject* isoRef; // for fast removal in the iso ref array
 
   // physic size
   PhysicsBody body;
@@ -54,6 +56,9 @@ typedef struct EntityStruct {
   Texture* texture;
   Shape shape;
   DjinniArray* children;
+
+  // draw data
+  WorldMapObject* worldMapData;
 
   // user data
   void* data;

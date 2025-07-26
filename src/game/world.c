@@ -1,5 +1,6 @@
 #include "djinni/util/util.h"
 #include "djinni/game/game.h"
+#include "djinni/geometry/isometric.h"
 
 static World* create(WorldSettings settings) {
   World* w = malloc(sizeof(World));
@@ -8,6 +9,19 @@ static World* create(WorldSettings settings) {
   w->entities = Djinni_Util_Array.initialize(10);
   w->grid = NULL;
   w->worldMap = NULL;
+
+/*
+    TODO:
+
+    frame #5: 0x00000001000071f0 example`initialize(nElements=10) at array.c:12:17
+    frame #6: 0x000000010000d70a example`initializeLevel(level=0x0000000102027610, cellSize=128, cellCapacity=10, worldWidth=1966079, worldHeight=6293388) at grid.c:58:32
+    frame #7: 0x000000010000cd9b example`create(cellCapacity=10, worldWidth=1966079, worldHeight=6293388, finestSize=32, midSize=64, coarseSize=128) at grid.c:35:5
+    frame #8: 0x00000001000096e4 example`setWorldMap(w=0x0000000102035bb0, wm=0x0000000102028b40) at world.c:114:15
+    frame #9: 0x00000001000017e6 example`onStageCreate(self=0x00000001020270d0, game=0x0000000102819a00, previous=0x0000000000000000) at stage.c:23:3
+    frame #10: 0x000000010000887e example`changeStage(game=0x0000000102819a00, id=0) at game.c:70:5
+    frame #11: 0x000000010000845c example`start(game=0x0000000102819a00, level=0) at djinni.c:61:3
+    frame #12: 0x0000000100001caa example`main at main.c:51:3
+*/
 
   if (settings.type != MAP_WORLD_TYPE) {
     w->grid = Djinni_Geometry_Grid.create(
@@ -31,6 +45,38 @@ static void addEntity(World* w, Entity* e) {
   e->id = w->entities->used;
 
   Djinni_Util_Array.insert(w->entities, e);
+
+  //
+  // if there is a map and it is isometric, it's coordinates need to be translated
+  // relative to the isometric grid size and added to the isometric objects draw list
+  //
+  WorldMap* m = w->worldMap;
+
+  if (m != NULL && m->type == ISOMETRIC_MAP_TYPE) {  
+    Coordinate cartesianPos = Djinni_Renderable.Entity->getRenderPoint(e);    
+    Coordinate isoxy = Djinni_Geometry_Isometric.cartesianToISO(
+      m->height, m->width, m->baseTileWidth, m->baseTileHeight, cartesianPos.x, cartesianPos.y
+    );
+
+    printf(
+      "Adding entity to world map: %p  rx:%d ry:%d x:%d y:%d map-h:%d tw:%d th:%d \n",
+      e, cartesianPos.x, cartesianPos.y, isoxy.x, isoxy.y, m->height, m->baseTileWidth, m->baseTileHeight
+    );
+
+    Djinni_Renderable.Entity->setPosition(e, isoxy.x, isoxy.y);
+
+    IsometricObject* obj = malloc(sizeof(IsometricObject));
+      obj->type = ISOMETRIC_ENTITY_TYPE;
+      obj->layer = &(e->worldMapData->layer);
+      obj->x = &(e->body.bounds.instance.x);
+      obj->y = &(e->body.bounds.instance.y);
+      obj->width = &(e->body.bounds.instance.w);
+      obj->height = &(e->body.bounds.instance.h);
+      obj->entity = e;
+    e->isoRef = obj;
+
+    Djinni_Util_Array.insert(m->isometricObjects, obj);
+  }
 
   DJINNI_RING ring = Djinni_Geometry_Grid.computeRingLevel(
     Djinni_Game.Camera->getViewportBounds(w->camera),
@@ -70,6 +116,7 @@ static void removeEntity(Game* game, Entity* e, double dt) {
 static void setWorldMap(World* w, WorldMap* wm) {
   if (w->settings.type == MAP_WORLD_TYPE) {
     w->worldMap = wm;
+
     w->settings.width = wm->width;
     w->settings.height = wm->height;
 
@@ -81,19 +128,6 @@ static void setWorldMap(World* w, WorldMap* wm) {
       w->settings.mediumGridSize,
       w->settings.coarseGridSize
     );
-
-    //
-    // add entities to the grid from the entities layer
-    //  static objects will be managed in draw if needed
-    //
-    WorldMapLayer* mapLayer = &(wm->layers[ENTITY_LAYER]);
-
-    if (mapLayer->objects != NULL) {
-      for (int i = 0; i < mapLayer->objects->used; i++) {
-        WorldMapObject* obj = mapLayer->objects->data[i];
-        wm->objectLoader(w, obj, ENTITY_LAYER);
-      }
-    }
   }
 }
 
@@ -146,6 +180,7 @@ static void draw(Renderer* r, Game* game, double dt) {
 
         //
         // Tiles
+        //  todo: move this to renderable
         //
         if (object->type == ISOMETRIC_TILE_TYPE) {
           WorldMapLayer* mapLayer = &(m->layers[layer]);
@@ -167,6 +202,10 @@ static void draw(Renderer* r, Game* game, double dt) {
           continue;
         }
 
+        if (object->type == ISOMETRIC_ENTITY_TYPE && object->entity != NULL) {
+          Djinni_Renderable_Paint.entity(r, object->entity, c);
+          continue;
+        }
       }
     }
   }

@@ -29,6 +29,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
 
   e->bounds = Djinni_Geometry.Rectangle->create(pos.x, pos.y, w, h);
   e->body = Djinni_Physics.Body->create(pos.x, pos.y, w, h);
+  e->isoRef = NULL;
 
   e->status = ENTITY_ALIVE;
   e->id = -1;
@@ -42,6 +43,7 @@ static Entity* create(int x, int y, int w, int h, ENTITY_TYPE type) {
   e->texture = NULL;
   e->children = NULL;
   e->data = NULL;
+  e->worldMapData = NULL;
 
   for(int i = 0; i < DJINNI_GRID_MAX_LEVELS; i++) {
     e->locations[i].level = -1;
@@ -207,6 +209,9 @@ static void destroy(Entity* e) {
     Djinni_Video.Texture->destroy(e->texture);
   }
 
+  if (e->worldMapData != NULL) {
+    free(e->worldMapData);
+  }
 
   free(e);
 }

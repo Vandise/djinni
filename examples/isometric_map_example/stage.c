@@ -2,25 +2,28 @@
 
 WorldMap* wm = NULL;
 
-void objectLoader(World* w, WorldMapObject* obj, DJINNI_MAP_LAYER layer) {
+void objectLoader(Game* game, WorldMapObject* obj) {
   printf("world map object id:%d \n", obj->id);
-  /*
+
   if (obj->id == 0) {
-    Entity* player = Djinni.Renderable->Sprite->create(800, 600, "bin/gfx/player.png");
-    Djinni.Game->World->addEntity(w, player);
+    Entity* player = Djinni.Renderable->Sprite->create(24, 23, "bin/gfx/player.png");
+    player->worldMapData = obj;
+
+    printf("created entity: %p \n", player);
+
+    Djinni.Game->World->addEntity(game->world, player);
   }
-  */
 }
 
 void onStageCreate(Stage* self, Game* game, Stage* previous) {
   //game->camera->zoom = 2.0;
-  wm = Djinni.Map->create();
+  wm = Djinni.Map->create(64,64);
   Djinni.Map->setMapDataFile(wm, "bin/data/map.json");
   Djinni.Map->setObjectLoader(wm, objectLoader);
-  Djinni.Map->load(wm, Djinni.renderer);
-  Djinni.Map->inspect(wm);
-
   Djinni.Game->World->setWorldMap(game->world, wm);
+
+  Djinni.Map->load(game, wm, Djinni.renderer);
+  //Djinni.Map->inspect(wm);
 
   Djinni.Game->enableInput(game);
 }
