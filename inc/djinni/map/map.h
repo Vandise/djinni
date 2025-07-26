@@ -46,6 +46,8 @@ typedef enum {
 } DJINNI_MAP_OBJECT_TYPE;
 
 typedef struct Djinni_Map_TileStruct {
+  int empty;
+
   int layer;
   int tileIndex;
   int atlasIndex;
@@ -102,7 +104,7 @@ typedef struct Djinni_WorldMapStruct {
 
   WorldMapLayer layers[DJINNI_MAX_MAP_LAYERS];
 
-  void (*objectLoader)(WorldMap*, WorldMapObject*, DJINNI_MAP_LAYER);
+  void (*objectLoader)(World*, WorldMapObject*, DJINNI_MAP_LAYER);
 } WorldMap;
 
 struct Djinni_MapStruct {
@@ -110,7 +112,7 @@ struct Djinni_MapStruct {
   void (*load)(WorldMap*, Renderer*);
   void (*setMapDataFile)(WorldMap*, char*);
 
-  void (*setObjectLoader)(WorldMap*, void (*objectLoader)(WorldMap*, WorldMapObject*, DJINNI_MAP_LAYER));
+  void (*setObjectLoader)(WorldMap*, void (*objectLoader)(World*, WorldMapObject*, DJINNI_MAP_LAYER));
 
   void (*inspect)(WorldMap*);
   void (*destroy)(WorldMap*);

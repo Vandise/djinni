@@ -71,7 +71,14 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
       cJSON* tileNode = cJSON_GetArrayItem(tilesNode, i);
       MapTile* mt = &(mapLayer->tiles.data[i]);
 
+      // skip blank tiles
+      if (tileNode->type != cJSON_Object) {
+        mt->empty = 1;
+        continue;
+      }
+
       mt->layer = layerId;
+      mt->empty = 0;
       mt->tileIndex = cJSON_GetObjectItem(tileNode, "index")->valueint;
       mt->atlasIndex = cJSON_GetObjectItem(tileNode, "atlas")->valueint;
       mt->width = mapLayer->tiles.tileWidth;
@@ -131,8 +138,8 @@ static void setMapDataFile(WorldMap* m, char* filename) {
   strncpy(m->mapFileName, filename, DJINNI_MAX_MAP_FILENAME);
 }
 
-static void setObjectLoader(WorldMap* m, void (*objectLoader)(WorldMap*, WorldMapObject*, DJINNI_MAP_LAYER)) {
-  m->objectLoader = objectLoader;
+static void setObjectLoader(WorldMap* w, void (*objectLoader)(World*, WorldMapObject*, DJINNI_MAP_LAYER)) {
+  w->objectLoader = objectLoader;
 }
 
 static void load(WorldMap* m, Renderer* r) {
@@ -179,10 +186,13 @@ static void inspect(WorldMap* m) {
 
       for (int j = 0; j < mapLayer->tiles.nTiles; j++) {
         MapTile tile = mapLayer->tiles.data[j];
-          Djinni_Util_Logger.log_debug(
-            "\t\t\tDjinni::Map::Layer::Tile( x:(%d) y:(%d) sx:(%d) sy:(%d) atlas:(%d) index:(%d) )",
-            tile.x, tile.y, tile.sx, tile.sy, tile.atlasIndex, tile.tileIndex
-          );
+
+        if (tile.empty) { continue; }
+
+        Djinni_Util_Logger.log_debug(
+          "\t\t\tDjinni::Map::Layer::Tile( x:(%d) y:(%d) sx:(%d) sy:(%d) atlas:(%d) index:(%d) )",
+          tile.x, tile.y, tile.sx, tile.sy, tile.atlasIndex, tile.tileIndex
+        );
       }
     }
 

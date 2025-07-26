@@ -91,7 +91,7 @@ static void setWorldMap(World* w, WorldMap* wm) {
     if (mapLayer->objects != NULL) {
       for (int i = 0; i < mapLayer->objects->used; i++) {
         WorldMapObject* obj = mapLayer->objects->data[i];
-        wm->objectLoader(wm, obj, ENTITY_LAYER);
+        wm->objectLoader(w, obj, ENTITY_LAYER);
       }
     }
   }
@@ -122,6 +122,12 @@ static void draw(Renderer* r, Game* game, double dt) {
   Camera* c = game->camera;
   ViewportBounds viewport = Djinni_Camera.getViewportBounds(c);
 
+
+  /*
+    todo: everything on the map will need to be qsorted
+          for x-y bounds.
+  */
+
   for (int i = 0; i < DJINNI_MAX_MAP_LAYERS; i++) {
     WorldMapLayer* mapLayer = &(m->layers[i]);
 
@@ -141,6 +147,8 @@ static void draw(Renderer* r, Game* game, double dt) {
 
       for (int i = 0; i < mapLayer->tiles.nTiles; i++) {
         MapTile tile = mapLayer->tiles.data[i];
+
+        if (tile.empty) { continue; }
 
         //
         // draw tiles only in the viewport with some padding
