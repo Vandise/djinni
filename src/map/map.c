@@ -100,11 +100,27 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
   cJSON* objectsNode = cJSON_GetObjectItem(layerNode, "objects");
   if (objectsNode != NULL) {
     int nObjects = cJSON_GetArraySize(objectsNode);
+
     mapLayer->objects = Djinni_Util_Array.initialize(nObjects);
 
     for (int i = 0; i < nObjects; i++) {
       cJSON* objectNode = cJSON_GetArrayItem(objectsNode, i);
+
+      WorldMapObject* obj = malloc(sizeof(WorldMapObject));
+      obj->type = cJSON_GetObjectItem(objectNode, "type")->valueint;
+      obj->x = cJSON_GetObjectItem(objectNode, "x")->valueint;
+      obj->y = cJSON_GetObjectItem(objectNode, "y")->valueint;
+
+      cJSON* atlasNode = cJSON_GetObjectItem(objectNode, "atlas");
+
+      if (atlasNode != NULL) {
+        obj->atlas = atlasNode->valueint;
+        obj->atlasIndex = cJSON_GetObjectItem(objectNode, "index")->valueint;
+      }
+
+      Djinni_Util_Array.insert(mapLayer->objects, obj);
     }
+
   }
 }
 
@@ -143,8 +159,9 @@ static void inspect(WorldMap* m) {
     WorldMapLayer* mapLayer = &(m->layers[i]);
 
     Djinni_Util_Logger.log_debug(
-      "\tDjinni::Map::Layer( id:(%p) type:(%d) n-atlases:(%d) )",
-      mapLayer->id, mapLayer->type, (mapLayer->atlases == NULL ? 0 : mapLayer->atlases->used)
+      "\tDjinni::Map::Layer( id:(%p) type:(%d) n-atlases:(%d) n-objects:(%d) )",
+      mapLayer->id, mapLayer->type, (mapLayer->atlases == NULL ? 0 : mapLayer->atlases->used),
+      (mapLayer->objects == NULL ? 0 : mapLayer->objects->used)
     );
 
     if (mapLayer->type == TILE_LAYER_TYPE) {
@@ -161,6 +178,18 @@ static void inspect(WorldMap* m) {
           );
       }
     }
+
+    if (mapLayer->objects != NULL) {
+      for (int j = 0; j < mapLayer->objects->used; j++) {
+        WorldMapObject* mo = mapLayer->objects->data[j];
+
+        Djinni_Util_Logger.log_debug(
+          "\t\tDjinni::Map::Layer::Object( type:(%d) x:(%d) y:(%d) )",
+          mo->type, mo->x, mo->y
+        );
+      }
+    }
+
   }
 }
 
