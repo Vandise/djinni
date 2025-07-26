@@ -107,9 +107,12 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
       cJSON* objectNode = cJSON_GetArrayItem(objectsNode, i);
 
       WorldMapObject* obj = malloc(sizeof(WorldMapObject));
+      obj->id = cJSON_GetObjectItem(objectNode, "id")->valueint;
       obj->type = cJSON_GetObjectItem(objectNode, "type")->valueint;
       obj->x = cJSON_GetObjectItem(objectNode, "x")->valueint;
       obj->y = cJSON_GetObjectItem(objectNode, "y")->valueint;
+
+      // todo: convert x/y to ISO
 
       cJSON* atlasNode = cJSON_GetObjectItem(objectNode, "atlas");
 
@@ -126,6 +129,10 @@ static void loadLayer(WorldMap* m, Renderer* r, cJSON* layerNode) {
 
 static void setMapDataFile(WorldMap* m, char* filename) {
   strncpy(m->mapFileName, filename, DJINNI_MAX_MAP_FILENAME);
+}
+
+static void setObjectLoader(WorldMap* m, void (*objectLoader)(WorldMap*, WorldMapObject*, DJINNI_MAP_LAYER)) {
+  m->objectLoader = objectLoader;
 }
 
 static void load(WorldMap* m, Renderer* r) {
@@ -220,6 +227,7 @@ static void destroy(WorldMap* m) {
 struct Djinni_MapStruct Djinni_Map = {
   .create = create,
   .setMapDataFile = setMapDataFile,
+  .setObjectLoader = setObjectLoader,
   .load = load,
   .inspect = inspect,
   .destroy = destroy

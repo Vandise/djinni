@@ -64,6 +64,7 @@ typedef struct Djinni_Map_TileStruct {
 } MapTile;
 
 typedef struct Djinni_WorldMapObjectStruct {
+  int id;
   int type;
 
   int x;
@@ -100,12 +101,16 @@ typedef struct Djinni_WorldMapStruct {
   int height;
 
   WorldMapLayer layers[DJINNI_MAX_MAP_LAYERS];
+
+  void (*objectLoader)(WorldMap*, WorldMapObject*, DJINNI_MAP_LAYER);
 } WorldMap;
 
 struct Djinni_MapStruct {
   WorldMap* (*create)();
   void (*load)(WorldMap*, Renderer*);
   void (*setMapDataFile)(WorldMap*, char*);
+
+  void (*setObjectLoader)(WorldMap*, void (*objectLoader)(WorldMap*, WorldMapObject*, DJINNI_MAP_LAYER));
 
   void (*inspect)(WorldMap*);
   void (*destroy)(WorldMap*);

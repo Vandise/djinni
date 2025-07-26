@@ -2,10 +2,15 @@
 
 WorldMap* wm = NULL;
 
+void objectLoader(WorldMap* m, WorldMapObject* obj, DJINNI_MAP_LAYER layer) {
+  printf("world map object id:%d \n", obj->id);
+}
+
 void onStageCreate(Stage* self, Game* game, Stage* previous) {
   //game->camera->zoom = 2.0;
   wm = Djinni.Map->create();
   Djinni.Map->setMapDataFile(wm, "bin/data/map.json");
+  Djinni.Map->setObjectLoader(wm, objectLoader);
   Djinni.Map->load(wm, Djinni.renderer);
   Djinni.Map->inspect(wm);
 

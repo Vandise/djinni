@@ -83,8 +83,17 @@ static void setWorldMap(World* w, WorldMap* wm) {
     );
 
     //
-    // todo: add entities to the grid from the entities layer
+    // add entities to the grid from the entities layer
+    //  static objects will be managed in draw if needed
     //
+    WorldMapLayer* mapLayer = &(wm->layers[ENTITY_LAYER]);
+
+    if (mapLayer->objects != NULL) {
+      for (int i = 0; i < mapLayer->objects->used; i++) {
+        WorldMapObject* obj = mapLayer->objects->data[i];
+        wm->objectLoader(wm, obj, ENTITY_LAYER);
+      }
+    }
   }
 }
 
