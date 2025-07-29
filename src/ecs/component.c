@@ -1,4 +1,6 @@
 #include "djinni/ecs/component.h"
+#include "djinni/ecs/components/position.h"
+#include "djinni/ecs/components/sprite.h"
 
 static int* states[DJINNI_MAX_STATES];
 static int active_state;

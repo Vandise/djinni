@@ -13,6 +13,10 @@ void djinni_video_renderer_initialize(int index, int flags) {
   background_color.a = 255;
 }
 
+inline SDL_Renderer* djinni_video_renderer() {
+  return renderer;
+}
+
 void djinni_video_renderer_reset_draw_color() {
   SDL_SetRenderDrawColor(
     renderer,
