@@ -1,0 +1,20 @@
+#ifndef DJINNI_ECS
+#define DJINNI_ECS 1
+
+#include "djinni/common.h"
+#include "djinni/ecs/shared.h"
+#include "djinni/ecs/component.h"
+
+typedef struct Djinni_ECSStruct {
+  int* free_ids;
+  int free_count;
+  int n_used;
+  int n_max_entities;
+} Djinni_ECS;
+
+void djinni_ecs_initialize(int base_entity_count);
+DjinniEntityId djinni_ecs_create_entity(int mask);
+void djinni_ecs_pool_expand();
+void djinni_ecs_destroy();
+
+#endif

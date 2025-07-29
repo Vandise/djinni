@@ -7,6 +7,7 @@
 
 typedef struct Djinni_Game_SettingsStruct {
   int n_stages;
+  int n_entities;
 
   float fps_lock;
   float logic_rate;
