@@ -43,6 +43,30 @@ void djinni_game_camera_follow(DjinniEntityId id, int x_offset, int y_offset) {
   djinni_game_camera_update();
 }
 
+int djinni_game_camera_entity_in_viewport(DjinniEntityId id) {
+  Djinni_Game_Camera* camera = djinni_game_camera_get_camera();
+  Djinni_Position* entity_position = djinni_ecs_component_position_get(id);
+
+  int x1, x2, y1, y2;
+  int rw = camera->width / camera->zoom;
+  int rh = camera->height / camera->zoom;
+
+  x1 = camera->x;
+  x2 = x1 + rw;
+
+  y1 = camera->y;
+  y2 = y1 + rh;
+
+  int x = entity_position->x;
+  int y = entity_position->y;
+
+  if (x < x1 || x > x2 || y < y1 || y > y2) {
+    return 0;
+  }
+
+  return 1;
+}
+
 inline Djinni_Game_Camera* djinni_game_camera_get_camera() {
   return &(states[active_state]);
 }

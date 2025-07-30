@@ -39,6 +39,15 @@ DjinniEntityId djinni_ecs_create_entity(int mask) {
   return id;
 }
 
+void djinni_ecs_destroy_entity(DjinniEntityId id) {
+  djinni_ecs_component_set(id, 0);
+
+  djinni_ecs_component_sprite_destroy_entity(id);
+
+  Djinni_ECS* state = states[active_state];
+  state->free_ids[state->free_count++] = id;
+}
+
 inline int djinni_ecs_pool_size() {
   return states[active_state]->n_max_entities;
 }

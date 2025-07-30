@@ -39,6 +39,15 @@ void djinni_ecs_component_sprite_pool_expand(int new_size) {
   pool_sizes[active_state] = new_size;
 }
 
+void djinni_ecs_component_sprite_destroy_entity(DjinniEntityId id) {
+  Djinni_Sprite* state = states[active_state];
+
+  if (state[id].texture != NULL) {
+    SDL_DestroyTexture(state[id].texture);
+    state[id].texture = NULL;
+  }
+}
+
 void djinni_ecs_component_sprite_destroy() {
   for (int i = 0; i < DJINNI_MAX_STATES; i++) {
     Djinni_Sprite* state = states[i];

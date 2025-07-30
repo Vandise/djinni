@@ -16,6 +16,7 @@ typedef struct Djinni_ECSStruct {
 
 void djinni_ecs_initialize(int base_entity_count);
 DjinniEntityId djinni_ecs_create_entity(int mask);
+void djinni_ecs_destroy_entity(DjinniEntityId id);
 int djinni_ecs_pool_size();
 void djinni_ecs_pool_expand();
 void djinni_ecs_destroy();

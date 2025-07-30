@@ -14,6 +14,8 @@ void djinni_initialize(Djinni_WindowSettings ws, Djinni_VideoSettings vs, Djinni
 
   djinni_video_initialize(vs.videoFlags);
 
+  djinni_render_isometric_occlusion_layer_initialize(gs.pool_settings.n_entities);
+
   djinni_ecs_initialize(gs.pool_settings.n_entities);
   djinni_game_stage_initialize(gs.pool_settings.n_stages);
   djinni_game_camera_initialize(gs);
@@ -31,6 +33,7 @@ void djinni_destroy() {
   djinni_game_camera_destroy();
   djinni_game_destroy();
   djinni_game_input_destroy();
+  djinni_render_isometric_occlusion_layer_destroy();
 
   djinni_video_renderer_destroy();
   djinni_video_window_destroy();

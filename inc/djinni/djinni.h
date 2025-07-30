@@ -6,6 +6,7 @@
 #include "djinni/video/video.h"
 #include "djinni/game/game.h"
 #include "djinni/game/camera.h"
+#include "djinni/render/isometric_occlusion_layer.h"
 
 typedef struct Djinni_WindowSettingsStruct {
   char* name;
