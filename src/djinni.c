@@ -14,8 +14,9 @@ void djinni_initialize(Djinni_WindowSettings ws, Djinni_VideoSettings vs, Djinni
 
   djinni_video_initialize(vs.videoFlags);
 
-  djinni_ecs_initialize(gs.n_entities);
-  djinni_game_stage_initialize(gs.n_stages);
+  djinni_ecs_initialize(gs.pool_settings.n_entities);
+  djinni_game_stage_initialize(gs.pool_settings.n_stages);
+  djinni_game_camera_initialize(gs);
   djinni_game_initialize(gs);
   djinni_game_input_initialize();
 }
@@ -27,6 +28,7 @@ void djinni_set_flag(const char *name, const char *value) {
 void djinni_destroy() {
   djinni_ecs_destroy();
   djinni_game_stage_destroy();
+  djinni_game_camera_destroy();
   djinni_game_destroy();
   djinni_game_input_destroy();
 

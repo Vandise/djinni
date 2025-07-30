@@ -5,6 +5,7 @@
 #include "djinni/ecs/ecs.h"
 #include "djinni/video/video.h"
 #include "djinni/game/game.h"
+#include "djinni/game/camera.h"
 
 typedef struct Djinni_WindowSettingsStruct {
   char* name;

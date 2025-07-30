@@ -6,14 +6,29 @@
 #include "djinni/game/input.h"
 
 typedef struct Djinni_Game_SettingsStruct {
-  int n_stages;
-  int n_entities;
+  struct {
+    int n_stages;
+    int n_entities;
+  } pool_settings;
 
-  float fps_lock;
-  float logic_rate;
+  struct {
+    float fps_lock;
+    float logic_rate;    
+  } engine_settings;
 
-  float medium_ring_tick;
-  float coarse_ring_tick;
+  struct {
+    float medium_ring_tick;
+    float coarse_ring_tick;
+  } grid_settings;
+
+  struct {
+    int x;
+    int y;
+    int width;
+    int height;
+    float zoom;
+  } camera_settings;
+
 } Djinni_GameSettings;
 
 typedef struct Djinni_Game_GameStruct {
