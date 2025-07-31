@@ -1,5 +1,7 @@
 #include "djinni/common.h"
 #include "djinni/render/isometric_occlusion_layer.h"
+#include "djinni/ecs/ecs.h"
+#include "djinni/game/camera.h"
 #include "djinni/util/array.h"
 
 static DjinniArray* isometric_occlusion_layer[DJINNI_MAX_STATES];
@@ -29,6 +31,59 @@ void djinni_render_isometric_occlusion_layer_remove_entity(DjinniEntityId id) {
       djinni_array_removeIndex(layer, i);
       free(drawable_entity);
       break;
+    }
+  }
+}
+
+static int djinni_render_isometric_occlusion_layer_draw_comparator(const void *a, const void *b) {
+  Djinni_Drawable* d1 = *(Djinni_Drawable**)a;
+  Djinni_Drawable* d2 = *(Djinni_Drawable**)b;
+
+  int d1y, d2y, d1x, d2x, d1w, d2w, result;
+
+  if (d1->type == DJINNI_DRAW_ENTITY) {
+    Djinni_Sprite* sprite = djinni_ecs_component_sprite_get(d1->entity_id);
+    Djinni_Position* position = djinni_ecs_component_position_get(d1->entity_id);
+    d1y = position->y;
+    d1x = position->x;
+    d1w = sprite->src.w;
+  } else {
+    d1y = d1->tile.y;
+  }
+
+  if (d2->type == DJINNI_DRAW_ENTITY) {
+    Djinni_Sprite* sprite = djinni_ecs_component_sprite_get(d2->entity_id);
+    Djinni_Position* position = djinni_ecs_component_position_get(d2->entity_id);
+    d2y = position->y;
+    d2x = position->x;
+    d2w = sprite->src.w;
+  } else {
+    d2y = d2->tile.y;
+  }
+
+  result = d1y - d2y;
+
+  if (result == 0) {
+    result = (d1x + d1w) - (d2x + d2w);
+  }
+
+  return result;
+}
+
+void djinni_render_isometric_occlusion_layer_draw(double dt) {
+  DjinniArray* layer = isometric_occlusion_layer[active_state];
+
+  qsort(
+    layer->data,
+    layer->used,
+    sizeof(void*),
+    djinni_render_isometric_occlusion_layer_draw_comparator
+  );
+
+  for (int i = 0; i < layer->used; i++) {
+    Djinni_Drawable* drawable_entity = layer->data[i];
+    if (drawable_entity->type == DJINNI_DRAW_ENTITY) {
+      djinni_ecs_system_draw_entity(drawable_entity->entity_id);
     }
   }
 }

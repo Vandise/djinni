@@ -6,6 +6,9 @@
 #include "djinni/ecs/component.h"
 #include "djinni/ecs/components/position.h"
 #include "djinni/ecs/components/sprite.h"
+#include "djinni/ecs/components/behavior.h"
+
+#include "djinni/ecs/systems/entity_draw_system.h"
 
 typedef struct Djinni_ECSStruct {
   int* free_ids;
