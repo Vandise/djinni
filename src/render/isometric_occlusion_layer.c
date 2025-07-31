@@ -83,7 +83,7 @@ void djinni_render_isometric_occlusion_layer_draw(double dt) {
   for (int i = 0; i < layer->used; i++) {
     Djinni_Drawable* drawable_entity = layer->data[i];
     if (drawable_entity->type == DJINNI_DRAW_ENTITY) {
-      djinni_ecs_system_draw_entity(drawable_entity->entity_id);
+      djinni_ecs_system_draw_entity(drawable_entity->entity_id, dt);
     }
   }
 }

@@ -3,6 +3,6 @@
 
 #include "djinni/ecs/shared.h"
 
-void djinni_ecs_system_draw_entity(DjinniEntityId id);
+void djinni_ecs_system_draw_entity(DjinniEntityId id, double dt);
 
 #endif

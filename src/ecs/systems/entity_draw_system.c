@@ -3,7 +3,7 @@
 #include "djinni/video/video.h"
 #include "djinni/ecs/systems/entity_draw_system.h"
 
-void djinni_ecs_system_draw_entity(DjinniEntityId id) {
+void djinni_ecs_system_draw_entity(DjinniEntityId id, double dt) {
   Djinni_Game_Camera* camera = djinni_game_camera_get_camera();
   Djinni_Sprite* sprite = djinni_ecs_component_sprite_get(id);
   Djinni_Position* position = djinni_ecs_component_position_get(id);
