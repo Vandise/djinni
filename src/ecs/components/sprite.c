@@ -31,7 +31,7 @@ void djinni_ecs_component_sprite_pool_expand(int new_size) {
     states[active_state], new_size * sizeof(Djinni_Sprite)
   ));
 
-  for (int i = (state_size - 1); i < new_size; i++) {
+  for (int i = state_size; i < new_size; i++) {
     states[active_state][i].texture_status = 0;
     states[active_state][i].texture = NULL;
   }
