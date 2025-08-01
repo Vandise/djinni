@@ -35,6 +35,31 @@ void djinni_render_isometric_occlusion_layer_remove_entity(DjinniEntityId id) {
   }
 }
 
+void djinni_render_isometric_occlusion_layer_insert_tile(int x, int y, int atlas_id, int tile_index) {
+  Djinni_Drawable* drawable_entity = malloc(sizeof(Djinni_Drawable));
+    drawable_entity->type = DJINNI_DRAW_TILE;
+    drawable_entity->tile.x = x;
+    drawable_entity->tile.y = y;
+    drawable_entity->tile.atlas_id = atlas_id;
+    drawable_entity->tile.tile_index = tile_index;
+
+  djinni_array_insert(isometric_occlusion_layer[active_state], drawable_entity);
+}
+
+void djinni_render_isometric_occlusion_layer_remove_tile(int x, int y) {
+  Djinni_Drawable* drawable_entity = NULL;
+  DjinniArray* layer = isometric_occlusion_layer[active_state];
+
+  for (int i = 0; i < layer->used; i++) {
+    drawable_entity = layer->data[i];
+    if (drawable_entity->tile.x == x && drawable_entity->tile.y == y) {
+      djinni_array_remove_index(layer, i);
+      free(drawable_entity);
+      break;
+    }
+  }
+}
+
 static int djinni_render_isometric_occlusion_layer_draw_comparator(const void *a, const void *b) {
   Djinni_Drawable* d1 = *(Djinni_Drawable**)a;
   Djinni_Drawable* d2 = *(Djinni_Drawable**)b;
@@ -84,8 +109,11 @@ void djinni_render_isometric_occlusion_layer_draw(double dt) {
     Djinni_Drawable* drawable_entity = layer->data[i];
     if (drawable_entity->type == DJINNI_DRAW_ENTITY && djinni_game_camera_entity_in_viewport(drawable_entity->entity_id)) {
       djinni_ecs_system_draw_entity(drawable_entity->entity_id, dt);
+    } else {
+      //
+      // todo: draw tiles
+      //
     }
-
   }
 }
 

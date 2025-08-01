@@ -16,6 +16,8 @@ static void update(double dt) {
 }
 
 static void draw(double dt) {
+  djinni_map_render_map(dt);
+
   Djinni_GameStage* stage = djinni_game_stage_get_active_stage();
     stage->draw(stage, dt);
 }

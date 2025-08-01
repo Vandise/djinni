@@ -25,6 +25,7 @@ Djinni_Map* djinni_map_load(char* file_name) {
     for (int i = 0; i < DJINNI_MAP_N_LAYERS; i++) {
       djinni_map->layers[i].id = -1;
       djinni_map->layers[i].tiles.data = NULL;
+      djinni_map->layers[i].draw = NULL;
     }
 
     load_layers(djinni_map, root);
