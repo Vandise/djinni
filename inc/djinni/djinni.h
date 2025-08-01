@@ -8,6 +8,7 @@
 #include "djinni/game/camera.h"
 #include "djinni/render/render.h"
 #include "djinni/grid/grid.h"
+#include "djinni/map/map.h"
 
 typedef struct Djinni_WindowSettingsStruct {
   char* name;
