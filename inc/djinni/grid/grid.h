@@ -2,14 +2,10 @@
 #define DJINNI_GRID_GRID 1
 
 #include "djinni/common.h"
+#include "djinni/grid/shared.h"
+#include "djinni/grid/concerns/entity_concern.h"
 #include "djinni/ecs/shared.h"
 #include "djinni/util/array.h"
-
-typedef enum {
-  DJINNI_RING_FINE,
-  DJINNI_RING_MEDIUM,
-  DJINNI_RING_COARSE
-} DJINNI_GRID_RING;
 
 //
 // A single cell in the grid storing pointers to entities occupying it
