@@ -17,6 +17,10 @@ typedef struct Djinni_Game_SettingsStruct {
   } engine_settings;
 
   struct {
+    int cell_capacity;
+    int finest_size;
+    int medium_size;
+    int coarse_size;
     float medium_ring_tick;
     float coarse_ring_tick;
   } grid_settings;

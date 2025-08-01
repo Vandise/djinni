@@ -1,6 +1,6 @@
 #include "djinni/ecs/ecs.h"
 #include "djinni/game/camera.h"
-#include "djinni/grid/concerns/entity_concern.h"
+#include "djinni/grid/grid.h"
 
 DJINNI_GRID_RING djinni_grid_concern_compute_ring(DjinniEntityId id) {
   Djinni_Position* position = djinni_ecs_component_position_get(id);
@@ -27,4 +27,27 @@ DJINNI_GRID_RING djinni_grid_concern_compute_ring(DjinniEntityId id) {
   }
 
   return DJINNI_RING_COARSE;
+}
+
+int djinni_grid_concern_entity_needs_cell_update(Djinni_Grid* grid, DjinniEntityId id) {
+  Djinni_Position* position = djinni_ecs_component_position_get(id);
+  Djinni_Collidable* collision_box = djinni_ecs_component_collision_get(id);
+
+  int result = 0;
+
+  if (collision_box->grid_cache.level > -1) {
+    int cell_size = grid->levels[collision_box->grid_cache.level].cell_size;
+    int minX = (int)(position->x / cell_size);
+    int minY = (int)(position->y / cell_size);
+    int maxX = (int)((position->x + collision_box->width) / cell_size);
+    int maxY = (int)((position->y + collision_box->height) / cell_size);
+
+    if (minX != collision_box->grid_cache.minX || minY != collision_box->grid_cache.minY ||
+        maxX != collision_box->grid_cache.maxX || maxY != collision_box->grid_cache.maxY
+    ) {
+      result = 1;
+    }
+  }
+
+  return result;
 }

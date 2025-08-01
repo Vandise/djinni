@@ -7,4 +7,6 @@ typedef enum {
   DJINNI_RING_COARSE
 } DJINNI_GRID_RING;
 
+typedef struct Djinni_GridStruct Djinni_Grid;
+
 #endif

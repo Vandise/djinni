@@ -45,7 +45,7 @@ Djinni_Grid* djinni_grid_create(
   int world_width,
   int world_height,
   int finest_size,
-  int mid_size,
+  int medium_size,
   int coarse_size
 );
 
