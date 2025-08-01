@@ -28,7 +28,7 @@ void djinni_render_isometric_occlusion_layer_remove_entity(DjinniEntityId id) {
   for (int i = 0; i < layer->used; i++) {
     drawable_entity = layer->data[i];
     if (drawable_entity->entity_id == id) {
-      djinni_array_removeIndex(layer, i);
+      djinni_array_remove_index(layer, i);
       free(drawable_entity);
       break;
     }

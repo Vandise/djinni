@@ -28,7 +28,7 @@ int djinni_array_insert(DjinniArray* array, void* data) {
   return index;
 }
 
-void djinni_array_removeIndex(DjinniArray* array, int index) {
+void djinni_array_remove_index(DjinniArray* array, int index) {
   /*
   array->data[index] = NULL;
 
@@ -44,6 +44,13 @@ void djinni_array_removeIndex(DjinniArray* array, int index) {
   if (index < 0 || index >= array->used) {
     return;
   }
+
+  array->data[index] = array->data[array->used - 1];
+  array->used--;
+}
+
+void djinni_array_delete_index(DjinniArray* array, int index, void (onDestroy)(void*)) {
+  if(onDestroy != NULL) { onDestroy(array->data[index]); }
 
   array->data[index] = array->data[array->used - 1];
   array->used--;

@@ -7,6 +7,7 @@
 #include "djinni/ecs/components/position.h"
 #include "djinni/ecs/components/sprite.h"
 #include "djinni/ecs/components/behavior.h"
+#include "djinni/ecs/components/collision.h"
 
 #include "djinni/ecs/systems/entity_draw_system.h"
 
