@@ -12,6 +12,11 @@ typedef struct Djinni_SpriteStruct {
 
   SDL_Texture* texture;
   SDL_Rect src;
+
+  struct {
+    float x;
+    float y;
+  } anchor;
 } Djinni_Sprite;
 
 void djinni_ecs_component_sprite_initialize(int base_entity_count);
