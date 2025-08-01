@@ -4,6 +4,7 @@
 #include "djinni/game/shared.h"
 #include "djinni/game/stage.h"
 #include "djinni/game/input.h"
+#include "djinni/game/runner.h"
 
 typedef struct Djinni_Game_SettingsStruct {
   struct {
@@ -43,6 +44,7 @@ typedef struct Djinni_Game_GameStruct {
 } Djinni_Game;
 
 void djinni_game_initialize(Djinni_GameSettings settings);
+Djinni_Game* djinni_game_get_game();
 int djinni_game_paused();
 void djinni_game_pause();
 void djinni_game_resume();

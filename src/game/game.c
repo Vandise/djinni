@@ -10,6 +10,10 @@ void djinni_game_initialize(Djinni_GameSettings settings) {
     game->settings = settings;
 }
 
+inline Djinni_Game* djinni_game_get_game() {
+  return game;
+}
+
 inline int djinni_game_paused() {
   return game->paused;
 }

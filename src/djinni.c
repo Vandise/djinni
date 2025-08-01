@@ -17,6 +17,7 @@ void djinni_initialize(Djinni_WindowSettings ws, Djinni_VideoSettings vs, Djinni
   djinni_render_isometric_occlusion_layer_initialize(gs.pool_settings.n_entities);
 
   djinni_ecs_initialize(gs.pool_settings.n_entities);
+  djinni_grid_state_initialize();
   djinni_game_stage_initialize(gs.pool_settings.n_stages);
   djinni_game_camera_initialize(gs);
   djinni_game_initialize(gs);
@@ -27,8 +28,14 @@ void djinni_set_flag(const char *name, const char *value) {
   SDL_SetHint(name, value);
 }
 
+void djinni_start(int stage_id) {
+  djinni_game_stage_change_stage(stage_id);
+  djinni_game_runner_execute();
+}
+
 void djinni_destroy() {
   djinni_ecs_destroy();
+  djinni_grid_state_destroy();
   djinni_game_stage_destroy();
   djinni_game_camera_destroy();
   djinni_game_destroy();

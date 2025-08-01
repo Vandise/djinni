@@ -3,6 +3,7 @@
 
 #include "djinni/common.h"
 #include "djinni/grid/shared.h"
+#include "djinni/grid/state.h"
 #include "djinni/grid/concerns/entity_concern.h"
 #include "djinni/ecs/shared.h"
 #include "djinni/util/array.h"

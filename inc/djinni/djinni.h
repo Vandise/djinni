@@ -7,6 +7,7 @@
 #include "djinni/game/game.h"
 #include "djinni/game/camera.h"
 #include "djinni/render/render.h"
+#include "djinni/grid/grid.h"
 
 typedef struct Djinni_WindowSettingsStruct {
   char* name;
@@ -27,6 +28,7 @@ typedef struct Djinni_VideoSettingsStruct {
 
 void djinni_initialize(Djinni_WindowSettings ws, Djinni_VideoSettings vs, Djinni_GameSettings gs);
 void djinni_set_flag(const char *name, const char *value);
+void djinni_start(int stage_id);
 void djinni_destroy();
 
 #endif
