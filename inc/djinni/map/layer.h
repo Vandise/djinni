@@ -19,7 +19,7 @@ typedef struct Djinni_MapLayerStruct {
     Djinni_MapTile* data;
   } tiles;
 
-  void (*draw)(double dt);
+  void (*draw)(int layer_id, double dt);
 } Djinni_MapLayer;
 
 void djinni_map_layer_load(Djinni_Map* djinni_map, cJSON* layer_node);

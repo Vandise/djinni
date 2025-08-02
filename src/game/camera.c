@@ -66,9 +66,8 @@ Djinni_Game_Viewport djinni_game_camera_get_viewport() {
   return bounds;
 }
 
-int djinni_game_camera_entity_in_viewport(DjinniEntityId id) {
+int djinni_game_camera_point_in_viewport(int x, int y) {
   Djinni_Game_Camera* camera = djinni_game_camera_get_camera();
-  Djinni_Position* entity_position = djinni_ecs_component_position_get(id);
 
   int x1, x2, y1, y2;
   int rw = camera->width / camera->zoom;
@@ -80,14 +79,16 @@ int djinni_game_camera_entity_in_viewport(DjinniEntityId id) {
   y1 = camera->y;
   y2 = y1 + rh;
 
-  int x = entity_position->x;
-  int y = entity_position->y;
-
   if (x < x1 || x > x2 || y < y1 || y > y2) {
     return 0;
   }
 
   return 1;
+}
+
+int djinni_game_camera_entity_in_viewport(DjinniEntityId id) {
+  Djinni_Position* entity_position = djinni_ecs_component_position_get(id);
+  return djinni_game_camera_point_in_viewport(entity_position->x, entity_position->y);
 }
 
 inline Djinni_Game_Camera* djinni_game_camera_get_camera() {

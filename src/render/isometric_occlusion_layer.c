@@ -1,5 +1,6 @@
 #include "djinni/common.h"
 #include "djinni/render/isometric_occlusion_layer.h"
+#include "djinni/render/tile_layer.h"
 #include "djinni/ecs/ecs.h"
 #include "djinni/game/camera.h"
 #include "djinni/util/array.h"
@@ -95,7 +96,7 @@ static int djinni_render_isometric_occlusion_layer_draw_comparator(const void *a
   return result;
 }
 
-void djinni_render_isometric_occlusion_layer_draw(double dt) {
+void djinni_render_isometric_occlusion_layer_draw(int layer_id, double dt) {
   DjinniArray* layer = isometric_occlusion_layer[active_state];
 
   qsort(
@@ -109,10 +110,14 @@ void djinni_render_isometric_occlusion_layer_draw(double dt) {
     Djinni_Drawable* drawable_entity = layer->data[i];
     if (drawable_entity->type == DJINNI_DRAW_ENTITY && djinni_game_camera_entity_in_viewport(drawable_entity->entity_id)) {
       djinni_ecs_system_draw_entity(drawable_entity->entity_id, dt);
-    } else {
-      //
-      // todo: draw tiles
-      //
+      continue;
+    }
+
+    if (
+      drawable_entity->type == DJINNI_DRAW_TILE &&
+      djinni_game_camera_point_in_viewport(drawable_entity->tile.x, drawable_entity->tile.y)
+    ) {
+      djinni_render_tile(drawable_entity, dt);
     }
   }
 }

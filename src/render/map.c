@@ -9,7 +9,7 @@ void djinni_map_render_map(double dt) {
     Djinni_MapLayer* layer = &(djinni_map->layers[i]);
 
     if (layer->id >= 0 && layer->draw != NULL) {
-      layer->draw(dt);
+      layer->draw(layer->id, dt);
     }
   }
 }

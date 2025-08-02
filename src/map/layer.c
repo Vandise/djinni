@@ -1,5 +1,6 @@
 #include "djinni/map/map.h"
 #include "djinni/map/layer.h"
+#include "djinni/render/tile_layer.h"
 #include "djinni/render/isometric_occlusion_layer.h"
 
 void djinni_map_layer_load(Djinni_Map* djinni_map, cJSON* layer_node) {
@@ -17,14 +18,14 @@ void djinni_map_layer_load(Djinni_Map* djinni_map, cJSON* layer_node) {
     if (tiles_node != NULL) {
       for (int i = 0; i < layer->tiles.n_tiles; i++) {
         Djinni_MapTile* mt = &(layer->tiles.data[i]);
-        djinni_render_isometric_occlusion_layer_insert_tile(mt->x, mt->y, mt->atlas_id, mt->tile_index);
+        if (!mt->empty) {
+          djinni_render_isometric_occlusion_layer_insert_tile(mt->x, mt->y, mt->atlas_id, mt->tile_index);
+        }
       }
     }
 
     layer->draw = djinni_render_isometric_occlusion_layer_draw;
+  } else {
+    layer->draw = djinni_render_tile_layer_draw;
   }
-
-  //
-  // todo: other layer draw handlers
-  //
 }
