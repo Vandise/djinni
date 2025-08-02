@@ -26,7 +26,10 @@ static void process_collisions(DjinniEntityId id, double dt) {
       for (int j = 0; j < cell->entities->used; j++) {
         DjinniEntityId other = *((int*)cell->entities->data[j]);
 
-        if (id == other) { continue; }
+        //
+        // do not process self against self or process both (A,B) and (B,A)
+        //
+        if (id == other || other < id) { continue; }
 
         other_box = djinni_ecs_component_collision_get(other);
         other_position = djinni_ecs_component_position_get(other);
