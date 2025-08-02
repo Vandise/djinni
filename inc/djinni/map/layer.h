@@ -8,6 +8,7 @@
 
 typedef struct Djinni_MapLayerStruct {
   int id;
+  int dirty;
 
   struct Djinni_MapLayerTilesStruct {
     int n_tiles;

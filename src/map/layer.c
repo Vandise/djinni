@@ -8,6 +8,7 @@ void djinni_map_layer_load(Djinni_Map* djinni_map, cJSON* layer_node) {
 
   Djinni_MapLayer* layer = &(djinni_map->layers[layer_id]);
     layer->id = layer_id;
+    layer->dirty = 1;
 
   cJSON* tiles_node = cJSON_GetObjectItem(layer_node, "tiles");
   if (tiles_node != NULL) {

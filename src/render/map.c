@@ -10,6 +10,7 @@ void djinni_map_render_map(double dt) {
 
     if (layer->id >= 0 && layer->draw != NULL) {
       layer->draw(layer->id, dt);
+      layer->dirty = 0;
     }
   }
 }

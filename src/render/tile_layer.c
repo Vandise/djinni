@@ -52,12 +52,14 @@ void djinni_render_tile_layer_draw(int layer_id, double dt) {
   Djinni_Map* djinni_map = djinni_map_state_get_map();
   Djinni_MapLayer* layer = &(djinni_map->layers[layer_id]);
 
-  qsort(
-    layer->tiles.data,
-    layer->tiles.n_tiles,
-    sizeof(Djinni_MapTile),
-    tile_draw_comparator
-  );
+  if (layer->dirty) {
+    qsort(
+      layer->tiles.data,
+      layer->tiles.n_tiles,
+      sizeof(Djinni_MapTile),
+      tile_draw_comparator
+    );
+  }
 
   for (int i = 0; i < layer->tiles.n_tiles; i++) {
     Djinni_MapTile tile = layer->tiles.data[i];
