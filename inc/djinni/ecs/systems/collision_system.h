@@ -3,6 +3,6 @@
 
 #include "djinni/grid/grid.h"
 
-void djinni_ecs_collision_system(DJINNI_GRID_RING ring);
+void djinni_ecs_collision_system(DJINNI_GRID_RING ring, double dt);
 
 #endif

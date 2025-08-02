@@ -14,7 +14,7 @@ static void update(double dt) {
   //
   // todo: tick other rings based on config intervals
   //
-  djinni_ecs_collision_system(DJINNI_RING_FINE);
+  djinni_ecs_collision_system(DJINNI_RING_FINE, dt);
 
   Djinni_GameStage* stage = djinni_game_stage_get_active_stage();
     stage->update(stage, dt);
