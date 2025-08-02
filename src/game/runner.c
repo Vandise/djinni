@@ -73,12 +73,15 @@ void djinni_game_runner_execute() {
     //
     // lock game logic to 60fps
     //
+    /*
+      todo: lock logic rate or frame rate
   	while (dt > 1) {
   		tmpDelta = dt;
   		dt = 1;
       update(then);
   		dt = (tmpDelta - 1);
   	}
+  	*/
 
     update(then);
 
@@ -100,5 +103,6 @@ void djinni_game_runner_execute() {
     // todo: lock_frame_rate(&then, &remainder, fps_lock);
     //       lock logic rate separate from the game loop
     //
+    lock_frame_rate(&then, &remainder, fps_lock);
   }
 }

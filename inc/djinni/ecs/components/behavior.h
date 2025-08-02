@@ -5,6 +5,8 @@
 #include "djinni/ecs/shared.h"
 
 typedef struct Djinni_BehaviorStruct {
+  double last_tick;
+
   void (*update)(DjinniEntityId self, double dt);
   void (*draw)(DjinniEntityId self, double dt);
   void (*collide)(DjinniEntityId self, DjinniEntityId other, double dt);

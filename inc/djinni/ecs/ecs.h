@@ -12,6 +12,7 @@
 #include "djinni/ecs/components/collision.h"
 
 #include "djinni/ecs/systems/entity_draw_system.h"
+#include "djinni/ecs/systems/velocity_system.h"
 #include "djinni/ecs/systems/entity_dispatch_system.h"
 
 typedef struct Djinni_ECSStruct {

@@ -13,10 +13,24 @@ void djinni_ecs_system_dispatch(DJINNI_GRID_RING ring, double dt) {
         for (int i = 0; i < cell->entities->used; i++) {
 
           DjinniEntityId id = *((int*)cell->entities->data[i]);
+          Djinni_Behavior* behaviors = djinni_ecs_component_behavior_get(id);
+
+          //
+          // avoid processing the entity on the same frame
+          //
+          if (behaviors->last_tick == dt) { continue; }
+
+          if (behaviors->update != NULL) { behaviors->update(id, dt); }
+
+          if (djinni_ecs_component_includes(id, DJINNI_COMPONENT_VELOCITY)) {
+            djinni_ecs_system_velocity(id, dt);
+          }
 
           if (djinni_ecs_component_includes(id, DJINNI_COMPONENT_COLLIDABLE)) {
             djinni_ecs_collision_system(id, dt);
           }
+
+          behaviors->last_tick = dt;
         }
       }
     }
