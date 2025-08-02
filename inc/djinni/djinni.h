@@ -2,6 +2,7 @@
 #define DJINNI 1
 
 #include "djinni/common.h"
+#include "djinni/debug/debug.h"
 #include "djinni/ecs/ecs.h"
 #include "djinni/video/video.h"
 #include "djinni/game/game.h"

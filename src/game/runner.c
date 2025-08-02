@@ -11,6 +11,11 @@ static void prepare() {
 static void update(double dt) {
   djinni_game_camera_update();
 
+  //
+  // todo: tick other rings based on config intervals
+  //
+  djinni_ecs_collision_system(DJINNI_RING_FINE);
+
   Djinni_GameStage* stage = djinni_game_stage_get_active_stage();
     stage->update(stage, dt);
 }

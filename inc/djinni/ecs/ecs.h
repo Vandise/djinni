@@ -11,6 +11,7 @@
 #include "djinni/ecs/components/collision.h"
 
 #include "djinni/ecs/systems/entity_draw_system.h"
+#include "djinni/ecs/systems/collision_system.h"
 
 typedef struct Djinni_ECSStruct {
   int* free_ids;
