@@ -1,0 +1,24 @@
+#include "djinni/ecs/ecs.h"
+#include "djinni/ecs/systems/entity_dispatch_system.h"
+
+void djinni_ecs_system_dispatch(DJINNI_GRID_RING ring, double dt) {
+  Djinni_Grid* grid = djinni_grid_state_get_grid();
+  Djinni_GridLevel* level = &(grid->levels[ring]);
+
+  for (int y = 0; y < level->height; y++) {
+    for (int x = 0; x < level->width; x++) {
+      Djinni_GridCell* cell = &level->cells[y * level->width + x];
+
+      if (cell->entities->used > 0) {
+        for (int i = 0; i < cell->entities->used; i++) {
+
+          DjinniEntityId id = *((int*)cell->entities->data[i]);
+
+          if (djinni_ecs_component_includes(id, DJINNI_COMPONENT_COLLIDABLE)) {
+            djinni_ecs_collision_system(id, dt);
+          }
+        }
+      }
+    }
+  }
+}
