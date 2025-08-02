@@ -39,12 +39,15 @@ static void process_collisions(DjinniEntityId id, double dt) {
           other_position->x, other_position->y, other_box->width, other_box->height
         )) {
 
-          //
-          // todo: default collision behavior
-          //
-
           if (has_collide) { behaviors->collide(id, other, dt); }
 
+          if (other_box->solid) {
+            Djinni_Velocity* velocity = djinni_ecs_component_velocity_get(id);
+              position->x -= velocity->x;
+              position->y -= velocity->y;
+              velocity->x = 0;
+              velocity->y = 0;
+          }
         }
       }
     }
