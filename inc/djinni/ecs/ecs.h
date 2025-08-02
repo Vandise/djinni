@@ -5,6 +5,7 @@
 #include "djinni/ecs/shared.h"
 #include "djinni/ecs/component.h"
 #include "djinni/ecs/components/position.h"
+#include "djinni/ecs/components/dirty.h"
 #include "djinni/ecs/components/sprite.h"
 #include "djinni/ecs/components/behavior.h"
 #include "djinni/ecs/components/collision.h"

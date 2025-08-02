@@ -11,18 +11,18 @@ void djinni_map_state_initialize() {
   }
 }
 
-void djinni_map_state_set_map(Djinni_Map* djinni_map) {
+inline void djinni_map_state_set_map(Djinni_Map* djinni_map) {
   states[active_state] = djinni_map;
 }
 
-Djinni_Map* djinni_map_state_get_map() {
+inline Djinni_Map* djinni_map_state_get_map() {
   return states[active_state];
 }
 
 void djinni_map_state_destroy() {
   for (int i = 0; i < DJINNI_MAX_STATES; i++) {
     if (states[i] != NULL) {
-
+      djinni_map_destroy(states[i]);
     }
   }
 }

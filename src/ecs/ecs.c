@@ -17,6 +17,7 @@ void djinni_ecs_initialize(int base_entity_count) {
 
   djinni_ecs_component_initialize(base_entity_count);
   djinni_ecs_component_position_initialize(base_entity_count);
+  djinni_ecs_component_dirty_initialize(base_entity_count);
   djinni_ecs_component_sprite_initialize(base_entity_count);
   djinni_ecs_component_behavior_initialize(base_entity_count);
   djinni_ecs_component_collision_initialize(base_entity_count);
@@ -61,6 +62,7 @@ void djinni_ecs_pool_expand() {
 
   djinni_ecs_component_pool_expand(next_size);
   djinni_ecs_component_position_pool_expand(next_size);
+  djinni_ecs_component_dirty_pool_expand(next_size);
   djinni_ecs_component_sprite_pool_expand(next_size);
   djinni_ecs_component_behavior_pool_expand(next_size);
   djinni_ecs_component_collision_pool_expand(next_size);
@@ -71,6 +73,7 @@ void djinni_ecs_pool_expand() {
 void djinni_ecs_destroy() {
   djinni_ecs_component_destroy();
   djinni_ecs_component_position_destroy();
+  djinni_ecs_component_dirty_destroy();
   djinni_ecs_component_sprite_destroy();
   djinni_ecs_component_behavior_destroy();
   djinni_ecs_component_collision_destroy();

@@ -1,4 +1,7 @@
 #include "djinni/map/map.h"
+#include "djinni/game/game.h"
+#include "djinni/grid/grid.h"
+#include "djinni/grid/state.h"
 #include "djinni/util/file.h"
 
 static void load_layers(Djinni_Map* djinni_map, cJSON* root) {
@@ -8,6 +11,21 @@ static void load_layers(Djinni_Map* djinni_map, cJSON* root) {
   for (int i = 0; i < n_layers; i++) {
     djinni_map_layer_load(djinni_map, cJSON_GetArrayItem(layers_node, i));
   }
+}
+
+static void load_grid(Djinni_Map* djinni_map) {
+  Djinni_Game* game = djinni_game_get_game();
+
+  Djinni_Grid* grid = djinni_grid_create(
+    game->settings.grid_settings.cell_capacity,
+    djinni_map->width,
+    djinni_map->height,
+    game->settings.grid_settings.finest_size,
+    game->settings.grid_settings.medium_size,
+    game->settings.grid_settings.coarse_size
+  );
+
+  djinni_grid_state_set_grid(grid);
 }
 
 Djinni_Map* djinni_map_load(char* file_name) {
@@ -27,6 +45,8 @@ Djinni_Map* djinni_map_load(char* file_name) {
       djinni_map->layers[i].tiles.data = NULL;
       djinni_map->layers[i].draw = NULL;
     }
+
+    load_grid(djinni_map);
 
     load_layers(djinni_map, root);
 

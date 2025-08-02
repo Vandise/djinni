@@ -14,7 +14,7 @@ typedef struct Djinni_Game_SettingsStruct {
 
   struct {
     float fps_lock;
-    float logic_rate;    
+    float logic_rate;
   } engine_settings;
 
   struct {

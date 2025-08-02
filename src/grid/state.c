@@ -11,6 +11,14 @@ void djinni_grid_state_initialize() {
   }
 }
 
+inline void djinni_grid_state_set_grid(Djinni_Grid* grid) {
+  states[active_state] = grid;
+}
+
+inline Djinni_Grid* djinni_grid_state_get_grid() {
+  return states[active_state];
+}
+
 void djinni_grid_state_destroy() {
   for (int i = 0; i < DJINNI_MAX_STATES; i++) {
     if (states[i] != NULL) {
