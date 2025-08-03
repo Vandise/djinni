@@ -4,5 +4,6 @@
 #define DJINNI_ANCHOR_DEFAULT 0.5
 
 #include "djinni/geometry/point.h"
+#include "djinni/geometry/rectangle.h"
 
 #endif

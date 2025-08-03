@@ -10,6 +10,9 @@ typedef struct Djinni_CollidableStruct {
   int height;
   int solid;
 
+  int parent_x_offset;
+  int parent_y_offset;
+
   Djinni_GridLocation grid_cache;
 } Djinni_Collidable;
 

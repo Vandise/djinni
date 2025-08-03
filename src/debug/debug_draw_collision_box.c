@@ -6,8 +6,8 @@ void djinni_debug_draw_collision_box(DjinniEntityId id, double dt) {
   Djinni_Position* position = djinni_ecs_component_position_get(id);
 
   SDL_Rect r = {
-    position->x - camera->x,
-    position->y - camera->y,
+    (position->x + collision_box->parent_x_offset) - camera->x,
+    (position->y + collision_box->parent_y_offset) - camera->y,
     collision_box->width,
     collision_box->height
   };

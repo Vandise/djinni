@@ -35,8 +35,14 @@ static void process_collisions(DjinniEntityId id, double dt) {
         other_position = djinni_ecs_component_position_get(other);
 
         if (rectangle_overlaps(
-          position->x, position->y, collision_box->width, collision_box->height,
-          other_position->x, other_position->y, other_box->width, other_box->height
+          position->x + collision_box->parent_x_offset,
+          position->y + collision_box->parent_y_offset,
+          collision_box->width,
+          collision_box->height,
+          other_position->x + other_box->parent_x_offset,
+          other_position->y + other_box->parent_y_offset,
+          other_box->width,
+          other_box->height
         )) {
 
           if (has_collide) { behaviors->collide(id, other, dt); }
