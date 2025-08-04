@@ -4,6 +4,7 @@
 #include "djinni/video/shared.h"
 #include "djinni/video/window.h"
 #include "djinni/video/renderer.h"
+#include "djinni/video/image_atlas.h"
 
 int djinni_video_initialize(int flags);
 
