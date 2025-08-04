@@ -37,10 +37,13 @@ int djinni_grid_concern_entity_needs_cell_update(Djinni_Grid* grid, DjinniEntity
 
   if (collision_box->grid_cache.level > -1) {
     int cell_size = grid->levels[collision_box->grid_cache.level].cell_size;
-    int minX = (int)(position->x / cell_size);
-    int minY = (int)(position->y / cell_size);
-    int maxX = (int)((position->x + collision_box->width) / cell_size);
-    int maxY = (int)((position->y + collision_box->height) / cell_size);
+    int rendered_width = collision_box->width;
+    int rendered_height = collision_box->height;
+
+    int minX = (int)((position->x + collision_box->parent_x_offset) / cell_size);
+    int minY = (int)((position->y + collision_box->parent_y_offset) / cell_size);
+    int maxX = (int)((position->x + collision_box->parent_x_offset + rendered_width) / cell_size);
+    int maxY = (int)((position->y + collision_box->parent_y_offset + rendered_height) / cell_size);
 
     if (minX != collision_box->grid_cache.minX || minY != collision_box->grid_cache.minY ||
         maxX != collision_box->grid_cache.maxX || maxY != collision_box->grid_cache.maxY

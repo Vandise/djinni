@@ -64,19 +64,32 @@ void djinni_ecs_collision_system(DjinniEntityId id, double dt) {
   Djinni_Grid* grid = djinni_grid_state_get_grid();
 
   //
-  // update cell position
+  // if an entity is dirty, process cells the entity belongs to
+  // to check for collisions
   //
-  if (djinni_grid_concern_entity_needs_cell_update(grid, id)) {
-    djinni_grid_remove(grid, id);
-    djinni_grid_insert(grid, id, djinni_grid_concern_compute_ring(id));
-  }
-
-  //
-  // process cells this entity belongs to
+  // cell updates are only required if the entity moved/is tagged dirty
+  // ring updates are required every cycle
   //
   if (djinni_ecs_component_dirty_is_dirty(id)) {
-    process_collisions(id, dt);
-  }
 
-  djinni_ecs_component_dirty_clear(id);
+    //
+    // update cell position if dirty and update is needed
+    //
+    if (djinni_grid_concern_entity_needs_cell_update(grid, id)) {
+      djinni_grid_remove(grid, id);
+      djinni_grid_insert(grid, id, djinni_grid_concern_compute_ring(id));
+    }
+
+    process_collisions(id, dt);
+
+    djinni_ecs_component_dirty_clear(id);
+  } else {
+    Djinni_Collidable* collision_box = djinni_ecs_component_collision_get(id);
+    DJINNI_GRID_RING expected_ring = djinni_grid_concern_compute_ring(id);
+
+    if (collision_box->grid_cache.level != expected_ring) {
+      djinni_grid_remove(grid, id);
+      djinni_grid_insert(grid, id, expected_ring);
+    }
+  }
 }

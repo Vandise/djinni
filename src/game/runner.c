@@ -1,5 +1,9 @@
 #include "djinni/djinni.h"
 
+static Djinni_Game* game = NULL;
+static double medium_grid_tick = 0;
+static double coarse_grid_tick = 0;
+
 static void prepare() {
   djinni_video_renderer_clear();
   djinni_video_renderer_reset_draw_color();
@@ -11,10 +15,17 @@ static void prepare() {
 static void update(double dt) {
   djinni_game_camera_update();
 
-  //
-  // todo: tick other rings based on config intervals
-  //
   djinni_ecs_system_dispatch(DJINNI_RING_FINE, dt);
+
+  if ((dt - medium_grid_tick) > game->settings.grid_settings.medium_ring_tick) {
+    medium_grid_tick = dt;
+    djinni_ecs_system_dispatch(DJINNI_RING_MEDIUM, dt);
+  }
+
+  if ((dt - coarse_grid_tick) > game->settings.grid_settings.coarse_ring_tick) {
+    coarse_grid_tick = dt;
+    djinni_ecs_system_dispatch(DJINNI_RING_COARSE, dt);
+  }
 
   Djinni_GameStage* stage = djinni_game_stage_get_active_stage();
     stage->update(stage, dt);
@@ -59,7 +70,7 @@ void djinni_game_runner_execute() {
   float  fps_lock   = 0;
   long   nextFPS   = SDL_GetTicks() + 1000;
 
-  Djinni_Game* game = djinni_game_get_game();
+  game = djinni_game_get_game();
     logic_rate = game->settings.engine_settings.logic_rate;
     fps_lock = game->settings.engine_settings.fps_lock;
 
