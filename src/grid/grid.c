@@ -63,10 +63,10 @@ void djinni_grid_insert(Djinni_Grid* grid, DjinniEntityId id, DJINNI_GRID_RING l
     return;
   }
 
-  int minX = (int)(position->x / cell_size);
-  int minY = (int)(position->y / cell_size);
-  int maxX = (int)((position->x + rendered_width) / cell_size);
-  int maxY = (int)((position->y + rendered_height) / cell_size);
+  int minX = (int)((position->x + collision_box->parent_x_offset) / cell_size);
+  int minY = (int)((position->y + collision_box->parent_y_offset) / cell_size);
+  int maxX = (int)((position->x + collision_box->parent_x_offset + rendered_width) / cell_size);
+  int maxY = (int)((position->y + collision_box->parent_y_offset + rendered_height) / cell_size);
 
   //
   // Cache the occupied cells bounds and level in the entity
