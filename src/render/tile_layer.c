@@ -4,15 +4,6 @@
 #include "djinni/game/camera.h"
 #include "djinni/video/video.h"
 
-/*
-
-  TODO: this is hard-coded until querying the map atlas
-
-  todo: only qsort if layer is changed
-*/
-
-static SDL_Texture* texture = NULL;
-
 static int tile_draw_comparator(const void *a, const void *b) {
   Djinni_MapTile *t1, *t2;
 
@@ -23,19 +14,26 @@ static int tile_draw_comparator(const void *a, const void *b) {
 }
 
 static void draw_tile(int x, int y, int atlas_id, int tile_index, double dt) {
+  Djinni_Map* djinni_map = djinni_map_state_get_map();
   Djinni_Game_Camera* camera = djinni_game_camera_get_camera();
+  Djinni_AtlasImage* img = djinni_video_image_atlas_get_index(
+    djinni_map->atlases->data[atlas_id],
+    tile_index
+  );
 
-  if (texture == NULL) {
-    texture = IMG_LoadTexture(djinni_video_renderer(), "bin/gfx/greycube.png");
-  }
+	SDL_Rect src;
+  	src.x = img->x;
+  	src.y = img->y;
+  	src.w = img->w;
+  	src.h = img->h;
 
-  SDL_Rect dest;
-    dest.x = x - camera->x;
-    dest.y = y - camera->y;
-    dest.w = 62;
-    dest.h = 63;
+	SDL_Rect dest;
+  	dest.x = x - camera->x;
+  	dest.y = y - camera->y;
+  	dest.w = djinni_map->base_tile_grid_width;
+  	dest.h = djinni_map->base_tile_grid_height;
 
-  SDL_RenderCopy(djinni_video_renderer(), texture, NULL, &dest);
+	SDL_RenderCopy(djinni_video_renderer(), img->atlas->texture, &src, &dest);
 }
 
 void djinni_render_tile(Djinni_Drawable* drawable_entity, double dt) {

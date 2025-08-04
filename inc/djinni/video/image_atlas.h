@@ -27,7 +27,7 @@ typedef struct Djinni_Video_AtlasImageStruct {
 
 Djinni_ImageAtlas* djinni_video_image_atlas_load(char* image_file, char* data_file);
 Djinni_AtlasImage* djinni_video_image_atlas_get_image(Djinni_ImageAtlas* atlas, char* filename);
-Djinni_ImageAtlas* djinni_video_image_atlas_get_index(Djinni_ImageAtlas* atlas, int index);
+Djinni_AtlasImage* djinni_video_image_atlas_get_index(Djinni_ImageAtlas* atlas, int index);
 void djinni_video_image_atlas_destroy(Djinni_ImageAtlas* atlas);
 
 #endif

@@ -53,7 +53,7 @@ Djinni_AtlasImage* djinni_video_image_atlas_get_image(Djinni_ImageAtlas* atlas, 
   return NULL;
 }
 
-Djinni_ImageAtlas* djinni_video_image_atlas_get_index(Djinni_ImageAtlas* atlas, int index) {
+inline Djinni_AtlasImage* djinni_video_image_atlas_get_index(Djinni_ImageAtlas* atlas, int index) {
   return atlas->images->data[index];
 }
 
