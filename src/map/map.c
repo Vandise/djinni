@@ -13,6 +13,25 @@ static void load_layers(Djinni_Map* djinni_map, cJSON* root) {
   }
 }
 
+static void load_atlases(Djinni_Map* djinni_map, cJSON* root) {
+  cJSON* atlases_node = cJSON_GetObjectItem(root, "atlases");
+  if (atlases_node != NULL) {
+    int n_atlases = cJSON_GetArraySize(atlases_node);
+    djinni_map->atlases = djinni_array_initialize(2);
+
+    for (int i = 0; i < n_atlases; i++) {
+      cJSON* atlas_JSON = cJSON_GetArrayItem(atlases_node, i);
+
+      Djinni_ImageAtlas* atlas = djinni_video_image_atlas_load(
+        cJSON_GetObjectItem(atlas_JSON, "image")->valuestring,
+        cJSON_GetObjectItem(atlas_JSON, "data")->valuestring
+      );
+
+      djinni_array_insert(djinni_map->atlases, atlas);
+    }
+  }
+}
+
 static void load_grid(Djinni_Map* djinni_map) {
   Djinni_Game* game = djinni_game_get_game();
 
@@ -35,6 +54,7 @@ Djinni_Map* djinni_map_load(char* file_name) {
   if (text != NULL) {
     cJSON* root = cJSON_Parse(text);
 
+    djinni_map->atlases = NULL;
     djinni_map->width = cJSON_GetObjectItem(root, "width")->valueint;
     djinni_map->height = cJSON_GetObjectItem(root, "height")->valueint;
     djinni_map->base_tile_grid_width = cJSON_GetObjectItem(root, "base_tile_grid_width")->valueint;
@@ -48,6 +68,8 @@ Djinni_Map* djinni_map_load(char* file_name) {
 
     load_grid(djinni_map);
 
+    load_atlases(djinni_map, root);
+
     load_layers(djinni_map, root);
 
     cJSON_Delete(root);
@@ -59,6 +81,12 @@ Djinni_Map* djinni_map_load(char* file_name) {
 }
 
 void djinni_map_destroy(Djinni_Map* djinni_map) {
+  if (djinni_map->atlases != NULL) {
+    for (int i = 0; i < djinni_map->atlases->used; i++) {
+      djinni_video_image_atlas_destroy(djinni_map->atlases->data[i]);
+    }
+    djinni_array_destroy(djinni_map->atlases, NULL);
+  }
   for (int i = 0; i < DJINNI_MAP_N_LAYERS; i++) {
     if (djinni_map->layers[i].tiles.data != NULL) {
       free(djinni_map->layers[i].tiles.data);

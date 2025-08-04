@@ -2,6 +2,7 @@
 #define DJINNI_MAP 1
 
 #include "djinni/common.h"
+#include "djinni/video/image_atlas.h"
 #include "djinni/util/json.h"
 #include "djinni/map/state.h"
 #include "djinni/map/layer.h"
@@ -16,6 +17,8 @@ typedef struct Djinni_MapStruct {
   int height;
   int base_tile_grid_width;
   int base_tile_grid_height;
+
+  DjinniArray* atlases;
 
   Djinni_MapLayer layers[DJINNI_MAP_N_LAYERS];
 } Djinni_Map;
