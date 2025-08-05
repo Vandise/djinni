@@ -3,7 +3,7 @@
 #include "djinni/video/video.h"
 #include "djinni/ecs/systems/collision_system.h"
 
-static int rectangle_overlaps(int ax, int ay, int aw, int ah, int bx, int by, int bw, int bh) {
+static inline int rectangle_overlaps(int ax, int ay, int aw, int ah, int bx, int by, int bw, int bh) {
   return ax < bx + bw && ax + aw > bx &&
          ay < by + bh && ay + ah > by;
 }

@@ -6,6 +6,7 @@
 #include "djinni/util/json.h"
 #include "djinni/map/state.h"
 #include "djinni/map/layer.h"
+#include "djinni/map/collision.h"
 
 #define DJINNI_MAP_N_LAYERS 10
 #define DJINNI_MAP_OCCLUSION_LAYER 4
@@ -19,6 +20,7 @@ typedef struct Djinni_MapStruct {
   int base_tile_grid_height;
 
   DjinniArray* atlases;
+  DjinniArray* collision_definitions;
 
   Djinni_MapLayer layers[DJINNI_MAP_N_LAYERS];
 } Djinni_Map;
