@@ -28,8 +28,9 @@ static void process_collisions(DjinniEntityId id, double dt) {
 
         //
         // do not process self against self or process both (A,B) and (B,A)
+        // possible: || other < id
         //
-        if (id == other || other < id) { continue; }
+        if (id == other) { continue; }
 
         other_box = djinni_ecs_component_collision_get(other);
         other_position = djinni_ecs_component_position_get(other);

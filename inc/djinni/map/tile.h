@@ -23,6 +23,7 @@ typedef struct Djinni_MapTileStruct {
   int layer;
   int tile_index;
   int atlas_id;
+  int collision_index;
 
   int x;
   int y;

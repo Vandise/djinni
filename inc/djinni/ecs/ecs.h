@@ -15,6 +15,8 @@
 #include "djinni/ecs/systems/velocity_system.h"
 #include "djinni/ecs/systems/entity_dispatch_system.h"
 
+#include "djinni/ecs/concerns/collision_concern.h"
+
 typedef struct Djinni_ECSStruct {
   int* free_ids;
   int free_count;

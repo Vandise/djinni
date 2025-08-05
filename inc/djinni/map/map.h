@@ -4,6 +4,7 @@
 #include "djinni/common.h"
 #include "djinni/video/image_atlas.h"
 #include "djinni/util/json.h"
+#include "djinni/map/shared.h"
 #include "djinni/map/state.h"
 #include "djinni/map/layer.h"
 #include "djinni/map/collision.h"

@@ -12,6 +12,9 @@ void djinni_ecs_system_dispatch(DJINNI_GRID_RING ring, double dt) {
       if (cell->entities->used > 0) {
         for (int i = 0; i < cell->entities->used; i++) {
 
+          //
+          // todo: tag as static and skip all updating
+          //
           DjinniEntityId id = *((int*)cell->entities->data[i]);
           Djinni_Behavior* behaviors = djinni_ecs_component_behavior_get(id);
 

@@ -70,6 +70,8 @@ Djinni_Map* djinni_map_load(char* file_name) {
 
     load_atlases(djinni_map, root);
 
+    djinni_map_collision_definitions_load(djinni_map, root);
+
     load_layers(djinni_map, root);
 
     cJSON_Delete(root);
@@ -87,10 +89,22 @@ void djinni_map_destroy(Djinni_Map* djinni_map) {
     }
     djinni_array_destroy(djinni_map->atlases, NULL);
   }
+
+  if (djinni_map->collision_definitions != NULL) {
+    for (int i = 0; i < djinni_map->collision_definitions->used; i++) {
+      Djinni_MapCollisionDefinition* definition = djinni_map->collision_definitions->data[i];
+      if (definition->shapes != NULL) {
+        djinni_array_destroy(definition->shapes, free);
+      }
+    }
+    djinni_array_destroy(djinni_map->collision_definitions, free);
+  }
+
   for (int i = 0; i < DJINNI_MAP_N_LAYERS; i++) {
     if (djinni_map->layers[i].tiles.data != NULL) {
       free(djinni_map->layers[i].tiles.data);
     }
   }
+
   free(djinni_map);
 }
