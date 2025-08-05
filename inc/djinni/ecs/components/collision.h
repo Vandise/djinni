@@ -13,6 +13,8 @@ typedef struct Djinni_CollidableStruct {
   int parent_x_offset;
   int parent_y_offset;
 
+  double last_collision_frame;
+
   Djinni_GridLocation grid_cache;
 } Djinni_Collidable;
 

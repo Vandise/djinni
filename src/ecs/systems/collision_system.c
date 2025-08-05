@@ -3,6 +3,7 @@
 #include "djinni/video/video.h"
 #include "djinni/ecs/systems/collision_system.h"
 
+/*
 static inline int rectangle_overlaps(int ax, int ay, int aw, int ah, int bx, int by, int bw, int bh) {
   return ax < bx + bw && ax + aw > bx &&
          ay < by + bh && ay + ah > by;
@@ -27,10 +28,9 @@ static void process_collisions(DjinniEntityId id, double dt) {
         DjinniEntityId other = *((int*)cell->entities->data[j]);
 
         //
-        // do not process self against self or process both (A,B) and (B,A)
-        // possible: || other < id
+        // do not process self against self
         //
-        if (id == other) { continue; }
+        if (id == other || collision_box->last_collision_frame == dt) { continue; }
 
         other_box = djinni_ecs_component_collision_get(other);
         other_position = djinni_ecs_component_position_get(other);
@@ -45,7 +45,6 @@ static void process_collisions(DjinniEntityId id, double dt) {
           other_box->width,
           other_box->height
         )) {
-
           if (has_collide) { behaviors->collide(id, other, dt); }
 
           if (other_box->solid) {
@@ -55,6 +54,80 @@ static void process_collisions(DjinniEntityId id, double dt) {
               velocity->x = 0;
               velocity->y = 0;
           }
+        }
+
+        collision_box->last_collision_frame = dt;
+
+      }
+    }
+  }
+}
+*/
+
+static void process_collisions(DjinniEntityId id, double dt) {
+  Djinni_Collidable* collision_box = djinni_ecs_component_collision_get(id);
+  Djinni_Position* position = djinni_ecs_component_position_get(id);
+  Djinni_Behavior* behaviors = djinni_ecs_component_behavior_get(id);
+  Djinni_GridLocation grid_cache = collision_box->grid_cache;
+
+  const int has_collide = (behaviors->collide != NULL ? 1 : 0);
+
+  //
+  // Precompute AABB for the subject
+  //
+  int ax  = position->x + collision_box->parent_x_offset;
+  int ay  = position->y + collision_box->parent_y_offset;
+  int aw  = collision_box->width;
+  int ah  = collision_box->height;
+  int ax2 = ax + aw;
+  int ay2 = ay + ah;
+
+  for (int i = 0; i < grid_cache.cells->used; i++) {
+    Djinni_GridCell* cell = grid_cache.cells->data[i];
+
+    for (int j = 0; j < cell->entities->used; j++) {
+      DjinniEntityId other = *((int*)cell->entities->data[j]);
+
+      //
+      // Skip self and already processed entities
+      //
+      if (id == other || collision_box->last_collision_frame == dt) {
+        continue;
+      }
+
+      collision_box->last_collision_frame = dt;
+
+      Djinni_Collidable* other_box = djinni_ecs_component_collision_get(other);
+      Djinni_Position* other_pos = djinni_ecs_component_position_get(other);
+
+      int bx  = other_pos->x + other_box->parent_x_offset;
+      int by  = other_pos->y + other_box->parent_y_offset;
+      int bw  = other_box->width;
+      int bh  = other_box->height;
+      int bx2 = bx + bw;
+      int by2 = by + bh;
+
+      //
+      // AABB early out test
+      //
+      if (ax2 <= bx || bx2 <= ax || ay2 <= by || by2 <= ay) {
+        continue;
+      }
+
+      //
+      // Collision occurred
+      //
+      if (has_collide) {
+        behaviors->collide(id, other, dt);
+      }
+
+      if (other_box->solid) {
+        Djinni_Velocity* velocity = djinni_ecs_component_velocity_get(id);
+        if (velocity) {
+          position->x -= velocity->x;
+          position->y -= velocity->y;
+          velocity->x = 0;
+          velocity->y = 0;
         }
       }
     }
