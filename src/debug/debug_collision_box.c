@@ -16,3 +16,13 @@ void djinni_debug_draw_collision_box(DjinniEntityId id, double dt) {
   SDL_RenderDrawRect(djinni_video_renderer(), &r);
   djinni_video_renderer_reset_draw_color();
 }
+
+void djinni_debug_draw_collision_boxes(double dt) {
+  int n_entities = djinni_ecs_used();
+
+  for (int eid = 0; eid < n_entities; eid++) {
+    if (djinni_ecs_component_includes(eid, DJINNI_COMPONENT_COLLIDABLE)) {
+      djinni_debug_draw_collision_box(eid, dt);
+    }
+  }
+}

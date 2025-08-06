@@ -52,6 +52,10 @@ void djinni_ecs_destroy_entity(DjinniEntityId id) {
   state->free_ids[state->free_count++] = id;
 }
 
+inline int djinni_ecs_used() {
+  return states[active_state]->n_used;
+}
+
 inline int djinni_ecs_pool_size() {
   return states[active_state]->n_max_entities;
 }
