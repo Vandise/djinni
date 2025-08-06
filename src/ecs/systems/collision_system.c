@@ -95,8 +95,6 @@ static void process_collisions(DjinniEntityId id, double dt) {
         continue;
       }
 
-      collision_box->last_collision_frame = dt;
-
       Djinni_Collidable* other_box = djinni_ecs_component_collision_get(other);
       Djinni_Position* other_pos = djinni_ecs_component_position_get(other);
 
@@ -132,6 +130,9 @@ static void process_collisions(DjinniEntityId id, double dt) {
       }
     }
   }
+
+  collision_box->last_collision_frame = dt;
+
 }
 
 void djinni_ecs_collision_system(DjinniEntityId id, double dt) {
