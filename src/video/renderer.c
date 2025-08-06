@@ -27,19 +27,19 @@ void djinni_video_renderer_reset_draw_color() {
   );
 }
 
-void djinni_video_renderer_set_background_color(Color c) {
+inline void djinni_video_renderer_set_background_color(Color c) {
   background_color = c;
 }
 
-void djinni_video_renderer_set_draw_color(Color c) {
+inline void djinni_video_renderer_set_draw_color(Color c) {
   SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
 }
 
-void djinni_video_renderer_present() {
+inline void djinni_video_renderer_present() {
   SDL_RenderPresent(renderer);
 }
 
-void djinni_video_renderer_clear() {
+inline void djinni_video_renderer_clear() {
   SDL_RenderClear(renderer);
 }
 
