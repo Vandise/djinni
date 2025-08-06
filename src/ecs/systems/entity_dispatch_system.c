@@ -12,15 +12,18 @@ void djinni_ecs_system_dispatch(DJINNI_GRID_RING ring, double dt) {
       if (cell->entities->used > 0) {
         for (int i = 0; i < cell->entities->used; i++) {
 
-          //
-          // todo: tag as static and skip all updating
-          //
           DjinniEntityId id = *((int*)cell->entities->data[i]);
-          Djinni_Behavior* behaviors = djinni_ecs_component_behavior_get(id);
+
+          //
+          // todo: Skip static elements, but need cell update checks,
+          //       or possible keep in ring 1 always
+          //
+          //if (djinni_ecs_component_includes(id, DJINNI_COMPONENT_STATIC)) { continue; }
 
           //
           // avoid processing the entity on the same frame
           //
+          Djinni_Behavior* behaviors = djinni_ecs_component_behavior_get(id);
           if (behaviors->last_tick == dt) { continue; }
 
           if (behaviors->update != NULL) { behaviors->update(id, dt); }

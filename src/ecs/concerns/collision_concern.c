@@ -3,7 +3,9 @@
 #include "djinni/geometry/rectangle.h"
 
 DjinniEntityId djinni_ecs_collision_concern_create_rectangle(int x, int y, int width, int height, int solid) {
-  DjinniEntityId id = djinni_ecs_create_entity(DJINNI_COMPONENT_POSITION | DJINNI_COMPONENT_COLLIDABLE);
+  DjinniEntityId id = djinni_ecs_create_entity(
+    DJINNI_COMPONENT_POSITION | DJINNI_COMPONENT_COLLIDABLE | DJINNI_COMPONENT_STATIC
+  );
 
   Djinni_Position* position = djinni_ecs_component_position_get(id);
     position->x = x;

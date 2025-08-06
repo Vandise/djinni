@@ -11,5 +11,6 @@
 #define DJINNI_COMPONENT_COLLIDABLE   (1 << 3)
 #define DJINNI_COMPONENT_VELOCITY     (1 << 4)
 #define DJINNI_COMPONENT_SPRITE       (1 << 5)
+#define DJINNI_COMPONENT_STATIC       (1 << 6)
 
 #endif
