@@ -11,8 +11,8 @@ void djinni_ecs_system_draw_entity(DjinniEntityId id, double dt) {
   SDL_Rect dest;
     dest.x = position->x - camera->x;
     dest.y = position->y - camera->y;
-    dest.w = sprite->src.w;
-    dest.h = sprite->src.h;
+    dest.w = camera->zoom * sprite->src.w;
+    dest.h = camera->zoom * sprite->src.h;
 
   SDL_RenderCopy(djinni_video_renderer(), sprite->texture, NULL, &dest);
 }

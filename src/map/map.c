@@ -3,6 +3,7 @@
 #include "djinni/grid/grid.h"
 #include "djinni/grid/state.h"
 #include "djinni/util/file.h"
+#include "djinni/game/camera.h"
 
 static void load_layers(Djinni_Map* djinni_map, cJSON* root) {
   cJSON* layers_node = cJSON_GetObjectItem(root, "layers");
@@ -50,15 +51,16 @@ static void load_grid(Djinni_Map* djinni_map) {
 Djinni_Map* djinni_map_load(char* file_name) {
   char* text = djinni_read_file(file_name);
   Djinni_Map* djinni_map = malloc(sizeof(Djinni_Map));
+  Djinni_Game_Camera* camera = djinni_game_camera_get_camera();
 
   if (text != NULL) {
     cJSON* root = cJSON_Parse(text);
 
     djinni_map->atlases = NULL;
-    djinni_map->width = cJSON_GetObjectItem(root, "width")->valueint;
-    djinni_map->height = cJSON_GetObjectItem(root, "height")->valueint;
-    djinni_map->base_tile_grid_width = cJSON_GetObjectItem(root, "base_tile_grid_width")->valueint;
-    djinni_map->base_tile_grid_height = cJSON_GetObjectItem(root, "base_tile_grid_height")->valueint;
+    djinni_map->width = camera->zoom * cJSON_GetObjectItem(root, "width")->valueint;
+    djinni_map->height = camera->zoom * cJSON_GetObjectItem(root, "height")->valueint;
+    djinni_map->base_tile_grid_width = camera->zoom * cJSON_GetObjectItem(root, "base_tile_grid_width")->valueint;
+    djinni_map->base_tile_grid_height = camera->zoom * cJSON_GetObjectItem(root, "base_tile_grid_height")->valueint;
 
     for (int i = 0; i < DJINNI_MAP_N_LAYERS; i++) {
       djinni_map->layers[i].id = -1;

@@ -29,8 +29,8 @@ void djinni_game_camera_update() {
 
   if (camera->follow.id >= 0) {
     Djinni_Position* entity_position = djinni_ecs_component_position_get(camera->follow.id);
-    camera->x = (entity_position->x - (camera->width / (2 * camera->zoom))) + camera->follow.x_offset;
-    camera->y = (entity_position->y - (camera->height / (2 * camera->zoom))) + camera->follow.y_offset;
+    camera->x = (entity_position->x - (camera->width / (2))) + camera->follow.x_offset;
+    camera->y = (entity_position->y - (camera->height / (2))) + camera->follow.y_offset;
   }
 }
 
@@ -47,8 +47,8 @@ Djinni_Game_Viewport djinni_game_camera_get_viewport() {
   Djinni_Game_Camera* c = djinni_game_camera_get_camera();
 
   int x1, x2, y1, y2;
-  int rw = c->width / c->zoom;
-  int rh = c->height / c->zoom;
+  int rw = c->width;
+  int rh = c->height;
 
   x1 = c->x;
   x2 = x1 + rw;
@@ -70,8 +70,8 @@ int djinni_game_camera_point_in_viewport(int x, int y) {
   Djinni_Game_Camera* camera = djinni_game_camera_get_camera();
 
   int x1, x2, y1, y2;
-  int rw = camera->width / camera->zoom;
-  int rh = camera->height / camera->zoom;
+  int rw = camera->width;
+  int rh = camera->height;
 
   x1 = camera->x;
   x2 = x1 + rw;

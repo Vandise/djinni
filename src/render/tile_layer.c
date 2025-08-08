@@ -16,6 +16,7 @@ static int tile_draw_comparator(const void *a, const void *b) {
 static void draw_tile(int x, int y, int atlas_id, int tile_index, double dt) {
   Djinni_Map* djinni_map = djinni_map_state_get_map();
   Djinni_Game_Camera* camera = djinni_game_camera_get_camera();
+
   Djinni_AtlasImage* img = djinni_video_image_atlas_get_index(
     djinni_map->atlases->data[atlas_id],
     tile_index
