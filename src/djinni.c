@@ -18,6 +18,7 @@ void djinni_initialize(Djinni_WindowSettings ws, Djinni_VideoSettings vs, Djinni
 
   djinni_ecs_initialize(gs.pool_settings.n_entities);
   djinni_map_state_initialize();
+  djinni_light_state_initialize();
   djinni_grid_state_initialize();
   djinni_game_stage_initialize(gs.pool_settings.n_stages);
   djinni_game_camera_initialize(gs);
@@ -37,6 +38,7 @@ void djinni_start(int stage_id) {
 void djinni_destroy() {
   djinni_ecs_destroy();
   djinni_map_state_destroy();
+  djinni_light_state_destroy();
   djinni_grid_state_destroy();
   djinni_game_stage_destroy();
   djinni_game_camera_destroy();
