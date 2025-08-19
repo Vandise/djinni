@@ -21,7 +21,7 @@ inline DjinniArray* djinni_light_state_get_lights() {
 void djinni_light_state_destroy() {
   for (int i = 0; i < DJINNI_MAX_STATES; i++) {
     if (states[i] != NULL) {
-      djinni_array_destroy(states[i], NULL);
+      djinni_array_destroy(states[i], free);
     }
   }
 }

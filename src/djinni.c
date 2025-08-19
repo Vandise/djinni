@@ -45,6 +45,7 @@ void djinni_destroy() {
   djinni_game_destroy();
   djinni_game_input_destroy();
   djinni_render_isometric_occlusion_layer_destroy();
+  djinni_light_destroy_shadow_texture();
 
   djinni_video_renderer_destroy();
   djinni_video_window_destroy();
