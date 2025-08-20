@@ -1,6 +1,7 @@
 #include "djinni/light/light.h"
 #include "djinni/video/video.h"
 #include "djinni/map/map.h"
+#include "djinni/game/camera.h"
 
 static SDL_Texture* shadow_texture;
 
@@ -74,7 +75,7 @@ static int get_blocker_level(Djinni_Map* djinni_map, int tx, int ty, int nx_tile
     // layer is not initialized / used
     if (layer->id < 0) { continue; }
 
-    Djinni_MapTile* mt = &(layer->tiles.data[ty * ny_tiles + tx]);
+    Djinni_MapTile* mt = &(layer->tiles.data[ty * nx_tiles + tx]);
 
     if (!mt->empty) {
       return layer->id;
@@ -117,7 +118,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
     }
 
     if (x < 0 || y < 0 || x >= nx_tiles || y >= ny_tiles) {
-      break;
+      continue;
     }
 
     if (!hit_blocker) {
@@ -158,7 +159,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
         // layer is not initialized / used
         if (layer->id < 0) { continue; }
     
-        Djinni_MapTile* mt = &(layer->tiles.data[y * ny_tiles + x]);
+        Djinni_MapTile* mt = &(layer->tiles.data[y * nx_tiles + x]);
     
         if (!mt->empty) {
           int v = mt->shadow_alpha + add;
@@ -183,14 +184,42 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
 }
 
 void djinni_light_generate_shadows(Djinni_Map* djinni_map, Djinni_Light* light) {
-  const float arc_rad = light->penumbra_arc_degrees * (float)M_PI / 180.0f;
-  for (int i = 0; i < light->n_rays; ++i) {
-    float base_angle = (float)i * 2.0f * (float)M_PI / (float)light->n_rays;
-    for (int s = 0; s < light->n_sub_rays; ++s) {
-      float off = subray_offset(s, light->n_sub_rays);
-      float a = base_angle + off * arc_rad;
-      float ax = cosf(a), ay = sinf(a);
-      apply_shadows(djinni_map, light, ax, ay);
+    const float arc_rad = light->penumbra_arc_degrees * (float)M_PI / 180.0f;
+    
+    // Convert light isometric position to Cartesian grid position
+    // (This is the inverse of the isometric projection used for rendering)
+    float iso_x = (float)light->x;
+    float iso_y = (float)light->y;
+    
+    //
+    // TODO: inverse ISO for light source
+    // Assuming base_tile_grid_width and base_tile_grid_height are W and H
+    //
+    float W = djinni_map->base_tile_grid_width / 2.0f;
+    float H = djinni_map->base_tile_grid_height / 4.0f;
+    float cart_x = 0.5f * (iso_x / W - ((djinni_map->height / 2.0f) - iso_y) / H);
+    float cart_y = 0.5f * (iso_x / W + ((djinni_map->height / 2.0f) - iso_y) / H);
+    
+    // Cartesian coordinates
+    // light->x and light->y
+    //
+    int original_x = light->x;
+    int original_y = light->y;
+    light->x = (int)roundf(cart_x);
+    light->y = (int)roundf(cart_y);
+
+    for (int i = 0; i < light->n_rays; ++i) {
+      float base_angle = (float)i * 2.0f * (float)M_PI / (float)light->n_rays;
+      for (int s = 0; s < light->n_sub_rays; ++s) {
+        float off = subray_offset(s, light->n_sub_rays);
+        float a = base_angle + off * arc_rad;
+        float ax = cosf(a);
+        float ay = sinf(a);
+        apply_shadows(djinni_map, light, ax, ay);
+      }
     }
-  }
+    
+    // Restore original light coordinates
+    light->x = original_x;
+    light->y = original_y;
 }
