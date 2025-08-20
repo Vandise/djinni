@@ -105,7 +105,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
 
   int steps = 0;
   int hit_blocker = 0;
-  float darkness = 0.0f;        // grows from 0..1 after blocker
+  float darkness = 0.0f;
   float tiles_since_block = 0.0f;
 
   while (steps++ < light->max_daa_steps) {
@@ -124,19 +124,14 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
     if (!hit_blocker) {
       hit_blocker = get_blocker_level(djinni_map, x, y, nx_tiles, ny_tiles);
 
-      //
-      // if a blocker is found, do not darken the blocker itself
-      //
       if (hit_blocker) {
         darkness = 0.0f;
         tiles_since_block = 0.0f;
         continue;
       }
     } else {
-      // Distance behind the blocker
       tiles_since_block += 1.0f;
 
-      // Fade shadow strength with distance (prevents infinite dark trails)
       float range_factor = 1.0f - (tiles_since_block / light->light_range);
       if (range_factor < 0.0f) {
         range_factor = 0.0f;
@@ -147,42 +142,63 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
         darkness = 1.0f;
       }
 
-      // Convert to alpha and accumulate additively (soft overlap of sub-rays)
-      int add = (int)(darkness * (light->max_alpha / (float)light->n_sub_rays));
-
-      //
-      // finds a tile under the blocker layer and sets the shadow
-      //
+      // Finds a tile under the blocker layer and sets the shadow
       for (int layer_id = (hit_blocker - 1); layer_id >= 0; layer_id--) {
         Djinni_MapLayer* layer = &(djinni_map->layers[layer_id]);
-    
-        // layer is not initialized / used
-        if (layer->id < 0) { continue; }
-    
+
+        if (layer->id < 0) {
+          continue;
+        }
+
         Djinni_MapTile* mt = &(layer->tiles.data[y * nx_tiles + x]);
-    
+
         if (!mt->empty) {
-          int add = (int)(darkness * (light->max_alpha / (float)light->n_sub_rays));  
-          float current_darkness = (float)mt->shadow_alpha / (float)light->max_alpha;
-          float new_darkness = current_darkness + (darkness / (float)light->n_sub_rays);
-          
-          // Convert back to integer alpha and clamp.
-          int v = (int)(new_darkness * light->max_alpha);
-          if (v > light->max_alpha) {
-            v = light->max_alpha;
-          }
-  
-          // Apply the new alpha to the tile.
-          mt->shadow_alpha = v;
-          
+          int v = (int)(darkness * light->max_alpha);
+          mt->shadow_alpha = (mt->shadow_alpha > v) ? mt->shadow_alpha : v;
+
+          // Note: printf is a debug tool and should be removed in final code for performance
           printf("\t layer: %d :: alpha: %d at x: %d y: %d\n", layer->id, mt->shadow_alpha, x, y);
           break;
         }
       }
 
-      // Out of range → stop this sub-ray
       if (range_factor <= 0.0f) {
         break;
+      }
+    }
+  }
+}
+
+void gaussian_blur_shadows(Djinni_Map* djinni_map, Djinni_Light* light) {
+  int nx_tiles = djinni_map->width / djinni_map->base_tile_grid_width;
+  int ny_tiles = djinni_map->height / djinni_map->base_tile_grid_height;
+
+  // We need to iterate from top-left to bottom-right to blur in the direction of the light.
+  for (int y = 0; y < ny_tiles; y++) {
+    for (int x = 0; x < nx_tiles; x++) {
+      // Find the current tile and its top-left neighbor
+      Djinni_MapTile* current_tile = NULL;
+      Djinni_MapTile* neighbor_tile = NULL;
+      
+      // Iterate through all shadow layers
+      for (int layer_id = 0; layer_id < DJINNI_MAP_N_LAYERS; layer_id++) {
+        Djinni_MapLayer* layer = &(djinni_map->layers[layer_id]);
+        if (layer->id < 0 || layer->id >= DJINNI_MAP_OCCLUSION_LAYER) {
+          continue;
+        }
+
+        int current_idx = y * nx_tiles + x;
+        current_tile = &(layer->tiles.data[current_idx]);
+
+        // Get neighbor to the top and left
+        if (x > 0 && y > 0) {
+          int neighbor_idx = (y - 1) * nx_tiles + (x - 1);
+          neighbor_tile = &(layer->tiles.data[neighbor_idx]);
+          
+          // Propagate the shadow darkness from the neighbor
+          int new_alpha = (int)((float)neighbor_tile->shadow_alpha * 0.5f + (float)current_tile->shadow_alpha * 0.5f);
+          current_tile->shadow_alpha = (unsigned char)fminf(new_alpha, light->max_alpha);
+        }
       }
     }
   }
@@ -223,7 +239,9 @@ void djinni_light_generate_shadows(Djinni_Map* djinni_map, Djinni_Light* light) 
         apply_shadows(djinni_map, light, ax, ay);
       }
     }
-    
+
+    gaussian_blur_shadows(djinni_map, light);
+
     // Restore original light coordinates
     light->x = original_x;
     light->y = original_y;
