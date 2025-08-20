@@ -59,26 +59,10 @@ void djinni_light_generate_shadow_texture(int tile_width, int tile_height) {
   SDL_SetRenderTarget(djinni_video_renderer(), NULL);
 }
 
-// ================================================================
-// Deterministic stratified offset in [-0.5, 0.5] for sub-rays
-//
-// ASCII (sub-rays per base ray):
-//    [-0.5]  [-0.25]  [0]  [0.25]  [0.5]
-//       |       |      |     |       |
-//       \       \      |    /       /    (spread across small arc)
-//
-// This avoids RNG shimmer while giving a nice penumbra.
-// ================================================================
 static inline float subray_offset(int sub, int sub_count) {
   return ((sub + 0.5f) / (float)sub_count) - 0.5f;
 }
 
-// ================================================================
-// Test if a tile blocks light and returns the layer id
-// Logic:
-//   Any non-zero tile in layers [DJINNI_MAP_OCCLUSION_LAYER...DJINNI_MAP_N_LAYERS) is treated as a blocker (highest level only for the largest shadow)
-//   Out-of-bounds is blocking to avoid rays leaving the map at the lowest layer
-// ================================================================
 static int get_blocker_level(Djinni_Map* djinni_map, int tx, int ty, int nx_tiles, int ny_tiles) {
   if (tx < 0 || ty < 0 || tx >= nx_tiles || ty >= ny_tiles) {
     return 1;
@@ -148,10 +132,6 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
         continue;
       }
     } else {
-      //
-      // todo: shadow range to expand based on tile layer the collision is found at
-      //
-
       // Distance behind the blocker
       tiles_since_block += 1.0f;
 
@@ -167,7 +147,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
       }
 
       // Convert to alpha and accumulate additively (soft overlap of sub-rays)
-      int add = (int)(darkness * light->max_alpha);
+      int add = (int)(darkness * (light->max_alpha / (float)light->n_sub_rays));
 
       //
       // finds a tile under the blocker layer and sets the shadow
@@ -202,22 +182,6 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
   }
 }
 
-// ================================================================
-// Build the shadow field from the light position
-//
-// Logic:
-//  - Convert mouse (px) to light origin in tile space (float).
-//  - For each base ray angle, spawn SUBRAYS_PER_BASE directions over a
-//    tiny arc (PENUMBRA_ARC_DEG) using deterministic offsets.
-//  - Cast each sub-ray with cast_subray_after_blocker.
-//
-//     [bundle per base ray]
-//         \  |  /
-//          \ | /
-//           \|/
-//            *
-//           light
-// ================================================================
 void djinni_light_generate_shadows(Djinni_Map* djinni_map, Djinni_Light* light) {
   const float arc_rad = light->penumbra_arc_degrees * (float)M_PI / 180.0f;
   for (int i = 0; i < light->n_rays; ++i) {
