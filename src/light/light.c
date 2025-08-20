@@ -162,10 +162,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
         Djinni_MapTile* mt = &(layer->tiles.data[y * nx_tiles + x]);
     
         if (!mt->empty) {
-          int add = (int)(darkness * (light->max_alpha / (float)light->n_sub_rays));
-          
-          // This is the key change: use the maximum alpha value.
-          // Also, convert the current alpha back to a fraction to add the darkness.
+          int add = (int)(darkness * (light->max_alpha / (float)light->n_sub_rays));  
           float current_darkness = (float)mt->shadow_alpha / (float)light->max_alpha;
           float new_darkness = current_darkness + (darkness / (float)light->n_sub_rays);
           
