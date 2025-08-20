@@ -40,6 +40,9 @@
 */
 
 typedef struct Djinni_LightStruct {
+  int x;
+  int y;
+
   int n_rays;                 // angular samples around 360°
   int n_sub_rays;             // jittered sub-rays per base ray
   int max_daa_steps;          // DAA safety cap through the grid

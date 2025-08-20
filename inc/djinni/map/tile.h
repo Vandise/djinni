@@ -27,6 +27,8 @@ typedef struct Djinni_MapTileStruct {
 
   int x;
   int y;
+
+  int shadow_alpha;
 } Djinni_MapTile;
 
 void djinni_map_tiles_load(Djinni_Map* djinni_map, Djinni_MapLayer* layer, cJSON* tiles_node);

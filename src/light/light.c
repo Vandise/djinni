@@ -1,5 +1,6 @@
 #include "djinni/light/light.h"
 #include "djinni/video/video.h"
+#include "djinni/map/map.h"
 
 static SDL_Texture* shadow_texture;
 
@@ -56,4 +57,176 @@ void djinni_light_generate_shadow_texture(int tile_width, int tile_height) {
   }
 
   SDL_SetRenderTarget(djinni_video_renderer(), NULL);
+}
+
+// ================================================================
+// Deterministic stratified offset in [-0.5, 0.5] for sub-rays
+//
+// ASCII (sub-rays per base ray):
+//    [-0.5]  [-0.25]  [0]  [0.25]  [0.5]
+//       |       |      |     |       |
+//       \       \      |    /       /    (spread across small arc)
+//
+// This avoids RNG shimmer while giving a nice penumbra.
+// ================================================================
+static inline float subray_offset(int sub, int sub_count) {
+  return ((sub + 0.5f) / (float)sub_count) - 0.5f;
+}
+
+// ================================================================
+// Test if a tile blocks light and returns the layer id
+// Logic:
+//   Any non-zero tile in layers [DJINNI_MAP_OCCLUSION_LAYER...DJINNI_MAP_N_LAYERS) is treated as a blocker (highest level only for the largest shadow)
+//   Out-of-bounds is blocking to avoid rays leaving the map at the lowest layer
+// ================================================================
+static int get_blocker_level(Djinni_Map* djinni_map, int tx, int ty, int nx_tiles, int ny_tiles) {
+  if (tx < 0 || ty < 0 || tx >= nx_tiles || ty >= ny_tiles) {
+    return 1;
+  }
+
+  for (int layer_id = (DJINNI_MAP_N_LAYERS - 1); layer_id >= DJINNI_MAP_OCCLUSION_LAYER; layer_id--) {
+    Djinni_MapLayer* layer = &(djinni_map->layers[layer_id]);
+
+    // layer is not initialized / used
+    if (layer->id < 0) { continue; }
+
+    Djinni_MapTile* mt = &(layer->tiles.data[ty * ny_tiles + tx]);
+
+    if (!mt->empty) {
+      return layer->id;
+    }
+  }
+
+  return 0;
+}
+
+static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dirx, float diry) {
+  int x = light->x;
+  int y = light->y;
+  int nx_tiles = djinni_map->width / djinni_map->base_tile_grid_width;
+  int ny_tiles = djinni_map->height / djinni_map->base_tile_grid_height;
+
+  float dx = dirx, dy = diry;
+  float tDeltaX = dx != 0.0f ? fabsf(1.0f / dx) : 1e30f;
+  float tDeltaY = dy != 0.0f ? fabsf(1.0f / dy) : 1e30f;
+
+  int stepX = (dx > 0) ? 1 : -1;
+  int stepY = (dy > 0) ? 1 : -1;
+
+  float fracX = light->x - floorf(light->x);
+  float fracY = light->y - floorf(light->y);
+  float tMaxX = (dx > 0) ? (1.0f - fracX) * tDeltaX : (fracX) * tDeltaX;
+  float tMaxY = (dy > 0) ? (1.0f - fracY) * tDeltaY : (fracY) * tDeltaY;
+
+  int steps = 0;
+  int hit_blocker = 0;
+  float darkness = 0.0f;        // grows from 0..1 after blocker
+  float tiles_since_block = 0.0f;
+
+  while (steps++ < light->max_daa_steps) {
+    if (tMaxX < tMaxY) {
+      tMaxX += tDeltaX;
+      x += stepX;
+    } else {
+      tMaxY += tDeltaY;
+      y += stepY;
+    }
+
+    if (x < 0 || y < 0 || x >= nx_tiles || y >= ny_tiles) {
+      break;
+    }
+
+    if (!hit_blocker) {
+      hit_blocker = get_blocker_level(djinni_map, x, y, nx_tiles, ny_tiles);
+
+      //
+      // if a blocker is found, do not darken the blocker itself
+      //
+      if (hit_blocker) {
+        darkness = 0.0f;
+        tiles_since_block = 0.0f;
+        continue;
+      }
+    } else {
+      //
+      // todo: shadow range to expand based on tile layer the collision is found at
+      //
+
+      // Distance behind the blocker
+      tiles_since_block += 1.0f;
+
+      // Fade shadow strength with distance (prevents infinite dark trails)
+      float range_factor = 1.0f - (tiles_since_block / light->light_range);
+      if (range_factor < 0.0f) {
+        range_factor = 0.0f;
+      }
+
+      darkness += light->shadow_steps * range_factor;
+      if (darkness > 1.0f) {
+        darkness = 1.0f;
+      }
+
+      // Convert to alpha and accumulate additively (soft overlap of sub-rays)
+      int add = (int)(darkness * light->max_alpha);
+
+      //
+      // finds a tile under the blocker layer and sets the shadow
+      //
+      for (int layer_id = (hit_blocker - 1); layer_id >= 0; layer_id--) {
+        Djinni_MapLayer* layer = &(djinni_map->layers[layer_id]);
+  
+        // layer is not initialized / used
+        if (layer->id < 0) { continue; }
+    
+        Djinni_MapTile* mt = &(layer->tiles.data[y * ny_tiles + x]);
+    
+        if (!mt->empty) {
+          int v = mt->shadow_alpha + add;
+
+          if (v > light->max_alpha) {
+            v = light->max_alpha;
+          }
+
+          mt->shadow_alpha = v;
+
+          printf("\t layer: %d :: alpha: %d at x: %d y: %d\n", layer->id, mt->shadow_alpha, x, y);
+          break;
+        }
+      }
+
+      // Out of range → stop this sub-ray
+      if (range_factor <= 0.0f) {
+        break;
+      }
+    }
+  }
+}
+
+// ================================================================
+// Build the shadow field from the light position
+//
+// Logic:
+//  - Convert mouse (px) to light origin in tile space (float).
+//  - For each base ray angle, spawn SUBRAYS_PER_BASE directions over a
+//    tiny arc (PENUMBRA_ARC_DEG) using deterministic offsets.
+//  - Cast each sub-ray with cast_subray_after_blocker.
+//
+//     [bundle per base ray]
+//         \  |  /
+//          \ | /
+//           \|/
+//            *
+//           light
+// ================================================================
+void djinni_light_generate_shadows(Djinni_Map* djinni_map, Djinni_Light* light) {
+  const float arc_rad = light->penumbra_arc_degrees * (float)M_PI / 180.0f;
+  for (int i = 0; i < light->n_rays; ++i) {
+    float base_angle = (float)i * 2.0f * (float)M_PI / (float)light->n_rays;
+    for (int s = 0; s < light->n_sub_rays; ++s) {
+      float off = subray_offset(s, light->n_sub_rays);
+      float a = base_angle + off * arc_rad;
+      float ax = cosf(a), ay = sinf(a);
+      apply_shadows(djinni_map, light, ax, ay);
+    }
+  }
 }

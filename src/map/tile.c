@@ -41,6 +41,7 @@ void djinni_map_tiles_load(Djinni_Map* djinni_map, Djinni_MapLayer* layer, cJSON
 
     mt->layer = layer->id;
     mt->empty = 0;
+    mt->shadow_alpha = 0;
     mt->tile_index = cJSON_GetObjectItem(tile_node, "index")->valueint;
     mt->atlas_id = cJSON_GetObjectItem(tile_node, "atlas")->valueint;
     mt->collision_index = -1;
