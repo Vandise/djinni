@@ -155,21 +155,29 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
       //
       for (int layer_id = (hit_blocker - 1); layer_id >= 0; layer_id--) {
         Djinni_MapLayer* layer = &(djinni_map->layers[layer_id]);
-  
+    
         // layer is not initialized / used
         if (layer->id < 0) { continue; }
     
         Djinni_MapTile* mt = &(layer->tiles.data[y * nx_tiles + x]);
     
         if (!mt->empty) {
-          int v = mt->shadow_alpha + add;
-
+          int add = (int)(darkness * (light->max_alpha / (float)light->n_sub_rays));
+          
+          // This is the key change: use the maximum alpha value.
+          // Also, convert the current alpha back to a fraction to add the darkness.
+          float current_darkness = (float)mt->shadow_alpha / (float)light->max_alpha;
+          float new_darkness = current_darkness + (darkness / (float)light->n_sub_rays);
+          
+          // Convert back to integer alpha and clamp.
+          int v = (int)(new_darkness * light->max_alpha);
           if (v > light->max_alpha) {
             v = light->max_alpha;
           }
-
+  
+          // Apply the new alpha to the tile.
           mt->shadow_alpha = v;
-
+          
           printf("\t layer: %d :: alpha: %d at x: %d y: %d\n", layer->id, mt->shadow_alpha, x, y);
           break;
         }
