@@ -142,7 +142,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
         darkness = 1.0f;
       }
 
-      // Finds a tile under the blocker layer and sets the shadow
+      // Find the tile under the blocker layer and set the shadow
       for (int layer_id = (hit_blocker - 1); layer_id >= 0; layer_id--) {
         Djinni_MapLayer* layer = &(djinni_map->layers[layer_id]);
 
@@ -156,7 +156,6 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
           int v = (int)(darkness * light->max_alpha);
           mt->shadow_alpha = (mt->shadow_alpha > v) ? mt->shadow_alpha : v;
 
-          // Note: printf is a debug tool and should be removed in final code for performance
           printf("\t layer: %d :: alpha: %d at x: %d y: %d\n", layer->id, mt->shadow_alpha, x, y);
           break;
         }
@@ -173,7 +172,7 @@ void gaussian_blur_shadows(Djinni_Map* djinni_map, Djinni_Light* light) {
   int nx_tiles = djinni_map->width / djinni_map->base_tile_grid_width;
   int ny_tiles = djinni_map->height / djinni_map->base_tile_grid_height;
 
-  // We need to iterate from top-left to bottom-right to blur in the direction of the light.
+  // iterate from the top-left to bottom-right to blur in the direction of the light.
   for (int y = 0; y < ny_tiles; y++) {
     for (int x = 0; x < nx_tiles; x++) {
       // Find the current tile and its top-left neighbor
