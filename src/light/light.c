@@ -105,6 +105,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
 
   int steps = 0;
   int hit_blocker = 0;
+  int layer_multiplier = 1;
   float darkness = 0.0f;
   float tiles_since_block = 0.0f;
 
@@ -127,6 +128,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
       if (hit_blocker) {
         darkness = 0.0f;
         tiles_since_block = 0.0f;
+        layer_multiplier = (hit_blocker - DJINNI_MAP_OCCLUSION_LAYER + 1);
         continue;
       }
     } else {
@@ -137,7 +139,7 @@ static void apply_shadows(Djinni_Map* djinni_map, Djinni_Light* light, float dir
         range_factor = 0.0f;
       }
 
-      darkness += light->shadow_steps * range_factor;
+      darkness += (light->shadow_steps * layer_multiplier) * range_factor;
       if (darkness > 1.0f) {
         darkness = 1.0f;
       }
