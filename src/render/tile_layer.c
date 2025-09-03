@@ -3,6 +3,7 @@
 #include "djinni/map/map.h"
 #include "djinni/game/camera.h"
 #include "djinni/video/video.h"
+#include "djinni/light/light.h"
 
 static int tile_draw_comparator(const void *a, const void *b) {
   Djinni_MapTile *t1, *t2;
@@ -13,7 +14,7 @@ static int tile_draw_comparator(const void *a, const void *b) {
   return t1->y - t2->y;
 }
 
-static void draw_tile(int x, int y, int atlas_id, int tile_index, double dt) {
+static void draw_tile(int x, int y, int atlas_id, int tile_index, int shadow_alpha, double dt) {
   Djinni_Map* djinni_map = djinni_map_state_get_map();
   Djinni_Game_Camera* camera = djinni_game_camera_get_camera();
 
@@ -35,6 +36,16 @@ static void draw_tile(int x, int y, int atlas_id, int tile_index, double dt) {
   	dest.h = djinni_map->base_tile_grid_height;
 
 	SDL_RenderCopy(djinni_video_renderer(), img->atlas->texture, &src, &dest);
+
+/*
+  todo: color mod from light source set to tile?
+  if (shadow_alpha) {
+    SDL_SetTextureColorMod(djinni_light_get_shadow_texture(), 0, 0, 0);
+    SDL_SetTextureAlphaMod(djinni_light_get_shadow_texture(), shadow_alpha);
+    SDL_Rect dst = { (x - camera->x), (y - camera->y), 128, 64 };
+    SDL_RenderCopy(djinni_video_renderer(), djinni_light_get_shadow_texture(), NULL, &dst);
+  }
+*/
 }
 
 void djinni_render_tile(Djinni_Drawable* drawable_entity, double dt) {
@@ -43,6 +54,7 @@ void djinni_render_tile(Djinni_Drawable* drawable_entity, double dt) {
     drawable_entity->tile.y,
     drawable_entity->tile.atlas_id,
     drawable_entity->tile.tile_index,
+    0,
     dt
   );
 }
@@ -64,7 +76,7 @@ void djinni_render_tile_layer_draw(int layer_id, double dt) {
     Djinni_MapTile tile = layer->tiles.data[i];
 
     if (!tile.empty && djinni_game_camera_point_in_viewport(tile.x, tile.y)) {
-      draw_tile(tile.x, tile.y, tile.atlas_id, tile.tile_index, dt);
+      draw_tile(tile.x, tile.y, tile.atlas_id, tile.tile_index, tile.shadow_alpha, dt);
     }
   }
 }
